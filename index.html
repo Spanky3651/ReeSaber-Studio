@@ -1,0 +1,1401 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>ReeSaber Studio — Config Generator &amp; Editor</title>
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAzMiAzMiI+CjxkZWZzPgo8bGluZWFyR3JhZGllbnQgaWQ9ImJsIiB4MT0iMCIgeTE9IjEiIHgyPSIxIiB5Mj0iMCI+PHN0b3Agb2Zmc2V0PSIwIiBzdG9wLWNvbG9yPSIjMDBlNWZmIi8+PHN0b3Agb2Zmc2V0PSIxIiBzdG9wLWNvbG9yPSIjZmZmZmZmIi8+PC9saW5lYXJHcmFkaWVudD4KPGZpbHRlciBpZD0iZ2wiIHg9Ii02MCUiIHk9Ii02MCUiIHdpZHRoPSIyMjAlIiBoZWlnaHQ9IjIyMCUiPjxmZUdhdXNzaWFuQmx1ciBzdGREZXZpYXRpb249IjEuNiIvPjwvZmlsdGVyPgo8L2RlZnM+CjxyZWN0IHdpZHRoPSIzMiIgaGVpZ2h0PSIzMiIgcng9IjciIGZpbGw9IiMwMDAwMDAiLz4KPHJlY3QgeD0iMC41IiB5PSIwLjUiIHdpZHRoPSIzMSIgaGVpZ2h0PSIzMSIgcng9IjYuNSIgZmlsbD0ibm9uZSIgc3Ryb2tlPSIjMjQyNDM1Ii8+CjxsaW5lIHgxPSI5IiB5MT0iMjMiIHgyPSIyNSIgeTI9IjciIHN0cm9rZT0iIzAwZTVmZiIgc3Ryb2tlLXdpZHRoPSI1LjUiIHN0cm9rZS1saW5lY2FwPSJyb3VuZCIgZmlsdGVyPSJ1cmwoI2dsKSIgb3BhY2l0eT0iMC43NSIvPgo8bGluZSB4MT0iNyIgeTE9IjI1LjUiIHgyPSIxMSIgeTI9IjIxLjUiIHN0cm9rZT0iIzhhNWJmZiIgc3Ryb2tlLXdpZHRoPSIzLjYiIHN0cm9rZS1saW5lY2FwPSJyb3VuZCIvPgo8bGluZSB4MT0iMTAiIHkxPSIyMi41IiB4Mj0iMjUiIHkyPSI3LjUiIHN0cm9rZT0idXJsKCNibCkiIHN0cm9rZS13aWR0aD0iMi43IiBzdHJva2UtbGluZWNhcD0icm91bmQiLz4KPGNpcmNsZSBjeD0iMjUiIGN5PSI3LjUiIHI9IjEuNyIgZmlsbD0iI2ZmZmZmZiIvPgo8L3N2Zz4K" />
+<style>
+  :root{
+    --bg:#000000;--panel:#070709;--panel-2:#0c0c11;--panel-3:#111119;
+    --line:#1d1d29;--line-2:#2a2a3d;
+    --txt:#e9e9f2;--txt-dim:#9aa0b5;--txt-mut:#6b7089;
+    --cyan:#00e5ff;--cyan-dim:#0891a3;--magenta:#ff2bd6;--violet:#8a5bff;
+    --green:#22ffa7;--amber:#ffb020;--red:#ff4d6d;
+    --glow-c:0 0 12px rgba(0,229,255,.55);--glow-m:0 0 12px rgba(255,43,214,.5);
+    --r:10px;
+    --font:'Segoe UI',Inter,system-ui,-apple-system,sans-serif;
+    --mono:'Cascadia Code','JetBrains Mono',Consolas,monospace;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  html,body{height:100%}
+  body{background:var(--bg);color:var(--txt);font-family:var(--font);font-size:15px;line-height:1.45;overflow:hidden;-webkit-font-smoothing:antialiased}
+  ::-webkit-scrollbar{width:10px;height:10px}
+  ::-webkit-scrollbar-track{background:#050507}
+  ::-webkit-scrollbar-thumb{background:#20202e;border-radius:6px;border:2px solid #050507}
+  ::-webkit-scrollbar-thumb:hover{background:#2f2f45}
+
+  .app{display:flex;flex-direction:column;height:100vh}
+  header.topbar{display:flex;align-items:center;gap:14px;padding:11px 18px;background:linear-gradient(90deg,#050508,#0a0a12 60%,#050508);border-bottom:1px solid var(--line);position:relative;z-index:30}
+  header.topbar::after{content:"";position:absolute;left:0;right:0;bottom:-1px;height:1px;background:linear-gradient(90deg,transparent,var(--cyan),var(--magenta),transparent);opacity:.6}
+  .brand{display:flex;align-items:center;gap:11px}
+  .brand .logo{width:33px;height:33px;border-radius:8px;background:radial-gradient(circle at 30% 30%,#12121c,#000);border:1px solid var(--line-2);display:grid;place-items:center;position:relative;overflow:hidden}
+  .brand .logo .blade{width:5px;height:21px;border-radius:3px;background:linear-gradient(180deg,#fff,var(--cyan));box-shadow:0 0 10px var(--cyan),0 0 22px var(--cyan-dim);transform:rotate(35deg)}
+  .brand h1{font-size:16px;font-weight:700;letter-spacing:.5px}
+  .brand h1 span{color:var(--cyan);text-shadow:var(--glow-c)}
+  .brand .sub{font-size:10.5px;color:var(--txt-mut);letter-spacing:2px;text-transform:uppercase}
+  .topbar .spacer{flex:1}
+  .topbar .modver{font-size:11px;color:var(--txt-mut);font-family:var(--mono);padding:4px 8px;border:1px solid var(--line);border-radius:6px}
+
+  .btn{display:inline-flex;align-items:center;gap:7px;padding:8px 13px;border-radius:8px;background:var(--panel-3);border:1px solid var(--line-2);color:var(--txt);font-size:13px;font-weight:600;cursor:pointer;transition:.15s;white-space:nowrap;font-family:var(--font)}
+  .btn:hover{border-color:var(--cyan-dim);background:#15151f}
+  .btn svg{width:15px;height:15px}
+  .btn.primary{background:linear-gradient(135deg,#003b44,#00252b);border-color:var(--cyan-dim);color:var(--cyan)}
+  .btn.primary:hover{box-shadow:var(--glow-c);border-color:var(--cyan)}
+  .btn.magenta{background:linear-gradient(135deg,#3d0033,#25001f);border-color:#6d1a5c;color:var(--magenta)}
+  .btn.magenta:hover{box-shadow:var(--glow-m);border-color:var(--magenta)}
+  .btn.ghost{background:transparent;border-color:var(--line)}
+  .btn.sm{padding:5px 9px;font-size:12px}
+  .btn.icon{padding:7px;border-radius:7px}
+  .btn.tiny{padding:3px 7px;font-size:11px}
+  .btn.danger:hover{border-color:var(--red);color:var(--red);box-shadow:0 0 10px rgba(255,77,109,.35)}
+  .btn[disabled]{opacity:.4;pointer-events:none}
+
+  /* Quick start strip */
+  .quickstart{background:linear-gradient(90deg,#04121a,#0a0510);border-bottom:1px solid var(--line);overflow:hidden;transition:.25s;position:relative;z-index:20}
+  .qs-head{display:flex;align-items:center;gap:10px;padding:9px 18px;cursor:pointer;font-size:13px;font-weight:600}
+  .qs-head .qs-ic{color:var(--cyan);display:flex}.qs-head .qs-ic svg{width:17px;height:17px}
+  .qs-head .qs-caret{margin-left:auto;transition:.2s;color:var(--txt-mut);display:flex}
+  .qs-head .qs-caret svg{width:16px;height:16px}
+  .quickstart.collapsed .qs-body{display:none}
+  .quickstart.collapsed .qs-caret{transform:rotate(-90deg)}
+  .qs-body{padding:4px 18px 16px;display:grid;grid-template-columns:repeat(4,1fr);gap:12px}
+  .qs-step{background:#08080d;border:1px solid var(--line);border-radius:9px;padding:11px 13px}
+  .qs-step .n{width:22px;height:22px;border-radius:6px;background:rgba(0,229,255,.12);color:var(--cyan);font-weight:800;font-size:12px;display:grid;place-items:center;border:1px solid var(--cyan-dim);margin-bottom:7px}
+  .qs-step b{font-size:13px}.qs-step p{font-size:12px;color:var(--txt-dim);margin-top:3px;line-height:1.5}
+
+  main{display:flex;flex:1;min-height:0}
+  .col{display:flex;flex-direction:column;min-height:0}
+  .col.presets{width:250px;border-right:1px solid var(--line);background:var(--panel)}
+  .col.builder{width:300px;border-right:1px solid var(--line);background:var(--panel)}
+  .col.inspector{flex:1;min-width:360px;background:var(--panel);border-right:1px solid var(--line)}
+  .col.rightcol{width:430px;background:#020203;display:flex;flex-direction:column}
+
+  .col-head{display:flex;align-items:center;gap:8px;padding:12px 14px;border-bottom:1px solid var(--line);font-size:12px;font-weight:700;letter-spacing:1.4px;text-transform:uppercase;color:var(--txt-dim);background:var(--panel);z-index:5}
+  .col-head .ic{color:var(--cyan);display:flex}.col-head .ic svg{width:16px;height:16px}
+  .col-head .spacer{flex:1}
+  .col-body{overflow-y:auto;flex:1;padding:12px}
+  .badge-count{font-size:11px;background:#15151f;border:1px solid var(--line-2);color:var(--txt-dim);padding:1px 7px;border-radius:20px;font-weight:700}
+
+  /* dropdown */
+  .dd{position:relative}
+  .dd-menu{position:absolute;top:calc(100% + 6px);left:0;right:0;background:var(--panel-3);border:1px solid var(--line-2);border-radius:9px;padding:6px;z-index:40;box-shadow:0 12px 40px rgba(0,0,0,.6);display:none}
+  .dd.open .dd-menu{display:block}
+  .dd-item{padding:9px 10px;border-radius:7px;cursor:pointer;font-size:13px;transition:.12s}
+  .dd-item:hover{background:#16161f}
+  .dd-item b{display:block;font-size:13px}.dd-item span{font-size:11px;color:var(--txt-mut)}
+
+  /* preset cards */
+  .preset-card{border:1px solid var(--line);border-radius:var(--r);background:var(--panel-2);padding:11px 12px;margin-bottom:10px;cursor:pointer;transition:.15s;position:relative;overflow:hidden}
+  .preset-card:hover{border-color:var(--line-2)}
+  .preset-card.active{border-color:var(--cyan-dim);background:#0a1418;box-shadow:inset 0 0 0 1px rgba(0,229,255,.15)}
+  .preset-card.active::before{content:"";position:absolute;left:0;top:0;bottom:0;width:3px;background:linear-gradient(180deg,var(--cyan),var(--magenta))}
+  .preset-card .pc-top{display:flex;align-items:center;gap:8px}
+  .preset-card .pc-name{font-weight:700;font-size:14px;flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+  .preset-card .pc-swatches{display:flex;gap:4px}
+  .swatch{width:15px;height:15px;border-radius:4px;border:1px solid rgba(255,255,255,.25)}
+  .preset-card .pc-meta{display:flex;gap:6px;margin-top:7px;flex-wrap:wrap}
+  .chip{font-size:10.5px;font-weight:700;letter-spacing:.5px;padding:2px 7px;border-radius:20px;text-transform:uppercase}
+  .chip.hand-L{background:rgba(255,43,214,.14);color:var(--magenta);border:1px solid rgba(255,43,214,.3)}
+  .chip.hand-R{background:rgba(0,229,255,.12);color:var(--cyan);border:1px solid rgba(0,229,255,.3)}
+  .chip.mods{background:#15151f;color:var(--txt-dim);border:1px solid var(--line-2)}
+  .chip.warn{background:rgba(255,176,32,.12);color:var(--amber);border:1px solid rgba(255,176,32,.35)}
+  .preset-card .pc-actions{display:flex;gap:4px;margin-top:9px;opacity:0;transition:.15s}
+  .preset-card:hover .pc-actions,.preset-card.active .pc-actions{opacity:1}
+
+  .palette{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:14px}
+  .pal-item{border:1px solid var(--line-2);border-radius:9px;background:var(--panel-2);padding:10px 8px;text-align:center;cursor:pointer;transition:.15s}
+  .pal-item:hover{border-color:var(--cyan-dim);background:#0e0e16;transform:translateY(-1px)}
+  .pal-item .pi-ic{color:var(--cyan);margin-bottom:5px;display:flex;justify-content:center}.pal-item .pi-ic svg{width:20px;height:20px}
+  .pal-item .pi-name{font-size:12px;font-weight:600}.pal-item .pi-desc{font-size:10px;color:var(--txt-mut);margin-top:2px}
+  .section-label{font-size:11px;font-weight:700;letter-spacing:1.4px;text-transform:uppercase;color:var(--txt-mut);margin:4px 0 10px;display:flex;align-items:center;gap:8px}
+
+  .stack-item{border:1px solid var(--line);border-radius:9px;background:var(--panel-2);padding:9px 10px;margin-bottom:8px;cursor:pointer;transition:.15s;display:flex;align-items:center;gap:9px}
+  .stack-item:hover{border-color:var(--line-2)}
+  .stack-item.active{border-color:var(--magenta);background:#160a14}
+  .stack-item .si-ic{color:var(--violet);display:flex}.stack-item .si-ic svg{width:17px;height:17px}
+  .stack-item .si-body{flex:1;min-width:0}
+  .stack-item .si-name{font-size:13px;font-weight:600;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+  .stack-item .si-type{font-size:10px;color:var(--txt-mut);font-family:var(--mono)}
+  .stack-item .si-ctrls{display:flex;gap:2px;align-items:center}
+  .layer-dot{width:8px;height:8px;border-radius:50%;background:var(--green);box-shadow:0 0 6px var(--green)}
+  .layer-dot.off{background:#333;box-shadow:none}
+
+  .empty{text-align:center;color:var(--txt-mut);font-size:13px;padding:26px 14px;border:1px dashed var(--line-2);border-radius:10px}
+  .empty svg{width:26px;height:26px;opacity:.4;margin-bottom:8px}
+
+  .insp-tabs{display:flex;gap:2px;padding:0 14px;border-bottom:1px solid var(--line);background:var(--panel)}
+  .insp-tab{padding:11px 14px;font-size:12.5px;font-weight:600;color:var(--txt-mut);cursor:pointer;border-bottom:2px solid transparent;transition:.15s;letter-spacing:.3px}
+  .insp-tab:hover{color:var(--txt-dim)}
+  .insp-tab.active{color:var(--cyan);border-bottom-color:var(--cyan)}
+  .insp-body{overflow-y:auto;flex:1;padding:14px 16px}
+
+  .field{margin-bottom:14px}
+  .field > label{display:flex;align-items:center;gap:6px;font-size:12px;font-weight:600;color:var(--txt-dim);margin-bottom:6px;letter-spacing:.3px}
+  .field .hint{font-size:11px;color:var(--txt-mut);margin-top:4px;line-height:1.4}
+  input[type=text],input[type=number],select,textarea{width:100%;background:#050508;border:1px solid var(--line-2);border-radius:8px;color:var(--txt);padding:9px 11px;font-size:14px;font-family:var(--font);transition:.15s}
+  input:focus,select:focus,textarea:focus{outline:none;border-color:var(--cyan-dim);box-shadow:0 0 0 3px rgba(0,229,255,.1)}
+  input.invalid{border-color:var(--red)!important;box-shadow:0 0 0 3px rgba(255,77,109,.12)}
+  textarea{font-family:var(--mono);font-size:12px;resize:vertical;min-height:90px}
+  select{cursor:pointer;appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%236b7089' stroke-width='3'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 11px center;padding-right:30px}
+  .row{display:flex;gap:10px}.row .field{flex:1}
+  .grid3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px}
+
+  .slider-wrap{display:flex;align-items:center;gap:12px}
+  input[type=range]{-webkit-appearance:none;appearance:none;flex:1;height:5px;border-radius:5px;background:linear-gradient(90deg,var(--cyan-dim),#1b1b28);outline:none}
+  input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:17px;height:17px;border-radius:50%;background:var(--cyan);cursor:pointer;box-shadow:0 0 8px var(--cyan),0 0 0 3px #000}
+  input[type=range]::-moz-range-thumb{width:17px;height:17px;border-radius:50%;background:var(--cyan);cursor:pointer;border:3px solid #000}
+  .slider-val{width:66px}.slider-val input{padding:6px 8px;font-size:13px;font-family:var(--mono);text-align:right}
+
+  .toggle{position:relative;display:inline-flex;align-items:center;cursor:pointer;gap:10px}
+  .toggle input{display:none}
+  .toggle .track{width:42px;height:23px;border-radius:20px;background:#1a1a26;border:1px solid var(--line-2);transition:.2s;position:relative}
+  .toggle .track::after{content:"";position:absolute;top:2px;left:2px;width:17px;height:17px;border-radius:50%;background:#5a5a70;transition:.2s}
+  .toggle input:checked + .track{background:rgba(0,229,255,.2);border-color:var(--cyan-dim)}
+  .toggle input:checked + .track::after{transform:translateX(19px);background:var(--cyan);box-shadow:0 0 8px var(--cyan)}
+  .toggle .tlabel{font-size:13px;font-weight:600;display:flex;align-items:center;gap:6px}
+
+  .color-field{display:flex;align-items:center;gap:10px}
+  .color-field input[type=color]{width:44px;height:34px;padding:2px;border-radius:8px;border:1px solid var(--line-2);background:#050508;cursor:pointer}
+  .color-field input[type=text]{flex:1;font-family:var(--mono);font-size:13px}
+
+  /* accordion */
+  .acc{border:1px solid var(--line);border-radius:10px;margin-bottom:12px;background:#060609;overflow:hidden}
+  .acc-head{display:flex;align-items:center;gap:9px;padding:12px 13px;cursor:pointer;user-select:none}
+  .acc-head .acc-ic{display:flex;color:var(--cyan)}.acc-head .acc-ic svg{width:15px;height:15px}
+  .acc.magenta .acc-head .acc-ic{color:var(--magenta)}
+  .acc-title{font-size:11.5px;font-weight:700;letter-spacing:1.1px;text-transform:uppercase;color:var(--txt-dim);flex:1}
+  .acc.magenta .acc-title{color:#e79bd8}
+  .acc-caret{color:var(--txt-mut);transition:.2s;display:flex}.acc-caret svg{width:16px;height:16px}
+  .acc.collapsed .acc-caret{transform:rotate(-90deg)}
+  .acc.collapsed .acc-body{display:none}
+  .acc-body{padding:2px 14px 14px}
+  .acc-reset{color:var(--txt-mut);font-size:10.5px;font-weight:700;letter-spacing:.5px;text-transform:uppercase;padding:3px 8px;border:1px solid var(--line-2);border-radius:6px;cursor:pointer;transition:.12s}
+  .acc-reset:hover{border-color:var(--amber);color:var(--amber)}
+
+  .hand-toggles{display:flex;gap:8px}
+  .hand-btn{flex:1;padding:9px;border-radius:8px;border:1px solid var(--line-2);background:var(--panel-2);text-align:center;font-size:12px;font-weight:700;cursor:pointer;transition:.15s;letter-spacing:.5px}
+  .hand-btn.on-L{border-color:var(--magenta);background:rgba(255,43,214,.12);color:var(--magenta);box-shadow:0 0 10px rgba(255,43,214,.2)}
+  .hand-btn.on-R{border-color:var(--cyan);background:rgba(0,229,255,.1);color:var(--cyan);box-shadow:0 0 10px rgba(0,229,255,.2)}
+
+  /* drivers */
+  .driver-card{border:1px solid var(--line-2);border-radius:10px;background:#08080c;margin-bottom:12px;overflow:hidden}
+  .driver-head{display:flex;align-items:center;gap:9px;padding:10px 12px;background:#0d0d14;border-bottom:1px solid var(--line)}
+  .driver-head .dh-badge{font-size:10px;font-weight:700;padding:2px 7px;border-radius:5px;background:rgba(138,91,255,.15);color:var(--violet);border:1px solid rgba(138,91,255,.3);text-transform:uppercase;letter-spacing:.5px}
+  .driver-head .dh-title{flex:1;font-size:13px;font-weight:600}
+  .driver-body{padding:12px}
+  .curve-preview{width:100%;height:70px;background:#040406;border:1px solid var(--line);border-radius:8px;margin-top:6px}
+
+  /* help */
+  .help-ic{width:15px;height:15px;border-radius:50%;border:1px solid var(--cyan-dim);color:var(--cyan);font-size:10px;font-weight:800;display:inline-grid;place-items:center;cursor:pointer;flex-shrink:0;transition:.12s;line-height:1}
+  .help-ic:hover{background:var(--cyan);color:#000;box-shadow:var(--glow-c)}
+  .help-pop{position:fixed;z-index:300;max-width:290px;background:#0c0c14;border:1px solid var(--cyan-dim);border-radius:10px;padding:12px 14px;box-shadow:0 12px 40px rgba(0,0,0,.7),0 0 20px rgba(0,229,255,.12);font-size:12.5px;line-height:1.55;color:var(--txt-dim);display:none}
+  .help-pop.show{display:block}
+  .help-pop b{color:var(--cyan);display:block;margin-bottom:4px;font-size:13px}
+  .help-pop .ingame{margin-top:7px;padding-top:7px;border-top:1px solid var(--line);color:var(--txt-mut);font-size:11.5px}
+  .help-pop .ingame em{color:var(--green);font-style:normal;font-weight:600}
+
+  /* right column tabs */
+  .rc-tabs{display:flex;gap:2px;padding:8px 12px 0;border-bottom:1px solid var(--line)}
+  .rc-tab{padding:8px 13px;font-size:12px;font-weight:700;letter-spacing:.6px;text-transform:uppercase;color:var(--txt-mut);cursor:pointer;border-bottom:2px solid transparent;display:flex;align-items:center;gap:6px}
+  .rc-tab.active{color:var(--cyan);border-bottom-color:var(--cyan)}
+  .rc-tab .dotwarn{width:7px;height:7px;border-radius:50%;background:var(--amber);box-shadow:0 0 6px var(--amber)}
+  .rc-tab .doterr{width:7px;height:7px;border-radius:50%;background:var(--red);box-shadow:0 0 6px var(--red)}
+  .rc-pane{flex:1;min-height:0;display:none;flex-direction:column}
+  .rc-pane.active{display:flex}
+  .preview-ctrls{display:flex;gap:6px;padding:8px 12px;border-bottom:1px solid var(--line);flex-wrap:wrap;align-items:center}
+  .mini-toggle{font-size:11px;font-weight:600;padding:4px 9px;border-radius:6px;border:1px solid var(--line-2);background:var(--panel-2);color:var(--txt-dim);cursor:pointer}
+  .mini-toggle.on{border-color:var(--cyan-dim);color:var(--cyan);background:rgba(0,229,255,.08)}
+  #glcanvas{flex:1;width:100%;display:block}
+  .preview-foot{padding:9px 12px;border-top:1px solid var(--line);font-size:11px;color:var(--txt-mut);display:flex;gap:12px;flex-wrap:wrap;background:#040406}
+  .preview-foot b{color:var(--txt-dim);font-weight:600}
+
+  .json-bar{display:flex;align-items:center;gap:8px;padding:9px 12px;border-bottom:1px solid var(--line);font-size:12px}
+  .json-status{display:inline-flex;align-items:center;gap:6px;font-weight:700;font-size:11.5px;padding:3px 9px;border-radius:20px}
+  .json-status.ok{background:rgba(34,255,167,.1);color:var(--green);border:1px solid rgba(34,255,167,.3)}
+  .json-status.bad{background:rgba(255,77,109,.1);color:var(--red);border:1px solid rgba(255,77,109,.35)}
+  .json-code{flex:1;overflow:auto;padding:12px 14px;font-family:var(--mono);font-size:11.5px;line-height:1.55;white-space:pre;color:#cfd3e6}
+  .tok-key{color:var(--cyan)}.tok-str{color:#7ee787}.tok-num{color:var(--amber)}.tok-bool{color:var(--magenta)}.tok-null{color:var(--txt-mut)}
+
+  .valid-body{flex:1;overflow-y:auto;padding:14px 16px}
+  .vitem{display:flex;gap:11px;padding:11px 12px;border-radius:9px;border:1px solid var(--line);margin-bottom:9px;background:#07070b;align-items:flex-start}
+  .vitem .vic{flex-shrink:0;width:22px;height:22px;border-radius:6px;display:grid;place-items:center;font-weight:800;font-size:13px}
+  .vitem.ok .vic{background:rgba(34,255,167,.12);color:var(--green)}
+  .vitem.warn .vic{background:rgba(255,176,32,.14);color:var(--amber)}
+  .vitem.err .vic{background:rgba(255,77,109,.14);color:var(--red)}
+  .vitem .vtitle{font-size:13px;font-weight:600}
+  .vitem .vmsg{font-size:12px;color:var(--txt-mut);margin-top:2px;line-height:1.45}
+  .valid-summary{padding:12px 16px;border-bottom:1px solid var(--line);font-size:13px;font-weight:600;display:flex;align-items:center;gap:10px}
+
+  /* asset manager */
+  .asset-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:6px}
+  .asset-tile{border:1px solid var(--line-2);border-radius:9px;background:#08080d;padding:10px;position:relative}
+  .asset-tile .at-thumb{height:64px;border-radius:6px;background:#040406 center/cover no-repeat;display:grid;place-items:center;color:var(--txt-mut);margin-bottom:8px;border:1px solid var(--line);overflow:hidden}
+  .asset-tile .at-thumb svg{width:26px;height:26px;opacity:.6}
+  .asset-tile .at-name{font-size:12px;font-weight:600;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+  .asset-tile .at-meta{font-size:10.5px;color:var(--txt-mut);font-family:var(--mono);margin-top:2px}
+  .asset-tile .at-actions{display:flex;gap:4px;margin-top:8px}
+  .asset-kind{position:absolute;top:8px;right:8px;font-size:9px;font-weight:800;letter-spacing:.5px;text-transform:uppercase;padding:2px 6px;border-radius:5px}
+  .asset-kind.mesh{background:rgba(138,91,255,.16);color:var(--violet)}
+  .asset-kind.texture{background:rgba(0,229,255,.14);color:var(--cyan)}
+  .asset-kind.sound{background:rgba(255,176,32,.14);color:var(--amber)}
+
+  .drop{border:2px dashed var(--line-2);border-radius:12px;padding:22px;text-align:center;color:var(--txt-mut);transition:.15s;cursor:pointer}
+  .drop.hot{border-color:var(--cyan);background:rgba(0,229,255,.05);color:var(--cyan)}
+  .drop svg{width:30px;height:30px;opacity:.5;margin-bottom:8px}
+
+  .fset-note{font-size:11.5px;color:var(--txt-mut);line-height:1.5;margin-bottom:10px}
+  code.k{font-family:var(--mono);font-size:12px;color:var(--amber);background:#0c0c05;padding:1px 5px;border-radius:4px}
+  .divider{height:1px;background:var(--line);margin:14px 0}
+  .placeholder-note{color:var(--txt-mut);font-size:13px;text-align:center;padding:38px 20px;line-height:1.6}
+  .placeholder-note svg{width:26px;height:26px;opacity:.4;margin-bottom:8px}
+
+  .modal-back{position:fixed;inset:0;background:rgba(0,0,0,.78);backdrop-filter:blur(4px);z-index:100;display:none;align-items:center;justify-content:center;padding:24px}
+  .modal-back.show{display:flex}
+  .modal{width:100%;max-width:640px;max-height:88vh;background:var(--panel-2);border:1px solid var(--line-2);border-radius:14px;display:flex;flex-direction:column;overflow:hidden;box-shadow:0 20px 70px rgba(0,0,0,.7),0 0 40px rgba(0,229,255,.06)}
+  .modal-head{padding:15px 20px;border-bottom:1px solid var(--line);display:flex;align-items:center;gap:10px}
+  .modal-head h3{font-size:16px;font-weight:700;flex:1}
+  .modal-body{padding:18px 20px;overflow-y:auto}
+  .modal-foot{padding:13px 20px;border-top:1px solid var(--line);display:flex;gap:10px;justify-content:flex-end}
+
+  .toast{position:fixed;bottom:22px;left:50%;transform:translateX(-50%) translateY(140%);background:#0c0c14;border:1px solid var(--cyan-dim);color:var(--txt);padding:12px 20px;border-radius:10px;font-size:13.5px;font-weight:600;z-index:200;transition:.3s;box-shadow:0 8px 30px rgba(0,0,0,.6),var(--glow-c);display:flex;align-items:center;gap:9px}
+  .toast.show{transform:translateX(-50%) translateY(0)}
+  .toast.err{border-color:var(--red);box-shadow:0 8px 30px rgba(0,0,0,.6),0 0 12px rgba(255,77,109,.4)}
+  .toast.warn{border-color:var(--amber);box-shadow:0 8px 30px rgba(0,0,0,.6),0 0 12px rgba(255,176,32,.4)}
+  .toast svg{width:16px;height:16px;color:var(--cyan)}.toast.err svg{color:var(--red)}.toast.warn svg{color:var(--amber)}
+</style>
+</head>
+<body>
+<div class="app">
+  <header class="topbar">
+    <div class="brand">
+      <div class="logo"><div class="blade"></div></div>
+      <div><h1>Ree<span>Saber</span> Studio</h1><div class="sub">Config Generator &amp; Editor</div></div>
+    </div>
+    <div class="spacer"></div>
+    <div class="modver" id="modverTag">ModVersion 0.3.18</div>
+    <button class="btn ghost" id="btnAssets"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/><polyline points="3.27 6.96 12 12.01 20.73 6.96"/><line x1="12" y1="22.08" x2="12" y2="12"/></svg>Assets <span class="badge-count" id="assetCount" style="margin-left:2px">0</span></button>
+    <button class="btn ghost" id="btnGlobals"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>Global</button>
+    <button class="btn ghost" id="btnImport"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>Import</button>
+    <button class="btn primary" id="btnExport"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>Export</button>
+  </header>
+
+  <!-- Quick start -->
+  <div class="quickstart" id="quickstart">
+    <div class="qs-head" id="qsHead">
+      <span class="qs-ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg></span>
+      <span><b>Quick Start</b> — how to build a ReeSaber preset in 4 steps</span>
+      <span class="qs-caret" id="qsCaret"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="6 9 12 15 18 9"/></svg></span>
+    </div>
+    <div class="qs-body">
+      <div class="qs-step"><div class="n">1</div><b>Pick a starter</b><p>Use <em style="color:var(--cyan);font-style:normal">New ▾ → template</em> for a ready-made saber, or start blank. Each preset is one saber config file.</p></div>
+      <div class="qs-step"><div class="n">2</div><b>Stack modules</b><p>Add a <b>Blade</b>, then layer <b>Trails</b>, <b>Sparks</b> and effects. Order = render order. Toggle the dot to mute a layer.</p></div>
+      <div class="qs-step"><div class="n">3</div><b>Tune &amp; drive</b><p>Open the accordions to shape mesh, material and color. Add <b>Drivers</b> to make a layer react to Score, Velocity, cuts &amp; more.</p></div>
+      <div class="qs-step"><div class="n">4</div><b>Check &amp; export</b><p>Watch the <b>Live JSON</b> and <b>Validate</b> tabs on the right. When it's green, hit <b>Export</b> and drop the file into ReeSabers.</p></div>
+    </div>
+  </div>
+
+  <main>
+    <!-- Presets -->
+    <section class="col presets">
+      <div class="col-head">
+        <span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/></svg></span>
+        Presets<span class="spacer"></span><span class="badge-count" id="presetCount">0</span>
+      </div>
+      <div class="col-body">
+        <div class="dd" id="newDd" style="margin-bottom:12px">
+          <button class="btn primary" id="btnNewPreset" style="width:100%;justify-content:center">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+            New Preset <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" style="width:13px;height:13px"><polyline points="6 9 12 15 18 9"/></svg>
+          </button>
+          <div class="dd-menu" id="newDdMenu"></div>
+        </div>
+        <div id="presetList"></div>
+      </div>
+    </section>
+
+    <!-- Module stack -->
+    <section class="col builder">
+      <div class="col-head">
+        <span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2 2 7l10 5 10-5-10-5z"/><path d="M2 17l10 5 10-5"/><path d="M2 12l10 5 10-5"/></svg></span>
+        Module Stack<span class="spacer"></span><span class="badge-count" id="moduleCount">0</span>
+      </div>
+      <div class="col-body">
+        <div class="section-label">Add module</div>
+        <div class="palette" id="palette"></div>
+        <div class="section-label">Layers <span style="flex:1;height:1px;background:var(--line)"></span></div>
+        <div id="stackList"></div>
+      </div>
+    </section>
+
+    <!-- Inspector -->
+    <section class="col inspector">
+      <div class="insp-tabs" id="inspTabs">
+        <div class="insp-tab active" data-tab="preset">Preset</div>
+        <div class="insp-tab" data-tab="module">Module</div>
+        <div class="insp-tab" data-tab="drivers">Drivers</div>
+      </div>
+      <div class="insp-body" id="inspBody"></div>
+    </section>
+
+    <!-- Right column: preview / json / validate -->
+    <section class="col rightcol">
+      <div class="rc-tabs" id="rcTabs">
+        <div class="rc-tab active" data-rc="preview"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:14px;height:14px"><path d="M2 12s3-7 10-7 10 7 10 7-3 7-10 7-10-7-10-7z"/><circle cx="12" cy="12" r="3"/></svg>3D</div>
+        <div class="rc-tab" data-rc="json"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:14px;height:14px"><polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/></svg>Live JSON</div>
+        <div class="rc-tab" data-rc="valid"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:14px;height:14px"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>Validate <span id="validDot"></span></div>
+      </div>
+      <!-- preview pane -->
+      <div class="rc-pane active" data-pane="preview">
+        <div class="preview-ctrls">
+          <div class="mini-toggle on" data-pv="spin">Auto-spin</div>
+          <div class="mini-toggle on" data-pv="trail">Trail</div>
+          <div class="mini-toggle on" data-pv="glow">Glow</div>
+          <div class="mini-toggle" data-pv="both">Both hands</div>
+          <div class="mini-toggle on" data-pv="driveScore">Sim driver</div>
+        </div>
+        <canvas id="glcanvas"></canvas>
+        <div class="preview-foot">
+          <span><b>Preset:</b> <span id="pvPreset">—</span></span>
+          <span><b>Modules:</b> <span id="pvMods">0</span></span>
+          <span><b>Drag</b> orbit · <b>scroll</b> zoom</span>
+        </div>
+      </div>
+      <!-- json pane -->
+      <div class="rc-pane" data-pane="json">
+        <div class="json-bar">
+          <span id="jsonStatus" class="json-status ok">valid</span>
+          <span style="color:var(--txt-mut);flex:1" id="jsonMeta"></span>
+          <button class="btn tiny" id="btnCopyJson">Copy</button>
+        </div>
+        <pre class="json-code" id="jsonCode"></pre>
+      </div>
+      <!-- validate pane -->
+      <div class="rc-pane" data-pane="valid">
+        <div class="valid-summary" id="validSummary"></div>
+        <div class="valid-body" id="validBody"></div>
+      </div>
+    </section>
+  </main>
+</div>
+
+<div class="modal-back" id="modalBack"><div class="modal" id="modal"></div></div>
+<div class="help-pop" id="helpPop"></div>
+<div class="toast" id="toast"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg><span id="toastMsg"></span></div>
+
+<script src="https://cdn.jsdelivr.net/npm/three@0.128.0/build/three.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/loaders/OBJLoader.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/loaders/GLTFLoader.js"></script>
+<script>
+"use strict";
+/* ===================================================================== */
+const $=(s,r=document)=>r.querySelector(s);
+const $$=(s,r=document)=>[...r.querySelectorAll(s)];
+const uid=()=>'m'+Math.random().toString(36).slice(2,9);
+const clamp=(v,a,b)=>Math.max(a,Math.min(b,v));
+const clone=o=>JSON.parse(JSON.stringify(o));
+const deepMerge=(t,s)=>{for(const k in s){if(s[k]&&typeof s[k]==='object'&&!Array.isArray(s[k])){t[k]=deepMerge(t[k]&&typeof t[k]==='object'?t[k]:{},s[k]);}else{t[k]=s[k];}}return t;};
+function get(o,path){return path.split('.').reduce((a,k)=>a==null?a:a[k],o);}
+function setPath(o,path,val){const ks=path.split('.');let c=o;for(let i=0;i<ks.length-1;i++){if(typeof c[ks[i]]!=='object'||c[ks[i]]==null)c[ks[i]]={};c=c[ks[i]];}c[ks[ks.length-1]]=val;}
+function hexToRgb(hex){hex=(''+hex).replace('#','');if(hex.length===3)hex=hex.split('').map(c=>c+c).join('');const n=parseInt(hex,16)||0;return {r:((n>>16)&255)/255,g:((n>>8)&255)/255,b:(n&255)/255};}
+function rgbToHex(c){const f=x=>('0'+Math.round(clamp(x||0,0,1)*255).toString(16)).slice(-2);return '#'+f(c.r)+f(c.g)+f(c.b);}
+function hsvToRgb(h,s,v){h=(h%1+1)%1;let i=Math.floor(h*6),f=h*6-i,p=v*(1-s),q=v*(1-f*s),t=v*(1-(1-f)*s),r,g,b;switch(i%6){case 0:r=v;g=t;b=p;break;case 1:r=q;g=v;b=p;break;case 2:r=p;g=v;b=t;break;case 3:r=p;g=q;b=v;break;case 4:r=t;g=p;b=v;break;case 5:r=v;g=p;b=q;break;}return {r,g,b};}
+function bytesFmt(n){if(n<1024)return n+' B';if(n<1048576)return (n/1024).toFixed(1)+' KB';return (n/1048576).toFixed(2)+' MB';}
+function escapeHtml(s){return String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));}
+function dataURLtoText(d){return atob(d.split(',')[1]||'');}
+function dataURLtoArrayBuffer(d){const b=atob(d.split(',')[1]||'');const len=b.length;const bytes=new Uint8Array(len);for(let i=0;i<len;i++)bytes[i]=b.charCodeAt(i);return bytes.buffer;}
+
+/* ===================================================================== */
+/*  SAFE LIMITS  (min, max, step, safeDefault)  — QA guardrails          */
+/* ===================================================================== */
+const LIMITS = {
+  radius:[0.002,0.05,0.001,0.012], zOffsetFrom:[-0.5,0.5,0.01,-0.17], zOffsetTo:[0,1.5,0.01,1.0],
+  stretchBias:[0,10,0.1,4.0], metallic:[0,1,0.01,0.0], roughness:[0,1,0.01,0.43], fresnelPower:[0,10,0.1,5.0],
+  blurFrames:[0,8,0.1,2.0], blurSensitivity:[0,1,0.01,0.6], envLightIntensity:[0,3,0.05,1.0],
+  trailLength:[0.05,1,0.01,0.3], trailWidth:[0.01,0.6,0.005,0.3], offset:[0.5,1.5,0.01,1.0], distortion:[0,3,0.05,1.0],
+  particleCount:[0,2000,10,600], lifetimeMin:[0,2,0.01,0.1], lifetimeMax:[0,2,0.01,0.5], bladeInertia:[0,2,0.05,0.5],
+  damping:[0,5,0.05,1.5], turbScale:[0,10,0.1,4.0], turbPower:[0,5,0.05,0.0],
+  triggerPct:[0,1,0.01,0.7], triggerPeriod:[0,1,0.01,0.05], burstSpread:[0,2,0.05,0.8],
+  hue:[0,1,0.001,0], sat:[0,1,0.01,1], val:[0,1,0.01,1], hueShift:[-2,2,0.01,0], fakeGlow:[0,5,0.05,1], glow:[0,1,0.01,0.5],
+  driverRange:[-100,100,0.1,1], resistance:[0,1,0.01,0], alpha:[0,1,0.01,1], driverScale:[0,3,0.01,1],
+  smoothing:[0,1,0.01,0.5]
+};
+
+/* ===================================================================== */
+/*  MODULE TEMPLATES (ReeSabers 0.3.18 schema)                            */
+/* ===================================================================== */
+const WHITE={r:1,g:1,b:1,a:1};
+const CURVE1=v=>({interpolationType:0,controlPoints:[{time:0,value:v}]});
+const COLORCURVE1=c=>({interpolationType:0,controlPoints:[{time:0,value:c}]});
+function mappingBlock(){return{colorOverValue:COLORCURVE1(clone(WHITE)),alphaOverValue:CURVE1(1),scaleOverValue:CURVE1(1),valueFrom:0,valueTo:1};}
+function maskCommon(extra){return Object.assign({driversSampleMode:0,viewingAngleMappings:mappingBlock(),surfaceAngleMappings:mappingBlock(),drivers:[]},extra);}
+
+const TEMPLATES={
+  'reezonate.blur-saber':{label:'Blade',icon:'blade',version:2,kind:'blade',
+    config:{MeshSettings:{zOffsetFrom:-0.17,zOffsetTo:1.0,radius:0.012,stretchBias:4.0,
+      saberProfile:{interpolationType:1,controlPoints:[{time:0,value:0},{time:0.012,value:0.8},{time:0.024,value:0},{time:0.029,value:0.7},{time:0.115,value:0.7},{time:0.12,value:0.093},{time:0.145,value:0.9},{time:0.257,value:0.66},{time:0.97,value:0.3},{time:1,value:0.069}]},
+      startCap:true,endCap:true,verticalResolution:20,horizontalResolution:10},
+    MaterialSettings:{blurFrames:2.0,blurSensitivity:0.6,reflectionColor:{r:0.05,g:0.005,b:0.005,a:0},envLightColor:clone(WHITE),
+      fresnelPower:5.0,metallic:0.0,roughness:0.428,envLightIntensity:1.0,reflectionIntensity:1.0,normalMapIntensity:1.0,
+      sceneReflections:false,sceneLights:false,renderQueue:3002,cullMode:0,depthWrite:false,
+      maskSettings:{bladeMaskResolution:48,driversMaskResolution:1,handleMask:{interpolationType:2,controlPoints:[{time:0,value:0},{time:0.128,value:0}]},bladeMappings:mappingBlock(),driversSampleMode:0,viewingAngleMappings:mappingBlock(),surfaceAngleMappings:mappingBlock(),drivers:[]}},
+    TexturesSettings:{customTextureId:'',normalMapId:'',tilingLayout:{x:1,y:1,z:0,w:0},uvScroll:{x:0,y:0}},
+    Enabled:true,Name:'Saber',LocalTransform:{Position:{x:0,y:0,z:0},Rotation:{x:0,y:0,z:0},Scale:{x:1,y:1,z:1}},
+    ForceColorOverride:false,ColorOverride:{type:0,hue:0,saturation:1,value:1,hueShiftPerSecond:0,fakeGlowMultiplier:1,colorSource:0}}},
+  'reezonate.simple-trail':{label:'Trail',icon:'trail',version:1,kind:'trail',
+    config:{MeshSettings:{TrailLength:0.3,HorizontalResolution:4,VerticalResolution:80},
+    MaterialSettings:{trailType:1,materialType:0,mappingType:0,offset:1.0,width:0.3,distortionMultiplier:1.0,
+      generalSettings:{customTextureId:'',opacityTextureId:'',animationLayout:{totalFrames:1,framesPerRow:1,framesPerColumn:1,frameDuration:1.0},tilingLayout:{x:1,y:1,z:0,w:0},uvScroll:{x:0,y:0},blendingMode:0,alwaysOnTop:false,renderQueue:2999},
+      maskSettings:maskCommon({mainMaskResolution:24,driversMaskResolution:16,lengthMappings:mappingBlock(),widthMappings:mappingBlock()})},
+    Enabled:true,Name:'Trail',LocalTransform:{Position:{x:0,y:0,z:0},Rotation:{x:0,y:0,z:0},Scale:{x:1,y:1,z:1}},
+    ForceColorOverride:false,ColorOverride:{type:0,hue:0,saturation:1,value:1,hueShiftPerSecond:0,fakeGlowMultiplier:1,colorSource:0}}},
+  'reezonate.sparks-vfx':{label:'Sparks',icon:'spark',version:1,kind:'vfx',
+    config:{TrailSettings:{Length:0.15},
+    MaterialSettings:{materialType:0,trailWidth:0.07,distortionMultiplier:1.0,
+      generalSettings:{customTextureId:'',opacityTextureId:'',animationLayout:{totalFrames:1,framesPerRow:1,framesPerColumn:1,frameDuration:1.0},tilingLayout:{x:1,y:1,z:0,w:0},uvScroll:{x:0,y:0},blendingMode:0,alwaysOnTop:false,renderQueue:3001},
+      textureSettings:{layers:[{centerOffset:{x:0,y:-0.7},scale:{x:1,y:1},power:{x:0.6,y:1},falloff:0.4,intensity:0.02}]},
+      maskSettings:maskCommon({mainMaskResolution:5,driversMaskResolution:5,lengthMappings:mappingBlock(),lifetimeMappings:mappingBlock(),bladeMappings:mappingBlock()})},
+    TriggerSettings:{type:1,percentage:0.7,period:0.05,burstSpread:0.8},
+    Enabled:true,Name:'Cut Particles',LocalTransform:{Position:{x:0,y:0,z:0},Rotation:{x:0,y:0,z:0},Scale:{x:1,y:1,z:1}},
+    ForceColorOverride:false,ColorOverride:{type:0,hue:0,saturation:1,value:1,hueShiftPerSecond:0,fakeGlowMultiplier:1,colorSource:0},
+    MeshSettings:{ParticlesCount:600,HorizontalResolution:1,VerticalResolution:4},
+    SpawnSettings:{MinLifetime:0.1,MaxLifetime:0.5,SpawningPeriod:0.0,MinBladeOffset:0.98,MaxBladeOffset:1.02,MinParticleMass:0.2,MaxParticleMass:0.7,RandomSpawnVelocity:0.0,BladeInertiaMultiplier:0.5,SizeVariation:{x:0,y:0},SpawnDriver:{valueType:0,increaseResistance:0,decreaseResistance:0,multiplierOverValue:CURVE1(1),valueFrom:0,valueTo:1}},
+    PhysicsSettings:{DampingCoefficient:1.5,TurbulenceScale:4.0,TurbulenceTimeScale:0.3,TurbulencePower:0.0,Gravity:{x:0,y:0,z:0}}}},
+  'reezonate.distortion':{label:'Distortion',icon:'wave',version:1,kind:'fx',
+    config:{MaterialSettings:{distortionMultiplier:1.0,width:0.08,offset:1.0,
+      generalSettings:{customTextureId:'',opacityTextureId:'',animationLayout:{totalFrames:1,framesPerRow:1,framesPerColumn:1,frameDuration:1.0},tilingLayout:{x:1,y:1,z:0,w:0},uvScroll:{x:0,y:0},blendingMode:0,alwaysOnTop:false,renderQueue:2997},
+      maskSettings:maskCommon({mainMaskResolution:16,driversMaskResolution:16,lengthMappings:mappingBlock(),widthMappings:mappingBlock()})},
+    MeshSettings:{TrailLength:0.25,HorizontalResolution:4,VerticalResolution:60},
+    Enabled:true,Name:'Distortion',LocalTransform:{Position:{x:0,y:0,z:0},Rotation:{x:0,y:0,z:0},Scale:{x:1,y:1,z:1}},
+    ForceColorOverride:false,ColorOverride:{type:0,hue:0,saturation:1,value:1,hueShiftPerSecond:0,fakeGlowMultiplier:1,colorSource:0}}},
+  'reezonate.custom-mesh':{label:'Custom Mesh',icon:'cube',version:1,kind:'mesh',
+    config:{MeshSettings:{customMeshId:'',scale:1.0,smoothNormals:true},
+    MaterialSettings:{metallic:0.3,roughness:0.5,emission:1.0,
+      generalSettings:{customTextureId:'',normalMapId:'',renderQueue:3000},
+      maskSettings:maskCommon({mainMaskResolution:16,drivers:[]})},
+    Enabled:true,Name:'Custom Mesh',LocalTransform:{Position:{x:0,y:0,z:0},Rotation:{x:0,y:0,z:0},Scale:{x:1,y:1,z:1}},
+    ForceColorOverride:false,ColorOverride:{type:0,hue:0,saturation:1,value:1,hueShiftPerSecond:0,fakeGlowMultiplier:1,colorSource:0}}}
+};
+
+const DRIVER_SOURCES=[
+  {v:0,name:'Constant / None',group:'—'},
+  {v:1,name:'Score',group:'Gameplay'},{v:2,name:'Velocity',group:'Gameplay'},{v:3,name:'Cut Direction',group:'Gameplay'},
+  {v:4,name:'Saber Speed',group:'Gameplay'},{v:5,name:'Hand Position X',group:'Gameplay'},{v:6,name:'Hand Position Y',group:'Gameplay'},
+  {v:7,name:'Hand Position Z',group:'Gameplay'},{v:8,name:'Time After Miss',group:'Gameplay'},{v:9,name:'Time Loop',group:'Animation'}
+];
+const sourceName=v=>(DRIVER_SOURCES.find(s=>s.v===v)||{name:'Type '+v}).name;
+const COLOR_SOURCES=[{v:0,n:'Custom (this override)'},{v:1,n:'Game Saber Color'},{v:2,n:'Game Note Color A/B'},{v:3,n:'Opposite Game Color'}];
+const COLOR_MODES=[{v:0,n:'Multiply'},{v:1,n:'Hue Override'},{v:2,n:'Add'},{v:3,n:'Replace'}];
+
+/* ===================================================================== */
+/*  HELP CONTENT (plain-English, in-game focused)                        */
+/* ===================================================================== */
+const HELP={
+  driver:{t:'Driver',b:'A driver links a live game value to how a layer looks — turning a static effect into a reactive one.',g:'e.g. a driver on <em>Velocity</em> makes your trail brighten the faster you swing.'},
+  valueCurve:{t:'Response Curve',b:'The curve shows how the driven value (0→1) maps onto Alpha (opacity) and Scale. Left = at "value from", right = at "value to".',g:'A steep alpha curve means the effect <em>snaps</em> on; a gentle one <em>fades</em> in.'},
+  cutDirection:{t:'Cut Direction Trigger',b:'"On cut" fires the effect only when you slice a note; the value reflects the swing direction/angle.',g:'Use it to <em>spawn sparks only on a hit</em>, not continuously.'},
+  transform:{t:'Transform Math',b:'Position moves the layer (metres), Rotation tilts it (degrees), Scale resizes it. These stack on top of the preset root transform.',g:'Tiny numbers go a long way — <em>0.1 position ≈ a hand-width</em>.'},
+  valueRange:{t:'Value From → To',b:'The raw game value that maps to the start and end of the curve. Anything below "from" clamps to 0, above "to" clamps to 1.',g:'Score 0→1,000,000 or Velocity 0→30 m/s are common ranges.'},
+  resistance:{t:'Rise / Fall Resistance',b:'Smoothing (0–1). Higher values make the driver react more slowly, so the effect eases instead of snapping.',g:'Adds <em>inertia</em> so fast score jumps don\'t flicker the saber.'},
+  hue:{t:'Hue',b:'Position on the color wheel (0–1). 0 = red, ~0.33 = green, ~0.66 = blue, back to red at 1.',g:'Only used when <em>Force color override</em> is on.'},
+  saturation:{t:'Saturation',b:'Color intensity. 0 = white/grey, 1 = fully vivid.',g:''},
+  value:{t:'Value (Brightness)',b:'How bright the color is. 0 = black, 1 = full brightness.',g:''},
+  fresnel:{t:'Fresnel Power',b:'Controls the glowing rim on edges facing away from you. Higher = a tighter, brighter outline.',g:'Gives blades that <em>neon-edge</em> look.'},
+  roughness:{t:'Roughness',b:'Surface finish. 0 = mirror-smooth and shiny, 1 = matte and diffuse.',g:''},
+  metallic:{t:'Metallic',b:'How metal the surface behaves. Higher reflects the environment more like chrome.',g:''},
+  blur:{t:'Motion Blur',b:'Blur frames = how much the blade smears while moving. Sensitivity = how much speed is needed to trigger it.',g:'Makes fast swings feel <em>silky</em>.'},
+  trailLength:{t:'Trail Length',b:'How far the trail streaks behind the tip. Longer trails cost a little more performance.',g:''},
+  blending:{t:'Blending Mode',b:'How the layer mixes with what\'s behind it. Additive = glowing/light, Alpha = normal transparency, Multiply = darkening.',g:'Additive is the classic <em>laser glow</em>.'},
+  colorSource:{t:'Color Source',b:'Where the base color comes from: your custom pick, or synced to the live in-game saber / note color so it always matches the map.',g:'Sync keeps sabers matching <em>gameplay color events</em>.'},
+  colorMode:{t:'Color Mode',b:'How the override color combines with the base: Multiply tints, Hue Override forces the hue, Add brightens, Replace overwrites.',g:''},
+  forceOverride:{t:'Force Color Override',b:'When on, this layer ignores the normal color and uses the Hue/Sat/Value below instead.',g:'Turn on to <em>lock a layer to one color</em> regardless of hand.'},
+  particleCount:{t:'Particle Count',b:'How many spark particles can exist at once. More = denser bursts but heavier on the GPU.',g:''},
+  turbulence:{t:'Turbulence',b:'Adds swirling noise to particle motion. Scale = size of the swirls, Power = how strongly they push.',g:'Makes sparks <em>drift and dance</em> instead of flying straight.'},
+  triggerType:{t:'Trigger Type',b:'When the effect emits: Continuous (always), On cut (only when slicing a note), or On miss.',g:''},
+  radius:{t:'Blade Radius',b:'Thickness of the glowing blade core in metres. Small changes are very visible.',g:''},
+  zOffset:{t:'Z Offset',b:'Where the blade starts and ends along the hilt. Shift these to grow, shrink, or float the blade.',g:''},
+  stretchBias:{t:'Stretch Bias',b:'Biases mesh detail toward the tip or the base of the blade as it stretches during fast swings.',g:''},
+  customMesh:{t:'Custom Mesh Slot',b:'Replace the default blade/hilt with your own 3D model (.obj / .glb / .gltf). Assign an uploaded mesh asset here.',g:'The model is embedded in the exported config so it travels with the preset.'},
+  customTexture:{t:'Custom Texture Slot',b:'Wrap this layer\'s material in your own image (.png / .jpg). Assign an uploaded texture asset here.',g:''},
+  motionSmoothing:{t:'Motion Smoothing',b:'Purely visual smoothing that interpolates saber motion between frames. Reduces jitter at the cost of a touch of latency.',g:''},
+  visibility:{t:'Visibility',b:'Independently show or hide the saber in the VR headset, on the desktop/Camera2 capture, and in mirror reflections.',g:'Streamers often <em>hide sabers in the headset but show them on stream</em>.'},
+  rootType:{t:'Root Type',b:'What this preset attaches to — the Saber is standard. Note/Custom are advanced targets.',g:''}
+};
+
+/* ===================================================================== */
+/*  STATE                                                                */
+/* ===================================================================== */
+const state={
+  modVersion:'0.3.18',
+  presets:[], activePresetId:null, activeModuleId:null, activeTab:'preset', rightTab:'preview',
+  assets:[], // {id,name,kind,ext,dataURL,size, _obj, _tex}
+  global:{visibility:{headset:true,desktop:true,mirror:true},motionSmoothing:{enabled:false,amount:0.5},menuPointer:true}
+};
+const pv={spin:true,trail:true,glow:true,both:false,driveScore:true};
+
+function newModule(moduleId){const t=TEMPLATES[moduleId];return{uid:uid(),moduleId,version:t.version,name:t.config.Name,enabled:true,kind:t.kind,config:clone(t.config),drivers:[],customMeshId:'',customTextureId:'',rawImported:false};}
+function newPreset(name){return{id:uid(),name:name||('Preset '+(state.presets.length+1)),hands:{L:true,R:true},color:{mode:1,source:0,left:'#ff2bd6',right:'#00e5ff',glow:0.5},transform:{Position:{x:0,y:0,z:0},Rotation:{x:0,y:0,z:0},Scale:{x:1,y:1,z:1}},rootType:0,modules:[]};}
+function activePreset(){return state.presets.find(p=>p.id===state.activePresetId);}
+function activeModule(){const p=activePreset();return p?p.modules.find(m=>m.uid===state.activeModuleId):null;}
+function assetById(id){return state.assets.find(a=>a.id===id);}
+
+/* ===================================================================== */
+/*  ICONS                                                                */
+/* ===================================================================== */
+const ICON={
+  blade:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 3l-9 9 3 3 9-9z"/><path d="M5 12l-2 7 7-2"/></svg>',
+  trail:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 12c4 0 4-6 8-6s4 6 8 6"/><path d="M3 18c4 0 4-4 8-4s4 4 8 4" opacity=".5"/></svg>',
+  spark:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2v4M12 18v4M2 12h4M18 12h4M5 5l3 3M16 16l3 3M19 5l-3 3M8 16l-3 3"/></svg>',
+  wave:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M2 12c2-4 4-4 6 0s4 4 6 0 4-4 6 0"/></svg>',
+  cube:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/><polyline points="3.27 6.96 12 12.01 20.73 6.96"/><line x1="12" y1="22.08" x2="12" y2="12"/></svg>',
+  trash:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg>',
+  copy:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>',
+  edit:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.12 2.12 0 0 1 3 3L12 15l-4 1 1-4z"/></svg>',
+  up:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="18 15 12 9 6 15"/></svg>',
+  down:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="6 9 12 15 18 9"/></svg>',
+  plus:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>',
+  x:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>',
+  layers:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2 2 7l10 5 10-5-10-5z"/><path d="M2 17l10 5 10-5"/><path d="M2 12l10 5 10-5"/></svg>',
+  bolt:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>',
+  img:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><path d="M21 15l-5-5L5 21"/></svg>',
+  sound:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><path d="M19.07 4.93a10 10 0 0 1 0 14.14M15.54 8.46a5 5 0 0 1 0 7.07"/></svg>',
+  play:'<svg viewBox="0 0 24 24" fill="currentColor" stroke="none"><polygon points="5 3 19 12 5 21 5 3"/></svg>'
+};
+
+/* ===================================================================== */
+/*  HELP SYSTEM                                                          */
+/* ===================================================================== */
+function helpIcon(key){
+  if(!HELP[key])return '';
+  return `<span class="help-ic" data-help="${key}">?</span>`;
+}
+const helpPop=$('#helpPop');
+document.addEventListener('click',e=>{
+  const ic=e.target.closest('.help-ic');
+  if(ic){
+    const h=HELP[ic.dataset.help];if(!h)return;
+    helpPop.innerHTML=`<b>${h.t}</b>${h.b}${h.g?`<div class="ingame">In-game: ${h.g}</div>`:''}`;
+    const r=ic.getBoundingClientRect();
+    helpPop.style.display='block';
+    let left=r.right+10, top=r.top-6;
+    const pw=helpPop.offsetWidth, ph=helpPop.offsetHeight;
+    if(left+pw>innerWidth-10)left=r.left-pw-10;
+    if(top+ph>innerHeight-10)top=innerHeight-ph-10;
+    if(left<8)left=8;if(top<8)top=8;
+    helpPop.style.left=left+'px';helpPop.style.top=top+'px';
+    helpPop.classList.add('show');
+    e.stopPropagation();
+    return;
+  }
+  if(!e.target.closest('#helpPop'))helpPop.classList.remove('show');
+});
+
+/* ===================================================================== */
+/*  WIDGET BUILDERS                                                      */
+/* ===================================================================== */
+function field(label,inner,hint,helpKey){
+  const f=document.createElement('div');f.className='field';
+  f.innerHTML=`<label>${label}${helpKey?helpIcon(helpKey):''}</label>`;
+  if(typeof inner==='string')f.insertAdjacentHTML('beforeend',inner);else if(inner)f.appendChild(inner);
+  if(hint)f.insertAdjacentHTML('beforeend',`<div class="hint">${hint}</div>`);
+  return f;
+}
+function accordion(title,iconSvg,opts={}){
+  const a=document.createElement('div');a.className='acc'+(opts.collapsed?' collapsed':'')+(opts.magenta?' magenta':'');
+  const head=document.createElement('div');head.className='acc-head';
+  head.innerHTML=`<span class="acc-ic">${iconSvg||''}</span><span class="acc-title">${title}</span>`;
+  if(opts.reset){const rb=document.createElement('span');rb.className='acc-reset';rb.textContent='Reset';rb.title='Reset this panel to safe defaults';rb.onclick=ev=>{ev.stopPropagation();opts.reset();};head.appendChild(rb);}
+  head.insertAdjacentHTML('beforeend',`<span class="acc-caret"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="6 9 12 15 18 9"/></svg></span>`);
+  const body=document.createElement('div');body.className='acc-body';
+  head.onclick=e=>{if(e.target.closest('.acc-reset'))return;a.classList.toggle('collapsed');};
+  a.appendChild(head);a.appendChild(body);
+  a.add=el=>{body.appendChild(el);return a;};
+  return a;
+}
+function slider(limitKey,val,onInput){
+  const [min,max,step]=LIMITS[limitKey]||[0,1,0.01];
+  const w=document.createElement('div');w.className='slider-wrap';
+  w.innerHTML=`<input type="range" min="${min}" max="${max}" step="${step}" value="${clamp(val,min,max)}"><div class="slider-val"><input type="number" min="${min}" max="${max}" step="${step}" value="${val}"></div>`;
+  const r=w.querySelector('input[type=range]'),n=w.querySelector('input[type=number]');
+  const commit=v=>{v=clamp(v,min,max);r.value=v;onInput(v);};
+  r.addEventListener('input',()=>{n.value=r.value;onInput(parseFloat(r.value));});
+  n.addEventListener('input',()=>{let v=parseFloat(n.value);if(isNaN(v))return;if(v<min||v>max)n.classList.add('invalid');else n.classList.remove('invalid');r.value=clamp(v,min,max);onInput(clamp(v,min,max));});
+  n.addEventListener('blur',()=>{let v=parseFloat(n.value);if(isNaN(v))v=(LIMITS[limitKey]||[0])[3]||0;n.classList.remove('invalid');n.value=clamp(v,min,max);commit(v);});
+  return w;
+}
+function rawSlider(min,max,step,val,onInput){
+  const w=document.createElement('div');w.className='slider-wrap';
+  w.innerHTML=`<input type="range" min="${min}" max="${max}" step="${step}" value="${clamp(val,min,max)}"><div class="slider-val"><input type="number" min="${min}" max="${max}" step="${step}" value="${val}"></div>`;
+  const r=w.querySelector('input[type=range]'),n=w.querySelector('input[type=number]');
+  r.addEventListener('input',()=>{n.value=r.value;onInput(parseFloat(r.value));});
+  n.addEventListener('input',()=>{let v=parseFloat(n.value);if(isNaN(v))return;r.value=clamp(v,min,max);onInput(v);});
+  return w;
+}
+function toggle(checked,label,onChange,helpKey){
+  const l=document.createElement('label');l.className='toggle';
+  l.innerHTML=`<input type="checkbox" ${checked?'checked':''}><span class="track"></span><span class="tlabel">${label}${helpKey?helpIcon(helpKey):''}</span>`;
+  l.querySelector('input').addEventListener('change',e=>onChange(e.target.checked));
+  return l;
+}
+function colorInput(hex,onChange){
+  const w=document.createElement('div');w.className='color-field';
+  w.innerHTML=`<input type="color" value="${hex}"><input type="text" value="${hex}">`;
+  const c=w.querySelector('input[type=color]'),t=w.querySelector('input[type=text]');
+  c.addEventListener('input',()=>{t.value=c.value;t.classList.remove('invalid');onChange(c.value);});
+  t.addEventListener('input',()=>{if(/^#[0-9a-fA-F]{6}$/.test(t.value)){c.value=t.value;t.classList.remove('invalid');onChange(t.value);}else t.classList.add('invalid');});
+  return w;
+}
+function selectInput(options,val,onChange){
+  const s=document.createElement('select');
+  options.forEach(o=>{const op=document.createElement('option');op.value=o.v;op.textContent=o.n;if(o.v==val)op.selected=true;s.appendChild(op);});
+  s.addEventListener('change',()=>onChange(isNaN(parseFloat(s.value))?s.value:parseFloat(s.value)));
+  return s;
+}
+function vec3Editor(obj,onChange,step){
+  step=step||0.01;
+  const g=document.createElement('div');g.className='grid3';
+  ['x','y','z'].forEach(ax=>{const i=document.createElement('input');i.type='number';i.step=step;i.value=obj[ax];i.placeholder=ax.toUpperCase();i.addEventListener('input',()=>{obj[ax]=parseFloat(i.value)||0;onChange();});g.appendChild(i);});
+  return g;
+}
+function assetSelect(kind,val,onChange){
+  const opts=[{v:'',n:'— none —'}].concat(state.assets.filter(a=>a.kind===kind).map(a=>({v:a.id,n:a.name})));
+  return selectInput(opts,val||'',onChange);
+}
+
+/* ===================================================================== */
+/*  RENDER — presets                                                     */
+/* ===================================================================== */
+function renderPresets(){
+  const list=$('#presetList');list.innerHTML='';
+  $('#presetCount').textContent=state.presets.length;
+  if(!state.presets.length){list.innerHTML='<div class="empty">'+ICON.layers+'<div>No presets yet.<br>Create one to begin.</div></div>';return;}
+  state.presets.forEach(p=>{
+    const card=document.createElement('div');card.className='preset-card'+(p.id===state.activePresetId?' active':'');
+    const hands=[];if(p.hands.L)hands.push('<span class="chip hand-L">Left</span>');if(p.hands.R)hands.push('<span class="chip hand-R">Right</span>');
+    const issues=validatePreset(p).filter(v=>v.level==='err').length;
+    card.innerHTML=`<div class="pc-top"><div class="pc-name">${escapeHtml(p.name)}</div><div class="pc-swatches"><div class="swatch" style="background:${p.color.left}"></div><div class="swatch" style="background:${p.color.right}"></div></div></div>
+      <div class="pc-meta">${hands.join('')}<span class="chip mods">${p.modules.length} module${p.modules.length!==1?'s':''}</span>${issues?`<span class="chip warn">${issues} issue${issues>1?'s':''}</span>`:''}</div>
+      <div class="pc-actions"><button class="btn sm ghost icon" data-act="dup" title="Duplicate">${ICON.copy}</button><button class="btn sm ghost icon" data-act="ren" title="Rename">${ICON.edit}</button><button class="btn sm ghost icon danger" data-act="del" title="Delete">${ICON.trash}</button></div>`;
+    card.addEventListener('click',e=>{const act=e.target.closest('[data-act]');if(act){e.stopPropagation();presetAction(act.dataset.act,p.id);return;}selectPreset(p.id);});
+    list.appendChild(card);
+  });
+}
+function presetAction(act,id){
+  const p=state.presets.find(x=>x.id===id);
+  if(act==='dup'){const c=clone(p);c.id=uid();c.name=p.name+' Copy';c.modules.forEach(m=>m.uid=uid());state.presets.splice(state.presets.indexOf(p)+1,0,c);selectPreset(c.id);toast('Preset duplicated');}
+  else if(act==='ren'){promptText('Rename preset',p.name,v=>{p.name=v;renderAll();});}
+  else if(act==='del'){confirmModal('Delete preset?','“'+escapeHtml(p.name)+'” and its '+p.modules.length+' module(s) will be removed.',()=>{state.presets.splice(state.presets.indexOf(p),1);if(state.activePresetId===id){state.activePresetId=state.presets[0]?state.presets[0].id:null;state.activeModuleId=null;}renderAll();toast('Preset deleted');});}
+}
+function selectPreset(id){state.activePresetId=id;state.activeModuleId=null;if(state.activeTab==='module'||state.activeTab==='drivers')state.activeTab='preset';renderAll();}
+
+/* ===================================================================== */
+/*  RENDER — palette + stack                                             */
+/* ===================================================================== */
+function renderPalette(){
+  const pal=$('#palette');pal.innerHTML='';
+  Object.entries(TEMPLATES).forEach(([mid,t])=>{
+    const el=document.createElement('div');el.className='pal-item';
+    el.innerHTML=`<div class="pi-ic">${ICON[t.icon]}</div><div class="pi-name">${t.label}</div><div class="pi-desc">${mid.split('.')[1]}</div>`;
+    el.addEventListener('click',()=>addModule(mid));pal.appendChild(el);
+  });
+}
+function addModule(mid){
+  const p=activePreset();if(!p){toast('Create or select a preset first','err');return;}
+  const m=newModule(mid);p.modules.push(m);state.activeModuleId=m.uid;state.activeTab='module';renderAll();toast(TEMPLATES[mid].label+' module added');
+}
+function renderStack(){
+  const list=$('#stackList');list.innerHTML='';const p=activePreset();
+  $('#moduleCount').textContent=p?p.modules.length:0;
+  if(!p){list.innerHTML='<div class="empty">Select a preset<br>to build its stack.</div>';return;}
+  if(!p.modules.length){list.innerHTML='<div class="empty">'+ICON.layers+'<div>No modules.<br>Add one above.</div></div>';return;}
+  p.modules.forEach((m,i)=>{
+    const t=TEMPLATES[m.moduleId]||{icon:'wave'};
+    const el=document.createElement('div');el.className='stack-item'+(m.uid===state.activeModuleId?' active':'');
+    const tags=[];if(m.drivers.length)tags.push(m.drivers.length+' drv');if(m.customMeshId)tags.push('mesh');if(m.customTextureId)tags.push('tex');
+    el.innerHTML=`<div class="layer-dot ${m.enabled?'':'off'}" title="${m.enabled?'Enabled':'Disabled'}"></div><div class="si-ic">${ICON[t.icon]||ICON.wave}</div><div class="si-body"><div class="si-name">${escapeHtml(m.name)}</div><div class="si-type">${m.moduleId.split('.')[1]}${tags.length?' · '+tags.join(' · '):''}</div></div>
+      <div class="si-ctrls"><button class="btn sm ghost icon" data-act="up" ${i===0?'disabled':''}>${ICON.up}</button><button class="btn sm ghost icon" data-act="down" ${i===p.modules.length-1?'disabled':''}>${ICON.down}</button><button class="btn sm ghost icon danger" data-act="del">${ICON.trash}</button></div>`;
+    el.addEventListener('click',e=>{const act=e.target.closest('[data-act]');if(act){e.stopPropagation();moduleAction(act.dataset.act,m.uid);return;}state.activeModuleId=m.uid;if(state.activeTab!=='drivers')state.activeTab='module';renderAll();});
+    list.appendChild(el);
+  });
+}
+function moduleAction(act,uid){
+  const p=activePreset();const i=p.modules.findIndex(m=>m.uid===uid);
+  if(act==='up'&&i>0){[p.modules[i-1],p.modules[i]]=[p.modules[i],p.modules[i-1]];}
+  else if(act==='down'&&i<p.modules.length-1){[p.modules[i+1],p.modules[i]]=[p.modules[i],p.modules[i+1]];}
+  else if(act==='del'){p.modules.splice(i,1);if(state.activeModuleId===uid){state.activeModuleId=null;state.activeTab='preset';}}
+  renderAll();
+}
+
+/* ===================================================================== */
+/*  RENDER — inspector                                                   */
+/* ===================================================================== */
+function renderInspector(){
+  $$('#inspTabs .insp-tab').forEach(t=>t.classList.toggle('active',t.dataset.tab===state.activeTab));
+  const body=$('#inspBody');body.innerHTML='';
+  if(state.activeTab==='preset')body.appendChild(buildPresetForm());
+  else if(state.activeTab==='module')body.appendChild(buildModuleForm());
+  else if(state.activeTab==='drivers')body.appendChild(buildDriversForm());
+}
+function buildPresetForm(){
+  const wrap=document.createElement('div');const p=activePreset();
+  if(!p){wrap.innerHTML='<div class="placeholder-note">'+ICON.layers+'<br>Select or create a preset to edit its identity, hand assignment, and colors.</div>';return wrap;}
+  const idAcc=accordion('Identity',ICON.edit);
+  idAcc.add(field('Preset name',(()=>{const i=document.createElement('input');i.type='text';i.value=p.name;i.addEventListener('input',()=>{p.name=i.value;renderPresets();updatePreviewFoot();refreshOutputs();});return i;})()));
+  idAcc.add(field('Root type',selectInput([{v:0,n:'Saber (0)'},{v:1,n:'Note (1)'},{v:2,n:'Custom (2)'}],p.rootType,v=>{p.rootType=v;touch();}),null,'rootType'));
+  wrap.appendChild(idAcc);
+
+  const hAcc=accordion('Hand Assignment',ICON.bolt,{magenta:true});
+  const ht=document.createElement('div');ht.className='hand-toggles';
+  ['L','R'].forEach(h=>{const b=document.createElement('div');b.className='hand-btn'+(p.hands[h]?' on-'+h:'');b.textContent=h==='L'?'LEFT':'RIGHT';b.addEventListener('click',()=>{p.hands[h]=!p.hands[h];renderPresets();renderInspector();touch();});ht.appendChild(b);});
+  hAcc.add(field('Apply this preset to',ht,'A preset can render on either or both saber hands.'));
+  wrap.appendChild(hAcc);
+
+  const cAcc=accordion('Colors',ICON.blade);
+  cAcc.add(field('Color mode',selectInput(COLOR_MODES,p.color.mode,v=>{p.color.mode=v;touch();}),null,'colorMode'));
+  cAcc.add(field('Color source',selectInput(COLOR_SOURCES,p.color.source,v=>{p.color.source=v;touch();}),null,'colorSource'));
+  cAcc.add(field('Left hand color',colorInput(p.color.left,v=>{p.color.left=v;renderPresets();touch();})));
+  cAcc.add(field('Right hand color',colorInput(p.color.right,v=>{p.color.right=v;renderPresets();touch();})));
+  cAcc.add(field('Glow / bloom',slider('glow',p.color.glow,v=>{p.color.glow=v;touch();})));
+  wrap.appendChild(cAcc);
+
+  const tAcc=accordion('Root Transform',ICON.layers,{collapsed:true});
+  tAcc.add(field('Position (m)',vec3Editor(p.transform.Position,touch),null,'transform'));
+  tAcc.add(field('Rotation (deg)',vec3Editor(p.transform.Rotation,touch,1)));
+  tAcc.add(field('Scale',vec3Editor(p.transform.Scale,touch)));
+  wrap.appendChild(tAcc);
+  return wrap;
+}
+
+/* ---- module form ---- */
+function buildModuleForm(){
+  const wrap=document.createElement('div');const m=activeModule();
+  if(!m){wrap.innerHTML='<div class="placeholder-note">'+ICON.layers+'<br>Select a module from the stack to edit its mesh, material, and effect properties.</div>';return wrap;}
+  const cfg=m.config;const tmpl=TEMPLATES[m.moduleId];
+  const resetGroup=(subPaths)=>{subPaths.forEach(sp=>{const def=get(tmpl.config,sp);if(def!==undefined)setPath(cfg,sp,clone(def));});renderInspector();touch();toast('Panel reset to safe defaults');};
+
+  const cs=accordion('Module',ICON.edit);
+  cs.add(field('Layer name',(()=>{const i=document.createElement('input');i.type='text';i.value=m.name;i.addEventListener('input',()=>{m.name=i.value;cfg.Name=i.value;renderStack();refreshOutputs();});return i;})()));
+  cs.add(field('',toggle(m.enabled,'Module enabled',v=>{m.enabled=v;cfg.Enabled=v;renderStack();touch();})));
+  wrap.appendChild(cs);
+
+  if(m.kind==='blade')buildBladeFields(wrap,cfg,resetGroup);
+  else if(m.kind==='trail')buildTrailFields(wrap,cfg,resetGroup);
+  else if(m.kind==='vfx')buildSparksFields(wrap,cfg,resetGroup);
+  else if(m.kind==='fx')buildDistortionFields(wrap,cfg,resetGroup);
+  else if(m.kind==='mesh')buildMeshFields(wrap,cfg,resetGroup);
+
+  /* Custom asset slots */
+  const asAcc=accordion('Custom Assets',ICON.cube,{magenta:true});
+  asAcc.add(field('Custom mesh override',assetSelect('mesh',m.customMeshId,v=>{m.customMeshId=v;if(cfg.MeshSettings)cfg.MeshSettings.customMeshId=v;renderStack();touch();}),
+    state.assets.some(a=>a.kind==='mesh')?'Replaces this layer\'s geometry with your uploaded model.':'Upload a .obj / .glb / .gltf in the Assets panel to enable this.','customMesh'));
+  asAcc.add(field('Custom texture map',assetSelect('texture',m.customTextureId,v=>{m.customTextureId=v;touch();}),
+    state.assets.some(a=>a.kind==='texture')?'Wraps this layer\'s material in your uploaded image.':'Upload a .png / .jpg in the Assets panel to enable this.','customTexture'));
+  const openAssets=document.createElement('button');openAssets.className='btn sm';openAssets.style.marginTop='2px';openAssets.innerHTML=ICON.cube+' Manage assets';openAssets.onclick=openAssetModal;
+  asAcc.add(openAssets);
+  wrap.appendChild(asAcc);
+
+  const co=accordion('Color Override',ICON.blade,{collapsed:true,magenta:true,reset:()=>resetGroup(['ForceColorOverride','ColorOverride'])});
+  co.add(field('',toggle(cfg.ForceColorOverride,'Force color override',v=>{cfg.ForceColorOverride=v;touch();},'forceOverride')));
+  co.add(field('Hue',slider('hue',cfg.ColorOverride.hue,v=>{cfg.ColorOverride.hue=v;touch();}),null,'hue'));
+  co.add(field('Saturation',slider('sat',cfg.ColorOverride.saturation,v=>{cfg.ColorOverride.saturation=v;touch();}),null,'saturation'));
+  co.add(field('Value',slider('val',cfg.ColorOverride.value,v=>{cfg.ColorOverride.value=v;touch();}),null,'value'));
+  co.add(field('Hue shift / sec',slider('hueShift',cfg.ColorOverride.hueShiftPerSecond,v=>{cfg.ColorOverride.hueShiftPerSecond=v;refreshOutputs();})));
+  co.add(field('Fake glow multiplier',slider('fakeGlow',cfg.ColorOverride.fakeGlowMultiplier,v=>{cfg.ColorOverride.fakeGlowMultiplier=v;touch();})));
+  co.add(field('Color source',selectInput(COLOR_SOURCES,cfg.ColorOverride.colorSource,v=>{cfg.ColorOverride.colorSource=v;refreshOutputs();}),null,'colorSource'));
+  wrap.appendChild(co);
+
+  const tAcc=accordion('Local Transform',ICON.layers,{collapsed:true,reset:()=>resetGroup(['LocalTransform'])});
+  tAcc.add(field('Position (m)',vec3Editor(cfg.LocalTransform.Position,touch),null,'transform'));
+  tAcc.add(field('Rotation (deg)',vec3Editor(cfg.LocalTransform.Rotation,touch,1)));
+  tAcc.add(field('Scale',vec3Editor(cfg.LocalTransform.Scale,touch)));
+  wrap.appendChild(tAcc);
+  return wrap;
+}
+function numField(label,limitKey,cur,setter,helpKey){return field(label,slider(limitKey,cur,v=>{setter(v);touch();}),null,helpKey);}
+function intField(label,cur,setter){return field(label,(()=>{const i=document.createElement('input');i.type='number';i.value=cur;i.addEventListener('input',()=>{setter(parseInt(i.value)||1);refreshOutputs();});return i;})());}
+
+function buildBladeFields(wrap,cfg,reset){
+  const ms=accordion('Mesh &amp; Shape',ICON.blade,{reset:()=>reset(['MeshSettings'])});
+  ms.add(numField('Blade radius','radius',cfg.MeshSettings.radius,v=>cfg.MeshSettings.radius=v,'radius'));
+  ms.add(numField('Z offset from','zOffsetFrom',cfg.MeshSettings.zOffsetFrom,v=>cfg.MeshSettings.zOffsetFrom=v,'zOffset'));
+  ms.add(numField('Z offset to','zOffsetTo',cfg.MeshSettings.zOffsetTo,v=>cfg.MeshSettings.zOffsetTo=v));
+  ms.add(numField('Stretch bias','stretchBias',cfg.MeshSettings.stretchBias,v=>cfg.MeshSettings.stretchBias=v,'stretchBias'));
+  const r=document.createElement('div');r.className='row';r.appendChild(intField('Vertical res',cfg.MeshSettings.verticalResolution,v=>cfg.MeshSettings.verticalResolution=v));r.appendChild(intField('Horizontal res',cfg.MeshSettings.horizontalResolution,v=>cfg.MeshSettings.horizontalResolution=v));ms.add(r);
+  wrap.appendChild(ms);
+  const mt=accordion('Material &amp; Shader',ICON.spark,{reset:()=>reset(['MaterialSettings.metallic','MaterialSettings.roughness','MaterialSettings.fresnelPower','MaterialSettings.blurFrames','MaterialSettings.blurSensitivity','MaterialSettings.envLightIntensity','MaterialSettings.sceneReflections','MaterialSettings.sceneLights'])});
+  mt.add(numField('Metallic','metallic',cfg.MaterialSettings.metallic,v=>cfg.MaterialSettings.metallic=v,'metallic'));
+  mt.add(numField('Roughness','roughness',cfg.MaterialSettings.roughness,v=>cfg.MaterialSettings.roughness=v,'roughness'));
+  mt.add(numField('Fresnel power','fresnelPower',cfg.MaterialSettings.fresnelPower,v=>cfg.MaterialSettings.fresnelPower=v,'fresnel'));
+  mt.add(numField('Blur frames','blurFrames',cfg.MaterialSettings.blurFrames,v=>cfg.MaterialSettings.blurFrames=v,'blur'));
+  mt.add(numField('Blur sensitivity','blurSensitivity',cfg.MaterialSettings.blurSensitivity,v=>cfg.MaterialSettings.blurSensitivity=v));
+  mt.add(numField('Env light intensity','envLightIntensity',cfg.MaterialSettings.envLightIntensity,v=>cfg.MaterialSettings.envLightIntensity=v));
+  mt.add(field('',toggle(cfg.MaterialSettings.sceneReflections,'Scene reflections',v=>{cfg.MaterialSettings.sceneReflections=v;refreshOutputs();})));
+  mt.add(field('',toggle(cfg.MaterialSettings.sceneLights,'Scene lights',v=>{cfg.MaterialSettings.sceneLights=v;refreshOutputs();})));
+  wrap.appendChild(mt);
+}
+function buildTrailFields(wrap,cfg,reset){
+  const ms=accordion('Trail',ICON.trail,{reset:()=>reset(['MeshSettings','MaterialSettings.width','MaterialSettings.offset','MaterialSettings.distortionMultiplier','MaterialSettings.trailType'])});
+  ms.add(numField('Trail length','trailLength',cfg.MeshSettings.TrailLength,v=>cfg.MeshSettings.TrailLength=v,'trailLength'));
+  ms.add(numField('Width','trailWidth',cfg.MaterialSettings.width,v=>cfg.MaterialSettings.width=v));
+  ms.add(numField('Offset','offset',cfg.MaterialSettings.offset,v=>cfg.MaterialSettings.offset=v));
+  ms.add(numField('Distortion','distortion',cfg.MaterialSettings.distortionMultiplier,v=>cfg.MaterialSettings.distortionMultiplier=v));
+  ms.add(field('Trail type',selectInput([{v:0,n:'Tip (0)'},{v:1,n:'Full blade (1)'}],cfg.MaterialSettings.trailType,v=>{cfg.MaterialSettings.trailType=v;touch();})));
+  ms.add(field('Blending mode',selectInput([{v:0,n:'Additive (0)'},{v:1,n:'Alpha blend (1)'},{v:2,n:'Multiply (2)'}],cfg.MaterialSettings.generalSettings.blendingMode,v=>{cfg.MaterialSettings.generalSettings.blendingMode=v;touch();}),null,'blending'));
+  wrap.appendChild(ms);
+}
+function buildSparksFields(wrap,cfg,reset){
+  const ms=accordion('Particles',ICON.spark,{reset:()=>reset(['MeshSettings','MaterialSettings.trailWidth','SpawnSettings'])});
+  ms.add(numField('Particle count','particleCount',cfg.MeshSettings.ParticlesCount,v=>cfg.MeshSettings.ParticlesCount=Math.round(v),'particleCount'));
+  ms.add(numField('Trail width','trailWidth',cfg.MaterialSettings.trailWidth,v=>cfg.MaterialSettings.trailWidth=v));
+  ms.add(numField('Min lifetime','lifetimeMin',cfg.SpawnSettings.MinLifetime,v=>cfg.SpawnSettings.MinLifetime=v));
+  ms.add(numField('Max lifetime','lifetimeMax',cfg.SpawnSettings.MaxLifetime,v=>cfg.SpawnSettings.MaxLifetime=v));
+  ms.add(numField('Blade inertia','bladeInertia',cfg.SpawnSettings.BladeInertiaMultiplier,v=>cfg.SpawnSettings.BladeInertiaMultiplier=v));
+  wrap.appendChild(ms);
+  const ph=accordion('Physics',ICON.wave,{collapsed:true,reset:()=>reset(['PhysicsSettings'])});
+  ph.add(numField('Damping','damping',cfg.PhysicsSettings.DampingCoefficient,v=>cfg.PhysicsSettings.DampingCoefficient=v));
+  ph.add(numField('Turbulence scale','turbScale',cfg.PhysicsSettings.TurbulenceScale,v=>cfg.PhysicsSettings.TurbulenceScale=v,'turbulence'));
+  ph.add(numField('Turbulence power','turbPower',cfg.PhysicsSettings.TurbulencePower,v=>cfg.PhysicsSettings.TurbulencePower=v));
+  ph.add(field('Gravity',vec3Editor(cfg.PhysicsSettings.Gravity,refreshOutputs,0.1)));
+  wrap.appendChild(ph);
+  const tr=accordion('Cut Trigger',ICON.bolt,{magenta:true,reset:()=>reset(['TriggerSettings'])});
+  tr.add(field('Trigger type',selectInput([{v:0,n:'Continuous (0)'},{v:1,n:'On cut (1)'},{v:2,n:'On miss (2)'}],cfg.TriggerSettings.type,v=>{cfg.TriggerSettings.type=v;touch();}),null,'triggerType'));
+  tr.add(numField('Percentage','triggerPct',cfg.TriggerSettings.percentage,v=>cfg.TriggerSettings.percentage=v,'cutDirection'));
+  tr.add(numField('Period','triggerPeriod',cfg.TriggerSettings.period,v=>cfg.TriggerSettings.period=v));
+  tr.add(numField('Burst spread','burstSpread',cfg.TriggerSettings.burstSpread,v=>cfg.TriggerSettings.burstSpread=v));
+  wrap.appendChild(tr);
+}
+function buildDistortionFields(wrap,cfg,reset){
+  const ms=accordion('Distortion',ICON.wave,{reset:()=>reset(['MeshSettings','MaterialSettings.width','MaterialSettings.distortionMultiplier','MaterialSettings.offset'])});
+  ms.add(numField('Trail length','trailLength',cfg.MeshSettings.TrailLength,v=>cfg.MeshSettings.TrailLength=v,'trailLength'));
+  ms.add(numField('Width','trailWidth',cfg.MaterialSettings.width,v=>cfg.MaterialSettings.width=v));
+  ms.add(numField('Distortion strength','distortion',cfg.MaterialSettings.distortionMultiplier,v=>cfg.MaterialSettings.distortionMultiplier=v));
+  ms.add(numField('Offset','offset',cfg.MaterialSettings.offset,v=>cfg.MaterialSettings.offset=v));
+  wrap.appendChild(ms);
+}
+function buildMeshFields(wrap,cfg,reset){
+  const ms=accordion('Custom Mesh',ICON.cube,{reset:()=>reset(['MeshSettings','MaterialSettings.metallic','MaterialSettings.roughness','MaterialSettings.emission'])});
+  ms.add(numField('Mesh scale','glow',cfg.MeshSettings.scale>1?1:cfg.MeshSettings.scale,v=>cfg.MeshSettings.scale=v*4));
+  ms.add(field('',toggle(cfg.MeshSettings.smoothNormals,'Smooth normals',v=>{cfg.MeshSettings.smoothNormals=v;refreshOutputs();})));
+  ms.add(numField('Metallic','metallic',cfg.MaterialSettings.metallic,v=>cfg.MaterialSettings.metallic=v,'metallic'));
+  ms.add(numField('Roughness','roughness',cfg.MaterialSettings.roughness,v=>cfg.MaterialSettings.roughness=v,'roughness'));
+  ms.add(field('Note','<div class="fset-note">Assign an uploaded model in the <b>Custom Assets</b> panel below to render your own geometry.</div>'));
+  wrap.appendChild(ms);
+}
+
+/* ---- drivers form ---- */
+function buildDriversForm(){
+  const wrap=document.createElement('div');const m=activeModule();
+  if(!m){wrap.innerHTML='<div class="placeholder-note">'+ICON.bolt+'<br>Select a module, then attach drivers to modulate its properties in real-time from gameplay events.</div>';return wrap;}
+  const intro=document.createElement('div');intro.className='fset-note';intro.style.marginBottom='14px';
+  intro.innerHTML=`Drivers map a live value ${helpIcon('driver')} onto this layer\'s alpha, scale and color between a <code class="k">value from → to</code> range. Watch the response curve update as you tune.`;
+  wrap.appendChild(intro);
+  const addBtn=document.createElement('button');addBtn.className='btn primary';addBtn.style.cssText='width:100%;justify-content:center;margin-bottom:16px';addBtn.innerHTML=ICON.plus+' Add driver';
+  addBtn.addEventListener('click',()=>{m.drivers.push({valueType:1,valueFrom:0,valueTo:1,increaseResistance:0,decreaseResistance:0,alpha0:0,alpha1:1,scale0:1,scale1:1,color:'#ffffff',interp:0});renderStack();renderInspector();refreshOutputs();});
+  wrap.appendChild(addBtn);
+  if(!m.drivers.length){wrap.appendChild(Object.assign(document.createElement('div'),{className:'empty',innerHTML:ICON.bolt+'<div>No drivers on this module.</div>'}));return wrap;}
+  m.drivers.forEach((d,i)=>{
+    const card=document.createElement('div');card.className='driver-card';
+    const head=document.createElement('div');head.className='driver-head';
+    head.innerHTML=`<span class="dh-badge">Driver ${i+1}</span><span class="dh-title">${sourceName(d.valueType)}</span>`;
+    const del=document.createElement('button');del.className='btn sm ghost icon danger';del.innerHTML=ICON.trash;del.addEventListener('click',()=>{m.drivers.splice(i,1);renderStack();renderInspector();refreshOutputs();});head.appendChild(del);
+    card.appendChild(head);
+    const b=document.createElement('div');b.className='driver-body';
+    const grpOpts=DRIVER_SOURCES.map(s=>({v:s.v,n:(s.group!=='—'?s.group+' · ':'')+s.name}));
+    b.appendChild(field('Value source',selectInput(grpOpts,d.valueType,v=>{d.valueType=v;renderInspector();renderStack();refreshOutputs();})));
+    const rng=document.createElement('div');rng.className='row';
+    rng.appendChild(field('Value from',(()=>{const inp=document.createElement('input');inp.type='number';inp.step='0.1';inp.value=d.valueFrom;inp.addEventListener('input',()=>{d.valueFrom=parseFloat(inp.value)||0;drawCurve(cv,d);refreshOutputs();});return inp;})(),null,'valueRange'));
+    rng.appendChild(field('Value to',(()=>{const inp=document.createElement('input');inp.type='number';inp.step='0.1';inp.value=d.valueTo;inp.addEventListener('input',()=>{d.valueTo=parseFloat(inp.value)||0;drawCurve(cv,d);refreshOutputs();});return inp;})()));
+    b.appendChild(rng);
+    const res=document.createElement('div');res.className='row';
+    res.appendChild(field('Rise resist',slider('resistance',d.increaseResistance,v=>{d.increaseResistance=v;refreshOutputs();}),null,'resistance'));
+    res.appendChild(field('Fall resist',slider('resistance',d.decreaseResistance,v=>{d.decreaseResistance=v;refreshOutputs();})));
+    b.appendChild(res);
+    b.appendChild(field('Interpolation',selectInput([{v:0,n:'Linear (0)'},{v:1,n:'Smooth (1)'},{v:2,n:'Stepped (2)'},{v:3,n:'Ease (3)'}],d.interp,v=>{d.interp=v;drawCurve(cv,d);refreshOutputs();}),null,'valueCurve'));
+    const am=document.createElement('div');am.className='row';
+    am.appendChild(field('Alpha @ from',slider('alpha',d.alpha0,v=>{d.alpha0=v;drawCurve(cv,d);touch();})));
+    am.appendChild(field('Alpha @ to',slider('alpha',d.alpha1,v=>{d.alpha1=v;drawCurve(cv,d);touch();})));
+    b.appendChild(am);
+    const sm=document.createElement('div');sm.className='row';
+    sm.appendChild(field('Scale @ from',slider('driverScale',d.scale0,v=>{d.scale0=v;drawCurve(cv,d);touch();})));
+    sm.appendChild(field('Scale @ to',slider('driverScale',d.scale1,v=>{d.scale1=v;drawCurve(cv,d);touch();})));
+    b.appendChild(sm);
+    b.appendChild(field('Target color',colorInput(d.color,v=>{d.color=v;refreshOutputs();})));
+    const cv=document.createElement('canvas');cv.className='curve-preview';cv.width=360;cv.height=70;
+    b.appendChild(field('Response curve (alpha · scale)'+helpIcon('valueCurve'),cv));
+    card.appendChild(b);wrap.appendChild(card);setTimeout(()=>drawCurve(cv,d),0);
+  });
+  return wrap;
+}
+function drawCurve(cv,d){
+  const ctx=cv.getContext('2d');const W=cv.width,H=cv.height;ctx.clearRect(0,0,W,H);
+  ctx.strokeStyle='#161622';ctx.lineWidth=1;
+  for(let i=0;i<=4;i++){const x=i/4*W;ctx.beginPath();ctx.moveTo(x,0);ctx.lineTo(x,H);ctx.stroke();}
+  for(let i=0;i<=2;i++){const y=i/2*H;ctx.beginPath();ctx.moveTo(0,y);ctx.lineTo(W,y);ctx.stroke();}
+  const ease=t=>d.interp===2?(t<0.5?0:1):d.interp===1?t*t*(3-2*t):d.interp===3?t*t:t;
+  ctx.strokeStyle='#00e5ff';ctx.lineWidth=2;ctx.beginPath();
+  for(let i=0;i<=W;i++){const t=i/W;const v=d.alpha0+(d.alpha1-d.alpha0)*ease(t);const y=H-v*H*0.92-2;i===0?ctx.moveTo(i,y):ctx.lineTo(i,y);}ctx.stroke();
+  ctx.strokeStyle='#ff2bd6';ctx.lineWidth=1.5;ctx.setLineDash([4,3]);ctx.beginPath();
+  for(let i=0;i<=W;i++){const t=i/W;const v=(d.scale0+(d.scale1-d.scale0)*ease(t))/3;const y=H-v*H*0.92-2;i===0?ctx.moveTo(i,y):ctx.lineTo(i,y);}ctx.stroke();ctx.setLineDash([]);
+}
+
+/* ===================================================================== */
+/*  RIGHT COLUMN — preview / json / validate                             */
+/* ===================================================================== */
+function selectRightTab(t){
+  state.rightTab=t;
+  $$('#rcTabs .rc-tab').forEach(x=>x.classList.toggle('active',x.dataset.rc===t));
+  $$('.rc-pane').forEach(x=>x.classList.toggle('active',x.dataset.pane===t));
+  if(t==='preview'&&renderer)setTimeout(resizeThree,30);
+  refreshOutputs();
+}
+function refreshOutputs(){
+  // JSON
+  const p=activePreset();
+  if(p){const obj=buildPresetExport(p);const js=JSON.stringify(obj,null,2);
+    $('#jsonCode').innerHTML=highlightJson(js);
+    $('#jsonMeta').textContent=obj.Modules.length+' modules · '+js.length.toLocaleString()+' chars';
+    const ok=(()=>{try{JSON.parse(js);return true}catch(e){return false}})();
+    const st=$('#jsonStatus');st.className='json-status '+(ok?'ok':'bad');st.textContent=ok?'valid JSON':'INVALID';
+  } else {$('#jsonCode').textContent='// no preset selected';$('#jsonMeta').textContent='';}
+  // validation
+  renderValidation();
+}
+function highlightJson(js){
+  return escapeHtml(js)
+    .replace(/(&quot;(?:[^&]|&(?!quot;))*?&quot;)(\s*:)/g,'<span class="tok-key">$1</span>$2')
+    .replace(/:\s*(&quot;(?:[^&]|&(?!quot;))*?&quot;)/g,': <span class="tok-str">$1</span>')
+    .replace(/\b(-?\d+\.?\d*(?:e[-+]?\d+)?)\b/gi,'<span class="tok-num">$1</span>')
+    .replace(/\b(true|false)\b/g,'<span class="tok-bool">$1</span>')
+    .replace(/\b(null)\b/g,'<span class="tok-null">$1</span>');
+}
+
+/* ---- validation engine ---- */
+function validatePreset(p){
+  const out=[];
+  if(!p)return out;
+  const enabled=p.modules.filter(m=>m.enabled);
+  if(!p.modules.length)out.push({level:'err',t:'No modules',m:'A preset needs at least one module to render anything in-game.'});
+  else if(!enabled.length)out.push({level:'err',t:'All modules disabled',m:'Every layer is muted — the saber will be invisible. Enable at least one.'});
+  const hasBlade=p.modules.some(m=>(m.kind==='blade'||m.kind==='mesh')&&m.enabled);
+  if(p.modules.length&&!hasBlade)out.push({level:'warn',t:'No visible blade',m:'No enabled Blade or Custom Mesh layer — you\'ll only see trails/effects with no core saber.'});
+  if(!p.hands.L&&!p.hands.R)out.push({level:'err',t:'No hand assigned',m:'This preset isn\'t applied to either hand, so ReeSaber won\'t show it.'});
+  // asset reference integrity
+  p.modules.forEach(m=>{
+    if(m.customMeshId&&!assetById(m.customMeshId))out.push({level:'err',t:'Missing mesh asset',m:`Layer “${m.name}” references a custom mesh that is no longer loaded. Re-upload it or clear the slot.`});
+    if(m.customTextureId&&!assetById(m.customTextureId))out.push({level:'err',t:'Missing texture asset',m:`Layer “${m.name}” references a custom texture that is no longer loaded.`});
+    // driver sanity
+    m.drivers.forEach((d,i)=>{if(d.valueFrom===d.valueTo)out.push({level:'warn',t:'Flat driver range',m:`Driver ${i+1} on “${m.name}” has value from = to, so it can never move. Set a real range.`});});
+  });
+  // numeric guardrails
+  p.modules.forEach(m=>{
+    const check=(key,val,label)=>{const L=LIMITS[key];if(L&&(val<L[0]||val>L[1]))out.push({level:'warn',t:'Value out of safe range',m:`“${m.name}” ${label} (${val}) is outside the recommended ${L[0]}–${L[1]} range and may cause lag or clipping.`});};
+    const c=m.config;
+    if(m.kind==='blade'){check('radius',c.MeshSettings.radius,'blade radius');}
+    if(m.kind==='vfx'){check('particleCount',c.MeshSettings.ParticlesCount,'particle count');}
+  });
+  return out;
+}
+function renderValidation(){
+  const p=activePreset();
+  const items=validatePreset(p);
+  const errs=items.filter(i=>i.level==='err').length, warns=items.filter(i=>i.level==='warn').length;
+  const dot=$('#validDot');dot.innerHTML=errs?'<span class="doterr"></span>':warns?'<span class="dotwarn"></span>':'';
+  const sum=$('#validSummary');
+  if(!p){sum.innerHTML='<span style="color:var(--txt-mut)">No preset selected.</span>';$('#validBody').innerHTML='';return;}
+  sum.innerHTML = errs? `<span style="color:var(--red)">✕ ${errs} error${errs>1?'s':''}</span>` : (warns? `<span style="color:var(--amber)">▲ ${warns} warning${warns>1?'s':''}</span>` : `<span style="color:var(--green)">✓ All checks passed</span>`) + `<span style="color:var(--txt-mut);font-weight:400;font-size:12px">— “${escapeHtml(p.name)}”</span>`;
+  const body=$('#validBody');body.innerHTML='';
+  if(!items.length){body.innerHTML=`<div class="vitem ok"><div class="vic">✓</div><div><div class="vtitle">Ready to export</div><div class="vmsg">No structural problems found. This preset should load cleanly in ReeSabers ${state.modVersion}.</div></div></div>`;return;}
+  // successes for context
+  const p2=p;
+  const passed=[];
+  if(p2.modules.filter(m=>m.enabled).length)passed.push('Has enabled modules');
+  if(p2.hands.L||p2.hands.R)passed.push('Hand assignment set');
+  passed.forEach(t=>{body.insertAdjacentHTML('beforeend',`<div class="vitem ok"><div class="vic">✓</div><div><div class="vtitle">${t}</div></div></div>`);});
+  items.sort((a,b)=>(a.level==='err'?0:1)-(b.level==='err'?0:1));
+  items.forEach(it=>{body.insertAdjacentHTML('beforeend',`<div class="vitem ${it.level}"><div class="vic">${it.level==='err'?'✕':'▲'}</div><div><div class="vtitle">${escapeHtml(it.t)}</div><div class="vmsg">${escapeHtml(it.m)}</div></div></div>`);});
+}
+
+/* ===================================================================== */
+/*  EXPORT                                                               */
+/* ===================================================================== */
+function driverToReeSaber(d){
+  const col=hexToRgb(d.color);
+  return {valueType:d.valueType,increaseResistance:d.increaseResistance,decreaseResistance:d.decreaseResistance,
+    mappings:{colorOverValue:{interpolationType:d.interp,controlPoints:[{time:0,value:{r:col.r,g:col.g,b:col.b,a:1}}]},
+      alphaOverValue:{interpolationType:d.interp,controlPoints:[{time:0,value:d.alpha0},{time:1,value:d.alpha1}]},
+      scaleOverValue:{interpolationType:d.interp,controlPoints:[{time:0,value:d.scale0},{time:1,value:d.scale1}]},
+      valueFrom:d.valueFrom,valueTo:d.valueTo}};
+}
+function moduleToReeSaber(m,assetSink){
+  const cfg=clone(m.config);cfg.Enabled=m.enabled;cfg.Name=m.name;
+  const rs=m.drivers.map(driverToReeSaber);
+  if(m.rawImported&&m._driverPath){setPath(cfg,m._driverPath,rs.length?rs:(get(cfg,m._driverPath)||[]));}
+  else if(get(cfg,'MaterialSettings.maskSettings')){cfg.MaterialSettings.maskSettings.drivers=rs;}
+  // custom assets → set ids + collect binary
+  if(m.customTextureId&&assetById(m.customTextureId)){
+    const a=assetById(m.customTextureId);assetSink.tex[a.id]=a;
+    if(get(cfg,'MaterialSettings.generalSettings'))cfg.MaterialSettings.generalSettings.customTextureId=a.id;
+    if(cfg.TexturesSettings)cfg.TexturesSettings.customTextureId=a.id;
+  }
+  if(m.customMeshId&&assetById(m.customMeshId)){
+    const a=assetById(m.customMeshId);assetSink.geo[a.id]=a;
+    if(!cfg.MeshSettings)cfg.MeshSettings={};cfg.MeshSettings.customMeshId=a.id;
+  }
+  return {ModuleId:m.moduleId,Version:m.version,Config:cfg,Children:m.rawChildren||[]};
+}
+function buildPresetExport(p){
+  const sink={tex:{},geo:{}};
+  const modules=p.modules.map(m=>moduleToReeSaber(m,sink));
+  const toBin=a=>({Id:a.id,Name:a.name,Format:a.ext,Data:a.dataURL});
+  return {ModVersion:state.modVersion,Version:1,RootSettings:{Type:p.rootType},LocalTransform:clone(p.transform),
+    Modules:modules,BinaryAssets:{Textures:Object.values(sink.tex).map(toBin),Geometry:Object.values(sink.geo).map(toBin)}};
+}
+function buildProjectExport(){return {__reesaberStudio:true,version:2,savedAt:'',modVersion:state.modVersion,global:state.global,assets:state.assets.map(a=>({id:a.id,name:a.name,kind:a.kind,ext:a.ext,dataURL:a.dataURL,size:a.size})),presets:state.presets};}
+
+/* ===================================================================== */
+/*  IMPORT                                                               */
+/* ===================================================================== */
+function detectDriverPath(cfg){for(const c of ['MaterialSettings.maskSettings.drivers','MaterialSettings.maskSettings.bladeMappings.drivers']){if(Array.isArray(get(cfg,c)))return c;}return null;}
+function reeSaberDriverToSimple(rd){
+  let color='#ffffff';try{color=rgbToHex(rd.mappings.colorOverValue.controlPoints[0].value);}catch(e){}
+  const aCP=(rd.mappings.alphaOverValue||{}).controlPoints||[],sCP=(rd.mappings.scaleOverValue||{}).controlPoints||[];
+  return {valueType:rd.valueType,valueFrom:rd.mappings.valueFrom!=null?rd.mappings.valueFrom:0,valueTo:rd.mappings.valueTo!=null?rd.mappings.valueTo:1,
+    increaseResistance:rd.increaseResistance||0,decreaseResistance:rd.decreaseResistance||0,interp:(rd.mappings.alphaOverValue||{}).interpolationType||0,
+    alpha0:aCP.length?aCP[0].value:1,alpha1:aCP.length?aCP[aCP.length-1].value:1,scale0:sCP.length?sCP[0].value:1,scale1:sCP.length?sCP[sCP.length-1].value:1,color};
+}
+function importReeSaberPreset(obj,name){
+  const p=newPreset(name||'Imported Preset');
+  if(obj.RootSettings&&obj.RootSettings.Type!=null)p.rootType=obj.RootSettings.Type;
+  if(obj.LocalTransform)p.transform=deepMerge(clone(p.transform),obj.LocalTransform);
+  // restore binary assets
+  const ba=obj.BinaryAssets||{};
+  (ba.Textures||[]).forEach(t=>{if(t.Data&&!assetById(t.Id))state.assets.push(cacheAsset({id:t.Id,name:t.Name||t.Id,kind:'texture',ext:t.Format||'png',dataURL:t.Data,size:(t.Data.length*0.75)|0}));});
+  (ba.Geometry||[]).forEach(t=>{if(t.Data&&!assetById(t.Id))state.assets.push(cacheAsset({id:t.Id,name:t.Name||t.Id,kind:'mesh',ext:t.Format||'glb',dataURL:t.Data,size:(t.Data.length*0.75)|0}));});
+  (obj.Modules||[]).forEach(mo=>{
+    const tmpl=TEMPLATES[mo.ModuleId];
+    const m={uid:uid(),moduleId:mo.ModuleId,version:mo.Version||(tmpl?tmpl.version:1),name:(mo.Config&&mo.Config.Name)||(tmpl?tmpl.label:mo.ModuleId),
+      enabled:mo.Config?mo.Config.Enabled!==false:true,kind:tmpl?tmpl.kind:'fx',config:mo.Config?clone(mo.Config):(tmpl?clone(tmpl.config):{}),
+      drivers:[],customMeshId:'',customTextureId:'',rawImported:true,rawChildren:mo.Children||[]};
+    const dp=detectDriverPath(m.config);if(dp){m._driverPath=dp;m.drivers=(get(m.config,dp)||[]).map(reeSaberDriverToSimple);}
+    const tid=get(m.config,'MaterialSettings.generalSettings.customTextureId')||get(m.config,'TexturesSettings.customTextureId');if(tid&&assetById(tid))m.customTextureId=tid;
+    const gid=get(m.config,'MeshSettings.customMeshId');if(gid&&assetById(gid))m.customMeshId=gid;
+    p.modules.push(m);
+  });
+  return p;
+}
+function handleImportData(text){
+  let obj;try{obj=JSON.parse(text);}catch(e){toast('Invalid JSON: '+e.message,'err');return false;}
+  if(obj.__reesaberStudio){
+    state.presets=obj.presets||[];if(obj.global)state.global=deepMerge(clone(state.global),obj.global);if(obj.modVersion)state.modVersion=obj.modVersion;
+    state.assets=(obj.assets||[]).map(cacheAsset);
+    state.presets.forEach(p=>p.modules.forEach(m=>{if(!m.kind){const t=TEMPLATES[m.moduleId];m.kind=t?t.kind:'fx';}if(m.customMeshId===undefined)m.customMeshId='';if(m.customTextureId===undefined)m.customTextureId='';}));
+    state.activePresetId=state.presets[0]?state.presets[0].id:null;state.activeModuleId=null;renderAll();updateAssetCount();toast('Studio project loaded ('+state.presets.length+' presets)');return true;
+  }
+  if(obj.Modules||obj.RootSettings||obj.ModVersion){const p=importReeSaberPreset(obj);state.presets.push(p);state.activePresetId=p.id;state.activeModuleId=null;renderAll();updateAssetCount();toast('Preset imported ('+p.modules.length+' modules)');return true;}
+  toast('Unrecognized file format','err');return false;
+}
+
+/* ===================================================================== */
+/*  ASSET PIPELINE                                                       */
+/* ===================================================================== */
+const EXT_KIND={obj:'mesh',gltf:'mesh',glb:'mesh',fbx:'mesh',png:'texture',jpg:'texture',jpeg:'texture',webp:'texture',wav:'sound',ogg:'sound',mp3:'sound'};
+function cacheAsset(a){
+  // parse mesh / texture for preview (async, best-effort)
+  if(a.kind==='mesh'&&typeof THREE!=='undefined')parseMeshAsset(a);
+  if(a.kind==='texture'&&typeof THREE!=='undefined'){try{a._tex=new THREE.TextureLoader().load(a.dataURL,()=>{if(scene)rebuildScene();});}catch(e){}}
+  return a;
+}
+function parseMeshAsset(a){
+  try{
+    if(a.ext==='obj'&&THREE.OBJLoader){const txt=dataURLtoText(a.dataURL);a._obj=new THREE.OBJLoader().parse(txt);normalizeMesh(a._obj);if(scene)rebuildScene();}
+    else if((a.ext==='glb'||a.ext==='gltf')&&THREE.GLTFLoader){
+      const loader=new THREE.GLTFLoader();
+      if(a.ext==='glb'){loader.parse(dataURLtoArrayBuffer(a.dataURL),'',g=>{a._obj=g.scene;normalizeMesh(a._obj);if(scene)rebuildScene();},err=>console.warn('glb parse',err));}
+      else{loader.parse(dataURLtoText(a.dataURL),'',g=>{a._obj=g.scene;normalizeMesh(a._obj);if(scene)rebuildScene();},err=>console.warn('gltf parse',err));}
+    }
+  }catch(e){console.warn('mesh parse failed',e);}
+}
+function normalizeMesh(obj){
+  const box=new THREE.Box3().setFromObject(obj);const size=new THREE.Vector3();box.getSize(size);const center=new THREE.Vector3();box.getCenter(center);
+  const maxDim=Math.max(size.x,size.y,size.z)||1;const s=1.3/maxDim;
+  obj.position.sub(center.multiplyScalar(s));obj.scale.setScalar(s);
+}
+function addFiles(files,onDone){
+  let pending=0,added=0;
+  [...files].forEach(f=>{
+    const ext=(f.name.split('.').pop()||'').toLowerCase();const kind=EXT_KIND[ext];
+    if(!kind){toast('Unsupported file: '+f.name,'err');return;}
+    if(f.size>25*1024*1024){toast(f.name+' is over 25 MB — skipped','err');return;}
+    pending++;
+    const r=new FileReader();
+    r.onload=()=>{const a=cacheAsset({id:'a'+uid(),name:f.name,kind,ext:ext==='jpeg'?'jpg':ext,dataURL:r.result,size:f.size});state.assets.push(a);added++;pending--;updateAssetCount();if(!pending){renderInspector();refreshOutputs();if(onDone)onDone(added);}};
+    r.onerror=()=>{pending--;toast('Failed to read '+f.name,'err');if(!pending&&onDone)onDone(added);};
+    r.readAsDataURL(f);
+  });
+  if(!pending&&onDone)onDone(0);
+}
+function updateAssetCount(){$('#assetCount').textContent=state.assets.length;}
+function removeAsset(id){
+  state.presets.forEach(p=>p.modules.forEach(m=>{if(m.customMeshId===id)m.customMeshId='';if(m.customTextureId===id)m.customTextureId='';}));
+  state.assets=state.assets.filter(a=>a.id!==id);updateAssetCount();openAssetModal();renderAll();
+}
+function openAssetModal(){
+  const m=openModal(`
+    <div class="modal-head"><h3>Custom Assets</h3><span class="spacer" style="flex:1"></span><button class="btn ghost icon" id="asX">${ICON.x}</button></div>
+    <div class="modal-body" id="asBody"></div>`);
+  const body=$('#asBody',m);
+  const dz=document.createElement('div');dz.className='drop';dz.id='asDrop';
+  dz.innerHTML=`<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
+    <div><b>Drop or click to upload</b></div><div class="fset-note" style="margin-top:6px">Meshes <code class="k">.obj .glb .gltf</code> · Textures <code class="k">.png .jpg</code> · Sounds <code class="k">.wav .ogg</code> — up to 25 MB each. Stored in-config as base64.</div>`;
+  const fileIn=document.createElement('input');fileIn.type='file';fileIn.multiple=true;fileIn.accept='.obj,.glb,.gltf,.png,.jpg,.jpeg,.webp,.wav,.ogg,.mp3';
+  dz.onclick=()=>fileIn.click();
+  fileIn.onchange=()=>addFiles(fileIn.files,n=>{if(n)toast(n+' asset'+(n>1?'s':'')+' added');openAssetModal();});
+  ['dragover','dragenter'].forEach(ev=>dz.addEventListener(ev,e=>{e.preventDefault();dz.classList.add('hot');}));
+  ['dragleave'].forEach(ev=>dz.addEventListener(ev,e=>{e.preventDefault();dz.classList.remove('hot');}));
+  dz.addEventListener('drop',e=>{e.preventDefault();dz.classList.remove('hot');addFiles(e.dataTransfer.files,n=>{if(n)toast(n+' asset'+(n>1?'s':'')+' added');openAssetModal();});});
+  body.appendChild(dz);
+  if(state.assets.length){
+    const grid=document.createElement('div');grid.className='asset-grid';
+    state.assets.forEach(a=>{
+      const tile=document.createElement('div');tile.className='asset-tile';
+      let thumb;
+      if(a.kind==='texture')thumb=`<div class="at-thumb" style="background-image:url('${a.dataURL}')"></div>`;
+      else if(a.kind==='sound')thumb=`<div class="at-thumb">${ICON.sound}</div>`;
+      else thumb=`<div class="at-thumb">${a._obj?'<span style=\"color:var(--green);font-size:11px;font-weight:700\">MODEL READY</span>':ICON.cube}</div>`;
+      const usedBy=[];state.presets.forEach(p=>p.modules.forEach(mm=>{if(mm.customMeshId===a.id||mm.customTextureId===a.id)usedBy.push(mm.name);}));
+      tile.innerHTML=`<span class="asset-kind ${a.kind}">${a.kind}</span>${thumb}<div class="at-name" title="${escapeHtml(a.name)}">${escapeHtml(a.name)}</div><div class="at-meta">${a.ext.toUpperCase()} · ${bytesFmt(a.size)}${usedBy.length?' · used ×'+usedBy.length:''}</div><div class="at-actions"></div>`;
+      const acts=tile.querySelector('.at-actions');
+      if(a.kind==='sound'){const pb=document.createElement('button');pb.className='btn tiny';pb.innerHTML=ICON.play+' Play';pb.onclick=()=>{const au=new Audio(a.dataURL);au.play().catch(()=>toast('Cannot play in this browser','err'));};acts.appendChild(pb);}
+      const rm=document.createElement('button');rm.className='btn tiny ghost danger';rm.innerHTML=ICON.trash;rm.title='Remove';rm.onclick=()=>removeAsset(a.id);acts.appendChild(rm);
+      grid.appendChild(tile);
+    });
+    body.appendChild(grid);
+  } else {
+    body.insertAdjacentHTML('beforeend','<div class="empty" style="margin-top:14px">'+ICON.cube+'<div>No custom assets yet.</div></div>');
+  }
+  $('#asX',m).onclick=closeModal;
+}
+
+/* ===================================================================== */
+/*  MODALS                                                               */
+/* ===================================================================== */
+function openModal(html){const m=$('#modal');m.innerHTML=html;$('#modalBack').classList.add('show');return m;}
+function closeModal(){$('#modalBack').classList.remove('show');}
+$('#modalBack').addEventListener('click',e=>{if(e.target===$('#modalBack'))closeModal();});
+function promptText(title,val,cb){
+  const m=openModal(`<div class="modal-head"><h3>${title}</h3></div><div class="modal-body"><input type="text" id="pmt" value="${escapeHtml(val)}"></div><div class="modal-foot"><button class="btn ghost" id="pmc">Cancel</button><button class="btn primary" id="pmo">OK</button></div>`);
+  const i=$('#pmt',m);i.focus();i.select();$('#pmc',m).onclick=closeModal;$('#pmo',m).onclick=()=>{cb(i.value.trim()||val);closeModal();};i.onkeydown=e=>{if(e.key==='Enter'){cb(i.value.trim()||val);closeModal();}};
+}
+function confirmModal(title,msg,cb,okLabel){
+  const m=openModal(`<div class="modal-head"><h3>${title}</h3></div><div class="modal-body"><p style="color:var(--txt-dim);font-size:14px;line-height:1.6">${msg}</p></div><div class="modal-foot"><button class="btn ghost" id="cmc">Cancel</button><button class="btn magenta" id="cmo">${okLabel||'Delete'}</button></div>`);
+  $('#cmc',m).onclick=closeModal;$('#cmo',m).onclick=()=>{cb();closeModal();};
+}
+function openExportModal(){
+  const p=activePreset();
+  const issues=validatePreset(p);const errs=issues.filter(i=>i.level==='err');const warns=issues.filter(i=>i.level==='warn');
+  let checkHtml='';
+  if(!p)checkHtml=`<div class="vitem err"><div class="vic">✕</div><div><div class="vtitle">No preset selected</div></div></div>`;
+  else if(!errs.length&&!warns.length)checkHtml=`<div class="vitem ok"><div class="vic">✓</div><div><div class="vtitle">Pre-export check passed</div><div class="vmsg">All mandatory layers and asset paths are present.</div></div></div>`;
+  else{[...errs,...warns].slice(0,6).forEach(it=>{checkHtml+=`<div class="vitem ${it.level}"><div class="vic">${it.level==='err'?'✕':'▲'}</div><div><div class="vtitle">${escapeHtml(it.t)}</div><div class="vmsg">${escapeHtml(it.m)}</div></div></div>`;});}
+  const m=openModal(`
+    <div class="modal-head"><h3>Export</h3><span class="spacer" style="flex:1"></span><button class="btn ghost icon" id="exX">${ICON.x}</button></div>
+    <div class="modal-body">
+      <div class="acc"><div class="acc-head" style="cursor:default"><span class="acc-ic">${ICON.bolt}</span><span class="acc-title">Pre-export check</span></div><div class="acc-body">${checkHtml}</div></div>
+      <div class="acc"><div class="acc-head" style="cursor:default"><span class="acc-ic">${ICON.blade}</span><span class="acc-title">ReeSaber preset (.json)</span></div><div class="acc-body">
+        <div class="fset-note">Drops into <code class="k">Beat Saber/UserData/ReeSabers/Presets</code>. Custom meshes &amp; textures are embedded as base64 in <code class="k">BinaryAssets</code>.</div>
+        <div style="display:flex;gap:8px;flex-wrap:wrap"><button class="btn primary" id="exActive" ${p?'':'disabled'}>${ICON.bolt} Download active preset</button><button class="btn" id="exAll">${ICON.layers} All (${state.presets.length})</button></div>
+      </div></div>
+      <div class="acc"><div class="acc-head" style="cursor:default"><span class="acc-ic" style="color:var(--magenta)">${ICON.edit}</span><span class="acc-title" style="color:#e79bd8">Studio project (.json)</span></div><div class="acc-body">
+        <div class="fset-note">Full editable state — presets, assets, colors, globals. Re-import here to keep editing.</div>
+        <button class="btn magenta" id="exProj">${ICON.copy} Download project bundle</button>
+      </div></div>
+    </div>`);
+  $('#exX',m).onclick=closeModal;
+  const doExport=()=>{downloadJSON(buildPresetExport(p),slug(p.name)+'.json');toast('Preset exported');};
+  $('#exActive',m).onclick=()=>{if(!p)return;if(errs.length){confirmModal('Export with errors?',errs.length+' blocking issue(s) were found. The file may not load correctly in ReeSabers. Export anyway?',()=>{doExport();},'Export anyway');}else{doExport();closeModal();}};
+  $('#exAll',m).onclick=()=>{state.presets.forEach(pp=>downloadJSON(buildPresetExport(pp),slug(pp.name)+'.json'));toast('Exported '+state.presets.length+' presets');closeModal();};
+  $('#exProj',m).onclick=()=>{const proj=buildProjectExport();proj.savedAt=new Date().toISOString();downloadJSON(proj,'reesaber-studio-project.json');toast('Project saved');closeModal();};
+}
+function openImportModal(){
+  const m=openModal(`
+    <div class="modal-head"><h3>Import config</h3><span class="spacer" style="flex:1"></span><button class="btn ghost icon" id="imX">${ICON.x}</button></div>
+    <div class="modal-body">
+      <div class="drop" id="dropZone"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg><div><b>Drop a .json file</b> or click to browse</div><div class="fset-note" style="margin-top:6px">ReeSaber preset or Studio project</div></div>
+      <div class="divider"></div>
+      <div class="field"><label>…or paste raw JSON</label><textarea id="pasteBox" placeholder='{ "ModVersion": "0.3.18", "Modules": [ ... ] }'></textarea></div>
+    </div>
+    <div class="modal-foot"><button class="btn ghost" id="imC">Cancel</button><button class="btn primary" id="imGo">Load JSON</button></div>`);
+  const dz=$('#dropZone',m),fileIn=document.createElement('input');fileIn.type='file';fileIn.accept='.json,application/json';
+  dz.onclick=()=>fileIn.click();
+  fileIn.onchange=()=>{const f=fileIn.files[0];if(f){const r=new FileReader();r.onload=()=>{if(handleImportData(r.result))closeModal();};r.readAsText(f);}};
+  ['dragover','dragenter'].forEach(ev=>dz.addEventListener(ev,e=>{e.preventDefault();dz.classList.add('hot');}));
+  ['dragleave','drop'].forEach(ev=>dz.addEventListener(ev,e=>{e.preventDefault();dz.classList.remove('hot');}));
+  dz.addEventListener('drop',e=>{const f=e.dataTransfer.files[0];if(f){const r=new FileReader();r.onload=()=>{if(handleImportData(r.result))closeModal();};r.readAsText(f);}});
+  $('#imX',m).onclick=closeModal;$('#imC',m).onclick=closeModal;$('#imGo',m).onclick=()=>{const t=$('#pasteBox',m).value.trim();if(!t){toast('Paste JSON or drop a file','err');return;}if(handleImportData(t))closeModal();};
+}
+function openGlobalModal(){
+  const g=state.global;
+  const m=openModal(`<div class="modal-head"><h3>Global settings</h3><span class="spacer" style="flex:1"></span><button class="btn ghost icon" id="gX">${ICON.x}</button></div><div class="modal-body" id="gBody"></div><div class="modal-foot"><button class="btn primary" id="gDone">Done</button></div>`);
+  const body=$('#gBody',m);
+  const vis=accordion('VR / Camera Visibility',ICON.blade);
+  vis.add(field('',toggle(g.visibility.headset,'Visible in VR headset',v=>g.visibility.headset=v,'visibility')));
+  vis.add(field('',toggle(g.visibility.desktop,'Visible on desktop / Camera2',v=>g.visibility.desktop=v)));
+  vis.add(field('',toggle(g.visibility.mirror,'Visible in mirror reflections',v=>g.visibility.mirror=v)));
+  body.appendChild(vis);
+  const sm=accordion('Motion Smoothing',ICON.wave,{magenta:true});
+  sm.add(field('',toggle(g.motionSmoothing.enabled,'Enable motion smoothing',v=>g.motionSmoothing.enabled=v,'motionSmoothing')));
+  sm.add(field('Smoothing amount',slider('smoothing',g.motionSmoothing.amount,v=>g.motionSmoothing.amount=v)));
+  body.appendChild(sm);
+  const mp=accordion('Menu',ICON.edit,{collapsed:true});
+  mp.add(field('',toggle(g.menuPointer,'Show sabers in menu',v=>g.menuPointer=v)));
+  body.appendChild(mp);
+  $('#gX',m).onclick=closeModal;$('#gDone',m).onclick=closeModal;
+}
+function slug(s){return (s||'preset').toLowerCase().replace(/[^a-z0-9]+/g,'-').replace(/^-|-$/g,'')||'preset';}
+function downloadJSON(obj,name){const blob=new Blob([JSON.stringify(obj,null,2)],{type:'application/json'});const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download=name;a.click();setTimeout(()=>URL.revokeObjectURL(a.href),1000);}
+
+/* ---- toast ---- */
+let toastTimer;
+function toast(msg,type){const t=$('#toast');$('#toastMsg').textContent=msg;t.classList.remove('err','warn');if(type)t.classList.add(type);t.classList.add('show');clearTimeout(toastTimer);toastTimer=setTimeout(()=>t.classList.remove('show'),2600);}
+
+/* ===================================================================== */
+/*  STARTER TEMPLATES                                                    */
+/* ===================================================================== */
+const STARTERS={
+  blank:{label:'Blank Preset',desc:'Start from scratch',build:()=>newPreset()},
+  neon:{label:'Basic Neon Saber',desc:'Blade + glow trail',build:()=>{const p=newPreset('Basic Neon Saber');p.color.left='#ff2bd6';p.color.right='#00e5ff';const bl=newModule('reezonate.blur-saber');bl.config.MaterialSettings.fresnelPower=6;const tr=newModule('reezonate.simple-trail');tr.name='Neon Trail';tr.config.MeshSettings.TrailLength=0.35;p.modules.push(bl,tr);return p;}},
+  reactive:{label:'Reactive Velocity Saber',desc:'Trail reacts to swing speed',build:()=>{const p=newPreset('Reactive Velocity Saber');p.color.left='#8a5bff';p.color.right='#22ffa7';const bl=newModule('reezonate.blur-saber');const tr=newModule('reezonate.simple-trail');tr.name='Velocity Trail';tr.drivers.push({valueType:2,valueFrom:0,valueTo:25,increaseResistance:0.15,decreaseResistance:0.3,alpha0:0.15,alpha1:1,scale0:0.7,scale1:1.4,color:'#22ffa7',interp:1});const sp=newModule('reezonate.sparks-vfx');sp.config.TriggerSettings.type=1;p.modules.push(bl,tr,sp);return p;}},
+  mesh:{label:'Custom Mesh Template',desc:'Slot in your own 3D model',build:()=>{const p=newPreset('Custom Mesh Saber');p.color.left='#ffb020';p.color.right='#00e5ff';const cm=newModule('reezonate.custom-mesh');const tr=newModule('reezonate.simple-trail');tr.name='Accent Trail';tr.config.MeshSettings.TrailLength=0.25;p.modules.push(cm,tr);return p;}}
+};
+function renderStarterMenu(){
+  const menu=$('#newDdMenu');menu.innerHTML='';
+  Object.entries(STARTERS).forEach(([k,s])=>{
+    const it=document.createElement('div');it.className='dd-item';it.innerHTML=`<b>${s.label}</b><span>${s.desc}</span>`;
+    it.onclick=()=>{const p=s.build();state.presets.push(p);$('#newDd').classList.remove('open');selectPreset(p.id);toast(s.label+' created');};
+    menu.appendChild(it);
+  });
+}
+
+/* ===================================================================== */
+/*  THREE.JS PREVIEW                                                     */
+/* ===================================================================== */
+let renderer,scene,camera,animReq,clock;
+let orbit={az:0.6,el:0.2,dist:3.2,drag:false,px:0,py:0};
+let sabers=[];
+function initThree(){
+  const canvas=$('#glcanvas');
+  renderer=new THREE.WebGLRenderer({canvas,antialias:true,alpha:true});renderer.setPixelRatio(Math.min(devicePixelRatio,2));
+  scene=new THREE.Scene();scene.fog=new THREE.FogExp2(0x000000,0.11);
+  camera=new THREE.PerspectiveCamera(50,1,0.1,100);clock=new THREE.Clock();
+  scene.add(new THREE.AmbientLight(0x445566,0.7));
+  const key=new THREE.PointLight(0x88ccff,0.9,25);key.position.set(3,4,3);scene.add(key);
+  const grid=new THREE.GridHelper(10,20,0x0a2530,0x08141a);grid.position.y=-1.4;scene.add(grid);
+  canvas.addEventListener('pointerdown',e=>{orbit.drag=true;orbit.px=e.clientX;orbit.py=e.clientY;canvas.setPointerCapture(e.pointerId);});
+  canvas.addEventListener('pointermove',e=>{if(!orbit.drag)return;orbit.az+=(e.clientX-orbit.px)*0.008;orbit.el=clamp(orbit.el+(e.clientY-orbit.py)*0.008,-1.2,1.2);orbit.px=e.clientX;orbit.py=e.clientY;});
+  canvas.addEventListener('pointerup',()=>orbit.drag=false);
+  canvas.addEventListener('wheel',e=>{e.preventDefault();orbit.dist=clamp(orbit.dist+e.deltaY*0.002,1.5,8);},{passive:false});
+  resizeThree();window.addEventListener('resize',resizeThree);rebuildScene();animate();
+}
+function resizeThree(){const c=$('#glcanvas');if(!c)return;const w=c.clientWidth,h=c.clientHeight;if(!w||!h)return;renderer.setSize(w,h,false);camera.aspect=w/h;camera.updateProjectionMatrix();}
+function disposeSabers(){sabers.forEach(s=>scene.remove(s.group));sabers=[];}
+function presetColorFor(p,hk){const c=hexToRgb(hk==='L'?p.color.left:p.color.right);return new THREE.Color(c.r,c.g,c.b);}
+function applyColorOverride(base,cfg,p){const co=cfg.ColorOverride||{};if(cfg.ForceColorOverride){const rgb=hsvToRgb(co.hue||0,co.saturation!=null?co.saturation:1,co.value!=null?co.value:1);return new THREE.Color(rgb.r,rgb.g,rgb.b);}return base;}
+function rebuildScene(){
+  if(!scene)return;disposeSabers();const p=activePreset();updatePreviewFoot();if(!p)return;
+  const hands=[];if(p.hands.L)hands.push('L');if(p.hands.R)hands.push('R');
+  if(pv.both){if(!hands.includes('L'))hands.push('L');if(!hands.includes('R'))hands.push('R');}
+  if(!hands.length)hands.push('R');
+  const spread=hands.length>1?0.7:0;
+  hands.forEach((hk,idx)=>{
+    const group=new THREE.Group();const xoff=hands.length>1?(idx===0?-spread:spread):0;
+    group.position.set(xoff+p.transform.Position.x,p.transform.Position.y,p.transform.Position.z);
+    group.rotation.set(THREE.MathUtils.degToRad(p.transform.Rotation.x),THREE.MathUtils.degToRad(p.transform.Rotation.y),THREE.MathUtils.degToRad(p.transform.Rotation.z));
+    group.scale.set(p.transform.Scale.x,p.transform.Scale.y,p.transform.Scale.z);
+    const baseColor=presetColorFor(p,hk);
+    const hilt=new THREE.Mesh(new THREE.CylinderGeometry(0.035,0.045,0.42,16),new THREE.MeshStandardMaterial({color:0x151515,metalness:0.8,roughness:0.4}));hilt.position.y=-0.55;group.add(hilt);
+    const guard=new THREE.Mesh(new THREE.TorusGeometry(0.06,0.018,10,24),new THREE.MeshStandardMaterial({color:0x0a0a0a,metalness:0.9,roughness:0.3}));guard.position.y=-0.34;guard.rotation.x=Math.PI/2;group.add(guard);
+    const rec=[];
+    p.modules.forEach(m=>{
+      if(!m.enabled)return;
+      const modColor=applyColorOverride(baseColor.clone(),m.config,p);
+      // custom mesh override
+      if(m.customMeshId&&assetById(m.customMeshId)&&assetById(m.customMeshId)._obj){
+        const src=assetById(m.customMeshId)._obj;const inst=src.clone(true);
+        inst.traverse(o=>{if(o.isMesh){o.material=new THREE.MeshStandardMaterial({color:modColor,emissive:modColor,emissiveIntensity:pv.glow?0.6:0.25,metalness:0.4,roughness:0.4});}});
+        inst.position.y+=0.4;group.add(inst);rec.push({m,mesh:inst,type:'blade'});return;
+      }
+      if(m.kind==='blade'){
+        const radius=(m.config.MeshSettings.radius||0.02)*8+0.02;const zf=m.config.MeshSettings.zOffsetFrom||0,zt=m.config.MeshSettings.zOffsetTo||1;const len=clamp(zt-zf,0.2,1.5)*1.4;
+        const tex=m.customTextureId&&assetById(m.customTextureId)?assetById(m.customTextureId)._tex:null;
+        const core=new THREE.Mesh(new THREE.CylinderGeometry(radius*0.5,radius*0.5,len,16),new THREE.MeshBasicMaterial({color:0xffffff,map:tex||null}));core.position.y=len/2-0.15;group.add(core);
+        const glow=new THREE.Mesh(new THREE.CylinderGeometry(radius*1.7,radius*1.7,len,20),new THREE.MeshBasicMaterial({color:modColor,transparent:true,opacity:pv.glow?0.5:0.28}));glow.position.y=len/2-0.15;group.add(glow);
+        if(pv.glow){const g2=new THREE.Mesh(new THREE.CylinderGeometry(radius*3.2,radius*3.2,len,20),new THREE.MeshBasicMaterial({color:modColor,transparent:true,opacity:0.14}));g2.position.y=len/2-0.15;group.add(g2);}
+        const tip=new THREE.Mesh(new THREE.SphereGeometry(radius*0.8,12,12),new THREE.MeshBasicMaterial({color:0xffffff}));tip.position.y=len-0.15;group.add(tip);
+        rec.push({m,mesh:glow,type:'blade'});
+      } else if(m.kind==='mesh'){
+        // custom-mesh module without assigned asset → placeholder icosahedron
+        const ph=new THREE.Mesh(new THREE.IcosahedronGeometry(0.16,0),new THREE.MeshStandardMaterial({color:modColor,emissive:modColor,emissiveIntensity:0.4,metalness:0.4,roughness:0.5,flatShading:true}));ph.position.y=0.4;group.add(ph);rec.push({m,mesh:ph,type:'blade'});
+      } else if(m.kind==='trail'&&pv.trail){
+        const tl=m.config.MeshSettings.TrailLength||0.3;const w=m.config.MaterialSettings.width||0.2;const segs=10;const tg=new THREE.Group();
+        for(let i=0;i<segs;i++){const t=i/segs;const pl=new THREE.Mesh(new THREE.PlaneGeometry(w*(1-t*0.7),0.14),new THREE.MeshBasicMaterial({color:modColor,transparent:true,opacity:(1-t)*0.5,side:THREE.DoubleSide,depthWrite:false}));pl.position.set(0,0.6-t*tl*3.2,-0.01*i);tg.add(pl);}group.add(tg);rec.push({m,mesh:tg,type:'trail'});
+      } else if(m.kind==='vfx'){
+        const cnt=Math.min(120,Math.round((m.config.MeshSettings.ParticlesCount||300)/6));const geo=new THREE.BufferGeometry();const pos=new Float32Array(cnt*3);
+        for(let i=0;i<cnt;i++){pos[i*3]=(Math.random()-0.5)*0.5;pos[i*3+1]=0.5+Math.random()*0.8;pos[i*3+2]=(Math.random()-0.5)*0.5;}geo.setAttribute('position',new THREE.BufferAttribute(pos,3));
+        const pts=new THREE.Points(geo,new THREE.PointsMaterial({color:modColor,size:0.03,transparent:true,opacity:0.85,depthWrite:false}));group.add(pts);rec.push({m,mesh:pts,type:'vfx',geo});
+      } else if(m.kind==='fx'&&pv.trail){
+        const ring=new THREE.Mesh(new THREE.TorusGeometry(0.12,0.02,8,24),new THREE.MeshBasicMaterial({color:modColor,transparent:true,opacity:0.3}));ring.position.y=0.4;ring.rotation.x=Math.PI/2;group.add(ring);rec.push({m,mesh:ring,type:'fx'});
+      }
+    });
+    scene.add(group);sabers.push({group,handKey:hk,rec});
+  });
+}
+function animate(){
+  animReq=requestAnimationFrame(animate);const dt=clock?clock.getDelta():0.016;const t=clock?clock.elapsedTime:0;
+  if(pv.spin)orbit.az+=dt*0.35;
+  camera.position.set(Math.cos(orbit.az)*Math.cos(orbit.el)*orbit.dist,Math.sin(orbit.el)*orbit.dist+0.3,Math.sin(orbit.az)*Math.cos(orbit.el)*orbit.dist);camera.lookAt(0,0.2,0);
+  const drive=pv.driveScore?(0.5+0.5*Math.sin(t*2)):1;
+  sabers.forEach(s=>s.rec.forEach(r=>{
+    if(r.m.drivers&&r.m.drivers.length){const d=r.m.drivers[0];const a=d.alpha0+(d.alpha1-d.alpha0)*drive;const sc=d.scale0+(d.scale1-d.scale0)*drive;if(r.mesh.material&&r.mesh.material.opacity!=null)r.mesh.material.opacity=clamp(a*0.6,0,1);if(r.type==='blade')r.mesh.scale.setScalar(clamp(sc,0.2,3));}
+    if(r.type==='vfx'&&r.geo){const pa=r.geo.attributes.position;for(let i=0;i<pa.count;i++){let y=pa.getY(i)-dt*0.6;if(y<0.3)y=0.5+Math.random()*0.8;pa.setY(i,y);}pa.needsUpdate=true;}
+  }));
+  renderer.render(scene,camera);
+}
+function updatePreviewFoot(){const p=activePreset();$('#pvPreset').textContent=p?p.name:'—';$('#pvMods').textContent=p?p.modules.filter(m=>m.enabled).length:0;}
+
+/* ===================================================================== */
+/*  WIRING                                                               */
+/* ===================================================================== */
+function renderAll(){renderPresets();renderStack();renderInspector();rebuildScene();refreshOutputs();}
+function touch(){rebuildScene();refreshOutputs();}
+const HAS_THREE=(typeof THREE!=='undefined');
+
+$('#btnNewPreset').onclick=e=>{const dd=$('#newDd');dd.classList.toggle('open');e.stopPropagation();};
+document.addEventListener('click',e=>{if(!e.target.closest('#newDd'))$('#newDd').classList.remove('open');});
+$('#btnExport').onclick=openExportModal;
+$('#btnImport').onclick=openImportModal;
+$('#btnGlobals').onclick=openGlobalModal;
+$('#btnAssets').onclick=openAssetModal;
+$('#qsHead').onclick=()=>$('#quickstart').classList.toggle('collapsed');
+$$('#inspTabs .insp-tab').forEach(tb=>tb.onclick=()=>{state.activeTab=tb.dataset.tab;renderInspector();});
+$$('#rcTabs .rc-tab').forEach(tb=>tb.onclick=()=>selectRightTab(tb.dataset.rc));
+$$('.preview-ctrls .mini-toggle').forEach(mt=>mt.onclick=()=>{const k=mt.dataset.pv;pv[k]=!pv[k];mt.classList.toggle('on',pv[k]);rebuildScene();});
+$('#btnCopyJson').onclick=()=>{const p=activePreset();if(!p)return;navigator.clipboard.writeText(JSON.stringify(buildPresetExport(p),null,2)).then(()=>toast('JSON copied'));};
+document.addEventListener('keydown',e=>{if(e.key==='Escape'){closeModal();helpPop.classList.remove('show');}});
+
+function seed(){
+  const p=STARTERS.neon.build();
+  p.modules.find(m=>m.kind==='trail').drivers.push({valueType:1,valueFrom:0,valueTo:1,increaseResistance:0.1,decreaseResistance:0.2,alpha0:0.2,alpha1:1,scale0:0.8,scale1:1.2,color:'#00e5ff',interp:1});
+  state.presets.push(p);state.activePresetId=p.id;
+}
+renderStarterMenu();
+seed();
+renderPalette();
+renderAll();
+updateAssetCount();
+if(HAS_THREE){initThree();}
+else{
+  const c=$('#glcanvas');if(c){const parent=c.parentElement;c.remove();const note=document.createElement('div');note.className='placeholder-note';note.style.cssText='flex:1;display:flex;align-items:center;justify-content:center;flex-direction:column';note.innerHTML='3D preview needs Three.js (loaded from CDN).<br>Connect to the internet and reload to enable the live preview.<br><br>All editing, assets, validation, import and export work offline.';parent.insertBefore(note,parent.querySelector('.preview-foot'));}
+}
+</script>
+</body>
+</html>

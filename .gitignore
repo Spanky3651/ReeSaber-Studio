@@ -1,0 +1,21 @@
+# OS / editor cruft
+.DS_Store
+Thumbs.db
+Desktop.ini
+*~
+.vscode/
+.idea/
+
+# Node (only if you ever add tooling — the app itself needs none)
+node_modules/
+npm-debug.log*
+yarn-error.log*
+package-lock.json
+
+# Local test / scratch output
+/tmp/
+*.log
+
+# User exports you don't want committed
+*.local.json
+reesaber-studio-project.json
