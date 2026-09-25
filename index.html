@@ -1610,30 +1610,26 @@ else{
 })();
 </script>
 <script>
-/* Footer live visitor counter — total visits from GoatCounter's public counter endpoint
+/* Footer live visitor counter — total visits from GoatCounter's public counter JSON endpoint
    (needs "Allow adding visitor counts on your website" enabled in GoatCounter Site settings).
-   Tries the themed JSON first; if the browser blocks it cross-origin, falls back to GoatCounter's
-   own <img> SVG counter (not subject to CORS). Silently stays hidden if neither can load. */
+   Only shows when the count is greater than zero; stays hidden at zero or if it can't load. */
 (function(){
   var box=document.getElementById('footCount');
-  if(!box)return;
+  if(!box||!window.fetch)return;
   var BASE='https://reesaberstudio.goatcounter.com/counter/TOTAL';
-  function showText(n){
-    box.title=String(n)+' total visits to ReeSaber Studio';
-    box.innerHTML='<span class="fc-dot">&#9670;</span><span class="fc-n">'+String(n)+'</span> visits';
+  function showText(raw){
+    box.title=String(raw)+' total visits to ReeSaber Studio';
+    box.innerHTML='<span class="fc-dot">&#9670;</span><span class="fc-n">'+String(raw)+'</span> visits';
     box.hidden=false;
   }
-  function showImg(){
-    var img=new Image();img.className='fc-img';img.alt='total visits';img.title='Total visits to ReeSaber Studio';
-    img.onload=function(){box.innerHTML='<span class="fc-dot">&#9670;</span>';box.appendChild(img);box.hidden=false;};
-    img.onerror=function(){};
-    img.src=BASE+'.svg?no_branding=1';
-  }
-  if(!window.fetch){showImg();return;}
   fetch(BASE+'.json',{cache:'no-store'})
     .then(function(r){return r.ok?r.json():null;})
-    .then(function(d){var n=d&&(d.count||d.count_unique);if(n)showText(n);else showImg();})
-    .catch(function(){showImg();});
+    .then(function(d){
+      var raw=d&&(d.count||d.count_unique);
+      var n=raw?parseInt(String(raw).replace(/[^0-9]/g,''),10):0;
+      if(n>0)showText(raw);      // hidden by default; only reveal when there is a real count
+    })
+    .catch(function(){});
 })();
 </script>
 <!-- ============================================================================
