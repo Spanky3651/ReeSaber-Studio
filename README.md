@@ -1,6 +1,6 @@
 # ReeSaber Studio
 
-> A visual, single-file preset editor for the [ReeSabers](https://beatleader.wiki/en/reesabers/start) Beat Saber mod.
+> A visual, single-file preset editor and config tool for the [ReeSabers](https://beatleader.wiki/en/reesabers/start) Beat Saber mod.
 
 **Live app:** https://spanky3651.github.io/ReeSaber-Studio/
 
