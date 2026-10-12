@@ -1,0 +1,47 @@
+{
+  "version": 1,
+  "presets": [
+    {
+      "name": "Neon Classic",
+      "author": "MSploit",
+      "description": "A clean glowing blade with a dark grip, pommel and guard ring. A good base to remix.",
+      "file": "neon-classic.json",
+      "thumb": "neon-classic.png"
+    },
+    {
+      "name": "Velocity Reactive",
+      "author": "MSploit",
+      "description": "Trail that brightens and grows with your swing, plus sparks on every cut.",
+      "file": "velocity-reactive.json",
+      "thumb": "velocity-reactive.png"
+    },
+    {
+      "name": "Layered Trails",
+      "author": "MSploit",
+      "description": "Tip, light and dark trails stacked for a thick, painterly streak.",
+      "file": "layered-trails.json",
+      "thumb": "layered-trails.png"
+    },
+    {
+      "name": "Charm Saber",
+      "author": "MSploit",
+      "description": "Neon blade with a dangling charm on a dynamic joint that jiggles as you swing.",
+      "file": "charm-saber.json",
+      "thumb": "charm-saber.png"
+    },
+    {
+      "name": "Double Staff",
+      "author": "MSploit",
+      "description": "One blade cloned out of the bottom of the handle, with a soft outline glow.",
+      "file": "double-staff.json",
+      "thumb": "double-staff.png"
+    },
+    {
+      "name": "Two-Tone Gradient",
+      "author": "MSploit",
+      "description": "Blade that fades from a pale core to the saber color at the tip, with a fading trail.",
+      "file": "two-tone-gradient.json",
+      "thumb": "two-tone-gradient.png"
+    }
+  ]
+}

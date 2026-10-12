@@ -1,0 +1,1253 @@
+{
+  "ModVersion": "0.3.18",
+  "Version": 1,
+  "RootSettings": {
+    "Type": 0
+  },
+  "LocalTransform": {
+    "Position": {
+      "x": 0,
+      "y": 0,
+      "z": 0
+    },
+    "Rotation": {
+      "x": 0,
+      "y": 0,
+      "z": 0
+    },
+    "Scale": {
+      "x": 1,
+      "y": 1,
+      "z": 1
+    }
+  },
+  "Modules": [
+    {
+      "ModuleId": "reezonate.blur-saber",
+      "Version": 2,
+      "Config": {
+        "MeshSettings": {
+          "zOffsetFrom": -0.17,
+          "zOffsetTo": 1,
+          "radius": 0.012,
+          "stretchBias": 4,
+          "saberProfile": {
+            "interpolationType": 1,
+            "controlPoints": [
+              {
+                "time": 0,
+                "value": 0
+              },
+              {
+                "time": 0.012,
+                "value": 0.8
+              },
+              {
+                "time": 0.024,
+                "value": 0
+              },
+              {
+                "time": 0.029,
+                "value": 0.7
+              },
+              {
+                "time": 0.115,
+                "value": 0.7
+              },
+              {
+                "time": 0.12,
+                "value": 0.093
+              },
+              {
+                "time": 0.145,
+                "value": 0.9
+              },
+              {
+                "time": 0.257,
+                "value": 0.66
+              },
+              {
+                "time": 0.97,
+                "value": 0.3
+              },
+              {
+                "time": 1,
+                "value": 0.069
+              }
+            ]
+          },
+          "startCap": true,
+          "endCap": true,
+          "verticalResolution": 20,
+          "horizontalResolution": 10
+        },
+        "MaterialSettings": {
+          "blurFrames": 2,
+          "blurSensitivity": 0.6,
+          "reflectionColor": {
+            "r": 0.05,
+            "g": 0.005,
+            "b": 0.005,
+            "a": 0
+          },
+          "envLightColor": {
+            "r": 1,
+            "g": 1,
+            "b": 1,
+            "a": 1
+          },
+          "fresnelPower": 6,
+          "metallic": 0,
+          "roughness": 0.428,
+          "envLightIntensity": 1,
+          "reflectionIntensity": 1,
+          "normalMapIntensity": 1,
+          "sceneReflections": false,
+          "sceneLights": false,
+          "renderQueue": 3002,
+          "cullMode": 0,
+          "depthWrite": false,
+          "maskSettings": {
+            "bladeMaskResolution": 48,
+            "driversMaskResolution": 1,
+            "handleMask": {
+              "interpolationType": 2,
+              "controlPoints": [
+                {
+                  "time": 0,
+                  "value": 0
+                },
+                {
+                  "time": 0.128,
+                  "value": 0
+                }
+              ]
+            },
+            "bladeMappings": {
+              "colorOverValue": {
+                "interpolationType": 0,
+                "controlPoints": [
+                  {
+                    "time": 0,
+                    "value": {
+                      "r": 1,
+                      "g": 1,
+                      "b": 1,
+                      "a": 1
+                    }
+                  }
+                ]
+              },
+              "alphaOverValue": {
+                "interpolationType": 0,
+                "controlPoints": [
+                  {
+                    "time": 0,
+                    "value": 1
+                  }
+                ]
+              },
+              "scaleOverValue": {
+                "interpolationType": 0,
+                "controlPoints": [
+                  {
+                    "time": 0,
+                    "value": 1
+                  }
+                ]
+              },
+              "valueFrom": 0,
+              "valueTo": 1
+            },
+            "driversSampleMode": 0,
+            "viewingAngleMappings": {
+              "colorOverValue": {
+                "interpolationType": 0,
+                "controlPoints": [
+                  {
+                    "time": 0,
+                    "value": {
+                      "r": 1,
+                      "g": 1,
+                      "b": 1,
+                      "a": 1
+                    }
+                  }
+                ]
+              },
+              "alphaOverValue": {
+                "interpolationType": 0,
+                "controlPoints": [
+                  {
+                    "time": 0,
+                    "value": 1
+                  }
+                ]
+              },
+              "scaleOverValue": {
+                "interpolationType": 0,
+                "controlPoints": [
+                  {
+                    "time": 0,
+                    "value": 1
+                  }
+                ]
+              },
+              "valueFrom": 0,
+              "valueTo": 1
+            },
+            "surfaceAngleMappings": {
+              "colorOverValue": {
+                "interpolationType": 0,
+                "controlPoints": [
+                  {
+                    "time": 0,
+                    "value": {
+                      "r": 1,
+                      "g": 1,
+                      "b": 1,
+                      "a": 1
+                    }
+                  }
+                ]
+              },
+              "alphaOverValue": {
+                "interpolationType": 0,
+                "controlPoints": [
+                  {
+                    "time": 0,
+                    "value": 1
+                  }
+                ]
+              },
+              "scaleOverValue": {
+                "interpolationType": 0,
+                "controlPoints": [
+                  {
+                    "time": 0,
+                    "value": 1
+                  }
+                ]
+              },
+              "valueFrom": 0,
+              "valueTo": 1
+            },
+            "drivers": []
+          }
+        },
+        "TexturesSettings": {
+          "mainTextureId": "None",
+          "normalMapTextureId": "None",
+          "glowMapTextureId": "None",
+          "colorMapTextureId": "None",
+          "metallicMapTextureId": "None",
+          "roughnessMapTextureId": "None",
+          "opacityTextureId": "None",
+          "tilingLayout": {
+            "x": 1,
+            "y": 1,
+            "z": 0,
+            "w": 0
+          },
+          "uvScroll": {
+            "x": 0,
+            "y": 0
+          }
+        },
+        "Enabled": true,
+        "Name": "Saber",
+        "LocalTransform": {
+          "Position": {
+            "x": 0,
+            "y": 0,
+            "z": 0
+          },
+          "Rotation": {
+            "x": 0,
+            "y": 0,
+            "z": 0
+          },
+          "Scale": {
+            "x": 1,
+            "y": 1,
+            "z": 1
+          }
+        },
+        "ForceColorOverride": false,
+        "ColorOverride": {
+          "type": 0,
+          "hue": 0,
+          "saturation": 1,
+          "value": 1,
+          "hueShiftPerSecond": 0,
+          "fakeGlowMultiplier": 1,
+          "colorSource": 0
+        }
+      },
+      "Children": []
+    },
+    {
+      "ModuleId": "reezonate.simple-trail",
+      "Version": 1,
+      "Config": {
+        "MeshSettings": {
+          "TrailLength": 0.35,
+          "HorizontalResolution": 4,
+          "VerticalResolution": 80
+        },
+        "MaterialSettings": {
+          "trailType": 1,
+          "materialType": 0,
+          "mappingType": 0,
+          "offset": 1,
+          "width": 0.3,
+          "distortionMultiplier": 1,
+          "generalSettings": {
+            "customTextureId": "",
+            "opacityTextureId": "",
+            "animationLayout": {
+              "totalFrames": 1,
+              "framesPerRow": 1,
+              "framesPerColumn": 1,
+              "frameDuration": 1
+            },
+            "tilingLayout": {
+              "x": 1,
+              "y": 1,
+              "z": 0,
+              "w": 0
+            },
+            "uvScroll": {
+              "x": 0,
+              "y": 0
+            },
+            "blendingMode": 0,
+            "alwaysOnTop": false,
+            "renderQueue": 2999
+          },
+          "maskSettings": {
+            "driversSampleMode": 0,
+            "viewingAngleMappings": {
+              "colorOverValue": {
+                "interpolationType": 0,
+                "controlPoints": [
+                  {
+                    "time": 0,
+                    "value": {
+                      "r": 1,
+                      "g": 1,
+                      "b": 1,
+                      "a": 1
+                    }
+                  }
+                ]
+              },
+              "alphaOverValue": {
+                "interpolationType": 0,
+                "controlPoints": [
+                  {
+                    "time": 0,
+                    "value": 1
+                  }
+                ]
+              },
+              "scaleOverValue": {
+                "interpolationType": 0,
+                "controlPoints": [
+                  {
+                    "time": 0,
+                    "value": 1
+                  }
+                ]
+              },
+              "valueFrom": 0,
+              "valueTo": 1
+            },
+            "surfaceAngleMappings": {
+              "colorOverValue": {
+                "interpolationType": 0,
+                "controlPoints": [
+                  {
+                    "time": 0,
+                    "value": {
+                      "r": 1,
+                      "g": 1,
+                      "b": 1,
+                      "a": 1
+                    }
+                  }
+                ]
+              },
+              "alphaOverValue": {
+                "interpolationType": 0,
+                "controlPoints": [
+                  {
+                    "time": 0,
+                    "value": 1
+                  }
+                ]
+              },
+              "scaleOverValue": {
+                "interpolationType": 0,
+                "controlPoints": [
+                  {
+                    "time": 0,
+                    "value": 1
+                  }
+                ]
+              },
+              "valueFrom": 0,
+              "valueTo": 1
+            },
+            "drivers": [],
+            "mainMaskResolution": 24,
+            "driversMaskResolution": 16,
+            "lengthMappings": {
+              "colorOverValue": {
+                "interpolationType": 0,
+                "controlPoints": [
+                  {
+                    "time": 0,
+                    "value": {
+                      "r": 1,
+                      "g": 1,
+                      "b": 1,
+                      "a": 1
+                    }
+                  }
+                ]
+              },
+              "alphaOverValue": {
+                "interpolationType": 0,
+                "controlPoints": [
+                  {
+                    "time": 0,
+                    "value": 1
+                  }
+                ]
+              },
+              "scaleOverValue": {
+                "interpolationType": 0,
+                "controlPoints": [
+                  {
+                    "time": 0,
+                    "value": 1
+                  }
+                ]
+              },
+              "valueFrom": 0,
+              "valueTo": 1
+            },
+            "widthMappings": {
+              "colorOverValue": {
+                "interpolationType": 0,
+                "controlPoints": [
+                  {
+                    "time": 0,
+                    "value": {
+                      "r": 1,
+                      "g": 1,
+                      "b": 1,
+                      "a": 1
+                    }
+                  }
+                ]
+              },
+              "alphaOverValue": {
+                "interpolationType": 0,
+                "controlPoints": [
+                  {
+                    "time": 0,
+                    "value": 1
+                  }
+                ]
+              },
+              "scaleOverValue": {
+                "interpolationType": 0,
+                "controlPoints": [
+                  {
+                    "time": 0,
+                    "value": 1
+                  }
+                ]
+              },
+              "valueFrom": 0,
+              "valueTo": 1
+            }
+          }
+        },
+        "Enabled": true,
+        "Name": "Neon Trail",
+        "LocalTransform": {
+          "Position": {
+            "x": 0,
+            "y": 0,
+            "z": 0
+          },
+          "Rotation": {
+            "x": 0,
+            "y": 0,
+            "z": 0
+          },
+          "Scale": {
+            "x": 1,
+            "y": 1,
+            "z": 1
+          }
+        },
+        "ForceColorOverride": false,
+        "ColorOverride": {
+          "type": 0,
+          "hue": 0,
+          "saturation": 1,
+          "value": 1,
+          "hueShiftPerSecond": 0,
+          "fakeGlowMultiplier": 1,
+          "colorSource": 0
+        }
+      },
+      "Children": []
+    },
+    {
+      "ModuleId": "reezonate.empty",
+      "Version": 1,
+      "Config": {
+        "Enabled": true,
+        "Name": "Hilt",
+        "LocalTransform": {
+          "Position": {
+            "x": 0,
+            "y": 0,
+            "z": 0
+          },
+          "Rotation": {
+            "x": 0,
+            "y": 0,
+            "z": 0
+          },
+          "Scale": {
+            "x": 1,
+            "y": 1,
+            "z": 1
+          }
+        },
+        "ForceColorOverride": false,
+        "ColorOverride": {
+          "type": 0,
+          "hue": 0,
+          "saturation": 1,
+          "value": 1,
+          "hueShiftPerSecond": 0,
+          "fakeGlowMultiplier": 1,
+          "colorSource": 0
+        }
+      },
+      "Children": [
+        {
+          "ModuleId": "reezonate.blur-saber",
+          "Version": 2,
+          "Config": {
+            "MeshSettings": {
+              "zOffsetFrom": -0.17,
+              "zOffsetTo": -0.005,
+              "radius": 0.016,
+              "stretchBias": 4,
+              "saberProfile": {
+                "interpolationType": 0,
+                "controlPoints": [
+                  {
+                    "time": 0,
+                    "value": 1
+                  }
+                ]
+              },
+              "startCap": true,
+              "endCap": true,
+              "verticalResolution": 20,
+              "horizontalResolution": 10
+            },
+            "MaterialSettings": {
+              "blurFrames": 2,
+              "blurSensitivity": 0.6,
+              "reflectionColor": {
+                "r": 0.05,
+                "g": 0.005,
+                "b": 0.005,
+                "a": 0
+              },
+              "envLightColor": {
+                "r": 1,
+                "g": 1,
+                "b": 1,
+                "a": 1
+              },
+              "fresnelPower": 5,
+              "metallic": 0.6,
+              "roughness": 0.35,
+              "envLightIntensity": 1,
+              "reflectionIntensity": 1,
+              "normalMapIntensity": 1,
+              "sceneReflections": false,
+              "sceneLights": false,
+              "renderQueue": 3002,
+              "cullMode": 0,
+              "depthWrite": false,
+              "maskSettings": {
+                "bladeMaskResolution": 48,
+                "driversMaskResolution": 1,
+                "handleMask": {
+                  "interpolationType": 2,
+                  "controlPoints": [
+                    {
+                      "time": 0,
+                      "value": 0
+                    },
+                    {
+                      "time": 0.128,
+                      "value": 0
+                    }
+                  ]
+                },
+                "bladeMappings": {
+                  "colorOverValue": {
+                    "interpolationType": 0,
+                    "controlPoints": [
+                      {
+                        "time": 0,
+                        "value": {
+                          "r": 1,
+                          "g": 1,
+                          "b": 1,
+                          "a": 1
+                        }
+                      }
+                    ]
+                  },
+                  "alphaOverValue": {
+                    "interpolationType": 0,
+                    "controlPoints": [
+                      {
+                        "time": 0,
+                        "value": 1
+                      }
+                    ]
+                  },
+                  "scaleOverValue": {
+                    "interpolationType": 0,
+                    "controlPoints": [
+                      {
+                        "time": 0,
+                        "value": 1
+                      }
+                    ]
+                  },
+                  "valueFrom": 0,
+                  "valueTo": 1
+                },
+                "driversSampleMode": 0,
+                "viewingAngleMappings": {
+                  "colorOverValue": {
+                    "interpolationType": 0,
+                    "controlPoints": [
+                      {
+                        "time": 0,
+                        "value": {
+                          "r": 1,
+                          "g": 1,
+                          "b": 1,
+                          "a": 1
+                        }
+                      }
+                    ]
+                  },
+                  "alphaOverValue": {
+                    "interpolationType": 0,
+                    "controlPoints": [
+                      {
+                        "time": 0,
+                        "value": 1
+                      }
+                    ]
+                  },
+                  "scaleOverValue": {
+                    "interpolationType": 0,
+                    "controlPoints": [
+                      {
+                        "time": 0,
+                        "value": 1
+                      }
+                    ]
+                  },
+                  "valueFrom": 0,
+                  "valueTo": 1
+                },
+                "surfaceAngleMappings": {
+                  "colorOverValue": {
+                    "interpolationType": 0,
+                    "controlPoints": [
+                      {
+                        "time": 0,
+                        "value": {
+                          "r": 1,
+                          "g": 1,
+                          "b": 1,
+                          "a": 1
+                        }
+                      }
+                    ]
+                  },
+                  "alphaOverValue": {
+                    "interpolationType": 0,
+                    "controlPoints": [
+                      {
+                        "time": 0,
+                        "value": 1
+                      }
+                    ]
+                  },
+                  "scaleOverValue": {
+                    "interpolationType": 0,
+                    "controlPoints": [
+                      {
+                        "time": 0,
+                        "value": 1
+                      }
+                    ]
+                  },
+                  "valueFrom": 0,
+                  "valueTo": 1
+                },
+                "drivers": []
+              }
+            },
+            "TexturesSettings": {
+              "mainTextureId": "None",
+              "normalMapTextureId": "None",
+              "glowMapTextureId": "None",
+              "colorMapTextureId": "None",
+              "metallicMapTextureId": "None",
+              "roughnessMapTextureId": "None",
+              "opacityTextureId": "None",
+              "tilingLayout": {
+                "x": 1,
+                "y": 1,
+                "z": 0,
+                "w": 0
+              },
+              "uvScroll": {
+                "x": 0,
+                "y": 0
+              }
+            },
+            "Enabled": true,
+            "Name": "Grip",
+            "LocalTransform": {
+              "Position": {
+                "x": 0,
+                "y": 0,
+                "z": 0
+              },
+              "Rotation": {
+                "x": 0,
+                "y": 0,
+                "z": 0
+              },
+              "Scale": {
+                "x": 1,
+                "y": 1,
+                "z": 1
+              }
+            },
+            "ForceColorOverride": true,
+            "ColorOverride": {
+              "type": 0,
+              "hue": 0,
+              "saturation": 0,
+              "value": 0.14,
+              "hueShiftPerSecond": 0,
+              "fakeGlowMultiplier": 1,
+              "colorSource": 0
+            }
+          },
+          "Children": []
+        },
+        {
+          "ModuleId": "reezonate.blur-saber",
+          "Version": 2,
+          "Config": {
+            "MeshSettings": {
+              "zOffsetFrom": -0.19,
+              "zOffsetTo": -0.165,
+              "radius": 0.022,
+              "stretchBias": 4,
+              "saberProfile": {
+                "interpolationType": 1,
+                "controlPoints": [
+                  {
+                    "time": 0,
+                    "value": 0.6
+                  },
+                  {
+                    "time": 0.5,
+                    "value": 1
+                  },
+                  {
+                    "time": 1,
+                    "value": 0.7
+                  }
+                ]
+              },
+              "startCap": true,
+              "endCap": true,
+              "verticalResolution": 20,
+              "horizontalResolution": 10
+            },
+            "MaterialSettings": {
+              "blurFrames": 2,
+              "blurSensitivity": 0.6,
+              "reflectionColor": {
+                "r": 0.05,
+                "g": 0.005,
+                "b": 0.005,
+                "a": 0
+              },
+              "envLightColor": {
+                "r": 1,
+                "g": 1,
+                "b": 1,
+                "a": 1
+              },
+              "fresnelPower": 5,
+              "metallic": 0,
+              "roughness": 0.428,
+              "envLightIntensity": 1,
+              "reflectionIntensity": 1,
+              "normalMapIntensity": 1,
+              "sceneReflections": false,
+              "sceneLights": false,
+              "renderQueue": 3002,
+              "cullMode": 0,
+              "depthWrite": false,
+              "maskSettings": {
+                "bladeMaskResolution": 48,
+                "driversMaskResolution": 1,
+                "handleMask": {
+                  "interpolationType": 2,
+                  "controlPoints": [
+                    {
+                      "time": 0,
+                      "value": 0
+                    },
+                    {
+                      "time": 0.128,
+                      "value": 0
+                    }
+                  ]
+                },
+                "bladeMappings": {
+                  "colorOverValue": {
+                    "interpolationType": 0,
+                    "controlPoints": [
+                      {
+                        "time": 0,
+                        "value": {
+                          "r": 1,
+                          "g": 1,
+                          "b": 1,
+                          "a": 1
+                        }
+                      }
+                    ]
+                  },
+                  "alphaOverValue": {
+                    "interpolationType": 0,
+                    "controlPoints": [
+                      {
+                        "time": 0,
+                        "value": 1
+                      }
+                    ]
+                  },
+                  "scaleOverValue": {
+                    "interpolationType": 0,
+                    "controlPoints": [
+                      {
+                        "time": 0,
+                        "value": 1
+                      }
+                    ]
+                  },
+                  "valueFrom": 0,
+                  "valueTo": 1
+                },
+                "driversSampleMode": 0,
+                "viewingAngleMappings": {
+                  "colorOverValue": {
+                    "interpolationType": 0,
+                    "controlPoints": [
+                      {
+                        "time": 0,
+                        "value": {
+                          "r": 1,
+                          "g": 1,
+                          "b": 1,
+                          "a": 1
+                        }
+                      }
+                    ]
+                  },
+                  "alphaOverValue": {
+                    "interpolationType": 0,
+                    "controlPoints": [
+                      {
+                        "time": 0,
+                        "value": 1
+                      }
+                    ]
+                  },
+                  "scaleOverValue": {
+                    "interpolationType": 0,
+                    "controlPoints": [
+                      {
+                        "time": 0,
+                        "value": 1
+                      }
+                    ]
+                  },
+                  "valueFrom": 0,
+                  "valueTo": 1
+                },
+                "surfaceAngleMappings": {
+                  "colorOverValue": {
+                    "interpolationType": 0,
+                    "controlPoints": [
+                      {
+                        "time": 0,
+                        "value": {
+                          "r": 1,
+                          "g": 1,
+                          "b": 1,
+                          "a": 1
+                        }
+                      }
+                    ]
+                  },
+                  "alphaOverValue": {
+                    "interpolationType": 0,
+                    "controlPoints": [
+                      {
+                        "time": 0,
+                        "value": 1
+                      }
+                    ]
+                  },
+                  "scaleOverValue": {
+                    "interpolationType": 0,
+                    "controlPoints": [
+                      {
+                        "time": 0,
+                        "value": 1
+                      }
+                    ]
+                  },
+                  "valueFrom": 0,
+                  "valueTo": 1
+                },
+                "drivers": []
+              }
+            },
+            "TexturesSettings": {
+              "mainTextureId": "None",
+              "normalMapTextureId": "None",
+              "glowMapTextureId": "None",
+              "colorMapTextureId": "None",
+              "metallicMapTextureId": "None",
+              "roughnessMapTextureId": "None",
+              "opacityTextureId": "None",
+              "tilingLayout": {
+                "x": 1,
+                "y": 1,
+                "z": 0,
+                "w": 0
+              },
+              "uvScroll": {
+                "x": 0,
+                "y": 0
+              }
+            },
+            "Enabled": true,
+            "Name": "Pommel",
+            "LocalTransform": {
+              "Position": {
+                "x": 0,
+                "y": 0,
+                "z": 0
+              },
+              "Rotation": {
+                "x": 0,
+                "y": 0,
+                "z": 0
+              },
+              "Scale": {
+                "x": 1,
+                "y": 1,
+                "z": 1
+              }
+            },
+            "ForceColorOverride": true,
+            "ColorOverride": {
+              "type": 0,
+              "hue": 0,
+              "saturation": 0,
+              "value": 0.3,
+              "hueShiftPerSecond": 0,
+              "fakeGlowMultiplier": 1,
+              "colorSource": 0
+            }
+          },
+          "Children": []
+        }
+      ]
+    },
+    {
+      "ModuleId": "reezonate.blur-saber",
+      "Version": 2,
+      "Config": {
+        "MeshSettings": {
+          "zOffsetFrom": -0.008,
+          "zOffsetTo": 0.012,
+          "radius": 0.042,
+          "stretchBias": 4,
+          "saberProfile": {
+            "interpolationType": 1,
+            "controlPoints": [
+              {
+                "time": 0,
+                "value": 0.7
+              },
+              {
+                "time": 0.5,
+                "value": 1
+              },
+              {
+                "time": 1,
+                "value": 0.7
+              }
+            ]
+          },
+          "startCap": true,
+          "endCap": true,
+          "verticalResolution": 20,
+          "horizontalResolution": 10
+        },
+        "MaterialSettings": {
+          "blurFrames": 2,
+          "blurSensitivity": 0.6,
+          "reflectionColor": {
+            "r": 0.05,
+            "g": 0.005,
+            "b": 0.005,
+            "a": 0
+          },
+          "envLightColor": {
+            "r": 1,
+            "g": 1,
+            "b": 1,
+            "a": 1
+          },
+          "fresnelPower": 5,
+          "metallic": 0.8,
+          "roughness": 0.428,
+          "envLightIntensity": 1,
+          "reflectionIntensity": 1,
+          "normalMapIntensity": 1,
+          "sceneReflections": false,
+          "sceneLights": false,
+          "renderQueue": 3002,
+          "cullMode": 0,
+          "depthWrite": false,
+          "maskSettings": {
+            "bladeMaskResolution": 48,
+            "driversMaskResolution": 1,
+            "handleMask": {
+              "interpolationType": 2,
+              "controlPoints": [
+                {
+                  "time": 0,
+                  "value": 0
+                },
+                {
+                  "time": 0.128,
+                  "value": 0
+                }
+              ]
+            },
+            "bladeMappings": {
+              "colorOverValue": {
+                "interpolationType": 0,
+                "controlPoints": [
+                  {
+                    "time": 0,
+                    "value": {
+                      "r": 1,
+                      "g": 1,
+                      "b": 1,
+                      "a": 1
+                    }
+                  }
+                ]
+              },
+              "alphaOverValue": {
+                "interpolationType": 0,
+                "controlPoints": [
+                  {
+                    "time": 0,
+                    "value": 1
+                  }
+                ]
+              },
+              "scaleOverValue": {
+                "interpolationType": 0,
+                "controlPoints": [
+                  {
+                    "time": 0,
+                    "value": 1
+                  }
+                ]
+              },
+              "valueFrom": 0,
+              "valueTo": 1
+            },
+            "driversSampleMode": 0,
+            "viewingAngleMappings": {
+              "colorOverValue": {
+                "interpolationType": 0,
+                "controlPoints": [
+                  {
+                    "time": 0,
+                    "value": {
+                      "r": 1,
+                      "g": 1,
+                      "b": 1,
+                      "a": 1
+                    }
+                  }
+                ]
+              },
+              "alphaOverValue": {
+                "interpolationType": 0,
+                "controlPoints": [
+                  {
+                    "time": 0,
+                    "value": 1
+                  }
+                ]
+              },
+              "scaleOverValue": {
+                "interpolationType": 0,
+                "controlPoints": [
+                  {
+                    "time": 0,
+                    "value": 1
+                  }
+                ]
+              },
+              "valueFrom": 0,
+              "valueTo": 1
+            },
+            "surfaceAngleMappings": {
+              "colorOverValue": {
+                "interpolationType": 0,
+                "controlPoints": [
+                  {
+                    "time": 0,
+                    "value": {
+                      "r": 1,
+                      "g": 1,
+                      "b": 1,
+                      "a": 1
+                    }
+                  }
+                ]
+              },
+              "alphaOverValue": {
+                "interpolationType": 0,
+                "controlPoints": [
+                  {
+                    "time": 0,
+                    "value": 1
+                  }
+                ]
+              },
+              "scaleOverValue": {
+                "interpolationType": 0,
+                "controlPoints": [
+                  {
+                    "time": 0,
+                    "value": 1
+                  }
+                ]
+              },
+              "valueFrom": 0,
+              "valueTo": 1
+            },
+            "drivers": []
+          }
+        },
+        "TexturesSettings": {
+          "mainTextureId": "None",
+          "normalMapTextureId": "None",
+          "glowMapTextureId": "None",
+          "colorMapTextureId": "None",
+          "metallicMapTextureId": "None",
+          "roughnessMapTextureId": "None",
+          "opacityTextureId": "None",
+          "tilingLayout": {
+            "x": 1,
+            "y": 1,
+            "z": 0,
+            "w": 0
+          },
+          "uvScroll": {
+            "x": 0,
+            "y": 0
+          }
+        },
+        "Enabled": true,
+        "Name": "Guard",
+        "LocalTransform": {
+          "Position": {
+            "x": 0,
+            "y": 0,
+            "z": 0
+          },
+          "Rotation": {
+            "x": 0,
+            "y": 0,
+            "z": 0
+          },
+          "Scale": {
+            "x": 1,
+            "y": 1,
+            "z": 1
+          }
+        },
+        "ForceColorOverride": true,
+        "ColorOverride": {
+          "type": 0,
+          "hue": 0,
+          "saturation": 0,
+          "value": 0.22,
+          "hueShiftPerSecond": 0,
+          "fakeGlowMultiplier": 1,
+          "colorSource": 0
+        }
+      },
+      "Children": []
+    }
+  ],
+  "BinaryAssets": {
+    "Textures": [],
+    "Geometry": []
+  }
+}
