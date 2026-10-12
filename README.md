@@ -90,6 +90,13 @@ ReeSaber-Studio/
 - [Three.js](https://threejs.org/) r128 from a CDN for the preview, plus its OBJ/GLTF loaders.
 - Privacy-friendly page counts with [GoatCounter](https://www.goatcounter.com/) (no cookies).
 
+## More tools
+
+Other free, single-file Beat Saber tools by MSploit:
+
+- **[Playlist Studio](https://spanky3651.github.io/Playlist-Studio/?utm_source=github&utm_campaign=readme-reesaber-studio)** - Build Beat Saber playlists from BeatLeader and BeatSaver, with your own scores on every map, PP math, and a ready-to-play `.bplist` export.
+- **[HSV Config Generator](https://spanky3651.github.io/HSV-Config-Generator/?utm_source=github&utm_campaign=readme-reesaber-studio)** - A visual editor and live simulator for HitScoreVisualizer configs, with push-to-Quest over USB.
+
 ## Acknowledgements
 
 - The [ReeSabers](https://beatleader.wiki/en/reesabers/start) mod by the BeatLeader team.
