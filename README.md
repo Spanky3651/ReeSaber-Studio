@@ -6,7 +6,7 @@
 
 ReeSaber Studio lets you build and edit ReeSabers presets in your browser: stack and nest layers, tune materials, wire up gameplay-reactive drivers, add your own textures, and export a ready-to-use `.json` or `.reesaber` file. No build step, no install, no backend. The whole app is one HTML file.
 
-![ReeSaber Studio: the editor with the live 3D preview](docs/screenshot.png)
+![ReeSaber Studio: the curve editor with a swing test running in the live 3D preview](docs/screenshot.png)
 
 ---
 
@@ -104,7 +104,7 @@ ReeSaber-Studio/
 ├── index.html        # the whole app (served by GitHub Pages)
 ├── gallery/          # community presets: index.json, preset files and thumbnails
 ├── docs/
-│   └── screenshot.png
+│   └── screenshot.png   # README image, also used as the link preview image
 ├── README.md
 ├── LICENSE
 └── .gitignore
