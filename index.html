@@ -72,6 +72,7 @@
   .btn.tiny{padding:3px 7px;font-size:11px}
   .btn.danger:hover{border-color:var(--red);color:var(--red);box-shadow:0 0 10px rgba(255,77,109,.35)}
   .btn[disabled]{opacity:.4;pointer-events:none}
+  .btn[hidden]{display:none}
 
   /* Quick start strip */
   .quickstart{background:linear-gradient(90deg,#0c1622,#0a0e15);border-bottom:1px solid var(--line);overflow:hidden;transition:.25s;position:relative;z-index:20}
@@ -85,13 +86,22 @@
   .qs-step{background:#08080d;border:1px solid var(--line);border-radius:9px;padding:11px 13px}
   .qs-step .n{width:22px;height:22px;border-radius:6px;background:rgba(30,107,255,.12);color:var(--cyan);font-weight:800;font-size:12px;display:grid;place-items:center;border:1px solid var(--cyan-dim);margin-bottom:7px}
   .qs-step b{font-size:13px}.qs-step p{font-size:12px;color:var(--txt-dim);margin-top:3px;line-height:1.5}
+  .qs-step{display:grid;grid-template-columns:22px 1fr;column-gap:10px;align-items:start;padding:9px 12px}
+  .qs-step .n{margin:0;grid-row:span 2}
+  .qs-body{padding:2px 18px 12px}
 
   main{display:flex;flex:1;min-height:0}
   .col{display:flex;flex-direction:column;min-height:0}
   .col.presets{width:250px;border-right:1px solid var(--line);background:var(--panel)}
   .col.builder{width:300px;border-right:1px solid var(--line);background:var(--panel)}
   .col.inspector{flex:1;min-width:360px;background:var(--panel);border-right:1px solid var(--line)}
-  .col.rightcol{width:430px;background:#020203;display:flex;flex-direction:column}
+  .col.rightcol{width:var(--pv-w,clamp(380px,34vw,860px));min-width:300px;flex:none;background:#020203;display:flex;flex-direction:column}
+  .col-split{width:7px;flex:none;cursor:col-resize;background:linear-gradient(90deg,transparent 3px,var(--line) 3px,var(--line) 4px,transparent 4px);touch-action:none;position:relative;z-index:6}
+  .col-split:hover,.col-split.drag,.col-split:focus-visible{background:linear-gradient(90deg,transparent 2px,var(--cyan) 2px,var(--cyan) 5px,transparent 5px);outline:none}
+  body.pv-full .col.rightcol{position:fixed;inset:0;z-index:90;width:auto!important;min-width:0}
+  body.pv-full .m-tabbar,body.pv-full .col-split{display:none}
+  .pv-ib{display:inline-flex;align-items:center;gap:5px}
+  .pv-ib svg{width:13px;height:13px}
 
   .col-head{display:flex;align-items:center;gap:8px;padding:12px 14px;border-bottom:1px solid var(--line);font-size:12px;font-weight:700;letter-spacing:1.4px;text-transform:uppercase;color:var(--txt-dim);background:var(--panel);z-index:5}
   .col-head .ic{color:var(--cyan);display:flex}.col-head .ic svg{width:16px;height:16px}
@@ -138,13 +148,19 @@
   .stack-item .si-ic{color:var(--violet);display:flex}.stack-item .si-ic svg{width:17px;height:17px}
   .stack-item .si-body{flex:1;min-width:0}
   .stack-item .si-name{font-size:13px;font-weight:600;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
-  .stack-item .si-type{font-size:10px;color:var(--txt-mut);font-family:var(--mono)}
+  .stack-item .si-type{font-size:10px;color:var(--txt-mut);font-family:var(--mono);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
   .stack-item .si-ctrls{display:flex;gap:2px;align-items:center}
   .layer-dot{width:26px;height:26px;margin:-9px -7px -9px -9px;display:grid;place-items:center;cursor:pointer;flex:none;border-radius:50%}
   .layer-dot::before{content:"";width:8px;height:8px;border-radius:50%;background:var(--green);box-shadow:0 0 6px var(--green)}
   .layer-dot.off::before{background:#333;box-shadow:none}
   .stack-item.nested{border-left:2px solid var(--line-2)}
-  .pal-target{font-size:11.5px;color:var(--txt-mut);margin:-6px 0 14px;display:flex;align-items:center;gap:8px;flex-wrap:wrap;line-height:1.45}
+  .add-dd{margin-bottom:12px}
+  .add-menu{max-height:min(70vh,560px);overflow-y:auto;padding:10px}
+  .add-menu .palette{margin-bottom:10px}.add-menu .snip-list{margin-bottom:2px}
+  .stack-empty{border:1px dashed var(--line-2);border-radius:10px;padding:14px 12px;text-align:center}
+  .stack-empty .se-t{font-size:13px;color:var(--txt-dim);margin-bottom:10px}
+  .stack-empty .palette{margin-bottom:0;text-align:left}
+  .pal-target{font-size:11.5px;color:var(--txt-mut);margin:0 0 12px;display:flex;align-items:center;gap:8px;flex-wrap:wrap;line-height:1.45}
   .pal-target:empty{display:none}
   :focus-visible{outline:2px solid var(--cyan);outline-offset:2px}
   .stack-item:focus-visible,.preset-card:focus-visible,.pal-item:focus-visible{outline-offset:0}
@@ -175,7 +191,8 @@
   input[type=range]::-moz-range-track{height:5px;border-radius:5px;background:linear-gradient(90deg,var(--cyan-dim),#1b1b28)}
   input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:17px;height:17px;margin-top:-6px;border-radius:50%;background:var(--cyan);cursor:pointer;box-shadow:0 0 8px var(--cyan),0 0 0 3px #000}
   input[type=range]::-moz-range-thumb{width:17px;height:17px;border-radius:50%;background:var(--cyan);cursor:pointer;border:3px solid #000}
-  .slider-val{width:66px}.slider-val input{padding:6px 8px;font-size:13px;font-family:var(--mono);text-align:right}
+  .slider-val{width:86px;flex:none}.slider-val input{padding:6px 7px;font-size:12.5px;font-family:var(--mono);text-align:right}
+  input.unusual{border-color:var(--amber)!important;color:var(--amber);box-shadow:0 0 0 3px rgba(255,194,61,.1)}
 
   .toggle{position:relative;display:inline-flex;align-items:center;cursor:pointer;gap:10px}
   .toggle input{position:absolute;opacity:0;width:1px;height:1px;margin:0;pointer-events:none}
@@ -255,6 +272,9 @@
   .vitem.ok .vic{background:rgba(34,224,161,.12);color:var(--green)}
   .vitem.warn .vic{background:rgba(255,194,61,.14);color:var(--amber)}
   .vitem.err .vic{background:rgba(255,77,109,.14);color:var(--red)}
+  .vitem.info .vic{background:rgba(61,139,255,.14);color:#8fbaff;font-family:Georgia,serif;font-style:italic}
+  .vitem.jump{cursor:pointer;transition:.12s}.vitem.jump:hover{border-color:var(--cyan-dim);background:#0a0f18}
+  .vitem .vgo{font-size:11.5px;color:var(--cyan);font-weight:700;margin-top:5px}
   .vitem .vtitle{font-size:13px;font-weight:600}
   .vitem .vmsg{font-size:12px;color:var(--txt-mut);margin-top:2px;line-height:1.45}
   .valid-summary{padding:12px 16px;border-bottom:1px solid var(--line);font-size:13px;font-weight:600;display:flex;align-items:center;gap:10px}
@@ -270,7 +290,7 @@
   .asset-kind{position:absolute;top:8px;right:8px;font-size:9px;font-weight:800;letter-spacing:.5px;text-transform:uppercase;padding:2px 6px;border-radius:5px}
   .asset-kind.mesh{background:rgba(217,75,255,.16);color:var(--violet)}
   .asset-kind.texture{background:rgba(30,107,255,.14);color:var(--cyan)}
-  .asset-kind.sound{background:rgba(255,194,61,.14);color:var(--amber)}
+  
 
   .drop{border:2px dashed var(--line-2);border-radius:12px;padding:22px;text-align:center;color:var(--txt-mut);transition:.15s;cursor:pointer}
   .drop.hot{border-color:var(--cyan);background:rgba(30,107,255,.05);color:var(--cyan)}
@@ -338,7 +358,7 @@
   /* ===== Mobile: single-view + bottom tab bar ===== */
   .m-tabbar{display:none}
   @media(min-width:1101px) and (max-width:1399px){
-    .col.presets{width:210px}.col.builder{width:250px}.col.inspector{min-width:300px}.col.rightcol{width:340px}
+    .col.presets{width:210px}.col.builder{width:250px}.col.inspector{min-width:300px}.col.rightcol{width:var(--pv-w,360px)}
   }
   @media(max-width:1100px){
     html,body{height:auto}
@@ -361,6 +381,7 @@
     .topbar > .btn{flex:none;min-height:40px}
 
     .col{width:100% !important;min-width:0 !important;border-right:none !important;flex-direction:column}
+    .col-split{display:none}
     .app main>.col{display:none}
     body.m-view-presets main>.col.presets{display:flex}
     body.m-view-modules main>.col.builder{display:flex}
@@ -495,6 +516,7 @@ input.mini-color{width:36px;height:30px;padding:2px;border-radius:7px;border:1px
 .snip-item:hover{border-color:var(--violet);background:#120a18}
 .snip-item b{display:block;font-size:12px}.snip-item span{display:block;font-size:10.5px;color:var(--txt-mut);line-height:1.35;margin-top:2px}
 .pv-row2{padding-top:6px}
+#pvScheme{max-width:150px}#pvBackdrop{max-width:130px}#pvView{max-width:120px}
 .pv-scrub{display:inline-flex;align-items:center;gap:6px;font-size:11px;color:var(--txt-mut);font-weight:600;flex:1;min-width:120px}
 .pv-scrub input{flex:1;min-width:60px}
 .solo-banner{display:flex;align-items:center;gap:8px;padding:6px 12px;font-size:12px;color:var(--amber);background:rgba(255,194,61,.08);border-bottom:1px solid rgba(255,194,61,.3)}
@@ -503,6 +525,11 @@ input.mini-color{width:36px;height:30px;padding:2px;border-radius:7px;border:1px
 .perf{border:1px solid var(--line);border-radius:9px;padding:10px 12px;margin-bottom:12px;background:#07070b}
 .perf-top{display:flex;align-items:center;gap:6px;font-size:13px}
 .perf-lvl{margin-left:auto;font-family:var(--mono);font-size:12px;font-weight:700}
+.perf-sub{display:flex;align-items:center;gap:8px;margin-top:8px;font-size:11.5px;color:var(--txt-mut)}
+.perf-tgt{display:inline-flex;border:1px solid var(--line-2);border-radius:7px;overflow:hidden}
+.perf-tb{background:transparent;border:0;color:var(--txt-mut);font:700 10.5px var(--font);padding:3px 8px;cursor:pointer;letter-spacing:.3px}
+.perf-tb.on{background:rgba(30,107,255,.16);color:#cfe4ff}
+@media(max-width:1100px){.perf-tb{padding:7px 12px;font-size:12px;min-height:34px;min-width:52px}}
 .perf-bar{height:6px;border-radius:6px;background:#141a26;margin:8px 0 6px;overflow:hidden}.perf-bar span{display:block;height:100%;border-radius:6px}
 .perf-light .perf-lvl{color:var(--green)}.perf-light .perf-bar span{background:var(--green)}
 .perf-medium .perf-lvl{color:var(--amber)}.perf-medium .perf-bar span{background:var(--amber)}
@@ -511,6 +538,21 @@ input.mini-color{width:36px;height:30px;padding:2px;border-radius:7px;border:1px
 .explain-sum{font-size:14px;line-height:1.6;color:var(--txt-dim);margin-bottom:12px}
 .explain-tree{font-size:13px;line-height:1.6;color:var(--txt);padding-left:18px;margin-bottom:14px}
 .explain-tree ul{padding-left:18px}
+.difflist{list-style:none;padding:0;margin:4px 0 0;font-size:12.5px;line-height:1.55;color:var(--txt-dim);font-family:var(--mono);max-height:46vh;overflow:auto;border:1px solid var(--line);border-radius:8px;padding:8px 10px;background:#05070b}
+.difflist li{padding:2px 0;border-bottom:1px solid #10141d;overflow-wrap:anywhere}.difflist li:last-child{border-bottom:0}
+.df-add{color:var(--green);font-weight:700}.df-rem{color:var(--red);font-weight:700}.df-old{color:#ff9fb0}.df-new{color:#8fffd0}.df-more{color:var(--txt-mut)}
+.combo-list{max-height:150px;overflow:auto;border:1px solid var(--line);border-radius:8px;padding:4px}
+.q-bar{display:flex;align-items:center;gap:8px;margin:10px 0 12px;flex-wrap:wrap}
+.q-pill{font-size:11.5px;font-weight:700;letter-spacing:.4px;padding:4px 10px;border-radius:20px;border:1px solid var(--line-2);color:var(--txt-dim);font-family:var(--mono)}
+.q-pill.on{color:var(--green);border-color:rgba(34,224,161,.4);background:rgba(34,224,161,.08)}
+.q-pill.connecting{color:var(--amber);border-color:rgba(255,194,61,.4)}
+.q-dirst{font-family:var(--mono);font-size:11px;margin-left:6px}.q-dirst.ok{color:var(--green)}.q-dirst.bad{color:var(--amber)}
+.q-list{border:1px solid var(--line);border-radius:9px;max-height:220px;overflow:auto;background:#05070b}
+.q-row{display:flex;align-items:center;gap:8px;padding:7px 10px;border-bottom:1px solid #10141d;font-size:13px}.q-row:last-child{border-bottom:0}.q-row span{flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;font-family:var(--mono);font-size:12.5px}
+.q-log{font-family:var(--mono);font-size:11.5px;line-height:1.5;max-height:160px;overflow:auto;border:1px solid var(--line);border-radius:8px;padding:8px 10px;background:#030405;color:var(--txt-dim)}
+.q-log .ql-ok{color:var(--green)}.q-log .ql-warn{color:var(--amber)}.q-log .ql-err{color:var(--red)}.q-log .ql-dim{color:var(--txt-mut)}
+.q-cmd{display:flex;align-items:center;gap:8px;margin:4px 0}.q-cmd code{flex:1}
+#btnQuest.q-on{border-color:rgba(34,224,161,.45);color:var(--green)}
 .gallery-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(180px,1fr));gap:12px;margin-top:10px}
 .gal-card{border:1px solid var(--line-2);border-radius:10px;padding:10px;background:#08080d;display:flex;flex-direction:column;gap:4px}
 .gal-thumb{height:120px;border-radius:7px;background:#020203;overflow:hidden;display:grid;place-items:center;border:1px solid var(--line)}
@@ -564,6 +606,25 @@ input.mini-color{width:36px;height:30px;padding:2px;border-radius:7px;border:1px
 .wn-d{font-size:12.5px;color:var(--txt-dim);line-height:1.45;margin:0}
 .wn-foot{padding:14px 18px;border-top:1px solid var(--line)}
 @media(max-width:1100px){.wn-back{padding:12px}.wn-foot .btn{min-height:44px}}
+/* Desktop: one slim footer row so the editor gets the height */
+@media(min-width:1101px){
+  footer.appfoot{flex-wrap:nowrap;padding:4px 14px;gap:12px}
+  footer.appfoot .foot-left{display:none}
+  footer.appfoot .foot-more{order:-1;width:auto;flex:1;margin:0;text-align:left;font-size:11.5px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  footer.appfoot .foot-right{gap:10px;flex-wrap:nowrap}
+  footer.appfoot a.credit{padding:2px 10px 2px 3px;gap:7px;border-radius:9px}
+  footer.appfoot a.credit img{width:24px;height:24px;border-radius:7px}
+  footer.appfoot a.credit .c1,footer.appfoot a.credit .c3{display:none}
+  footer.appfoot a.credit .c2{font-size:12.5px}
+  footer.appfoot .footlinks a.src-badge,footer.appfoot a.kofi-support{padding:5px 11px;font-size:12.5px;border-radius:9px}
+}
+/* Phones: labels under the header icons so Import and Export can't be mixed up */
+@media(max-width:700px){
+  .topbar > .btn{font-size:9.5px !important;flex-direction:column;gap:2px !important;width:46px !important;height:44px !important;min-height:44px !important;letter-spacing:.2px;line-height:1}
+  .topbar > .btn svg{width:17px !important;height:17px !important}
+  .m-tab[data-view="modules"] .m-badge{background:#28303f !important;color:#e9edf5 !important}
+}
+@media(max-width:420px){.topbar > .btn{width:42px !important}.brand h1{font-size:13px}}
 </style>
 </head>
 <body>
@@ -576,7 +637,7 @@ input.mini-color{width:36px;height:30px;padding:2px;border-radius:7px;border:1px
     <div class="spacer"></div>
     <div class="modver" id="modverTag">ModVersion 0.3.18</div>
     <button class="btn ghost" id="btnAssets" title="Assets" aria-label="Assets"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/><polyline points="3.27 6.96 12 12.01 20.73 6.96"/><line x1="12" y1="22.08" x2="12" y2="12"/></svg>Assets <span class="badge-count" id="assetCount" style="margin-left:2px">0</span></button>
-    <button class="btn ghost" id="btnGlobals" title="Global settings" aria-label="Global settings"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>Global</button>
+    <button class="btn ghost" id="btnQuest" title="Meta Quest: open and push presets over USB" aria-label="Quest"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 9a3 3 0 0 1 3-3h12a3 3 0 0 1 3 3v5a3 3 0 0 1-3 3h-3l-2-2.5h-2L9 17H6a3 3 0 0 1-3-3z"/><circle cx="8.5" cy="11.5" r="1.6"/><circle cx="15.5" cy="11.5" r="1.6"/></svg>Quest</button>
     <button class="btn ghost" id="btnImport" title="Import" aria-label="Import"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>Import</button>
     <button class="btn primary" id="btnExport" title="Export" aria-label="Export"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>Export</button>
   </header>
@@ -590,9 +651,9 @@ input.mini-color{width:36px;height:30px;padding:2px;border-radius:7px;border:1px
     </div>
     <div class="qs-body">
       <div class="qs-step"><div class="n">1</div><b>Pick a starter</b><p>Use <em style="color:var(--cyan);font-style:normal">New ▾ → template</em> for a ready-made saber, or start blank. Each preset is one saber config file.</p></div>
-      <div class="qs-step"><div class="n">2</div><b>Stack modules</b><p>Add a <b>Blade</b>, then layer <b>Trails</b> and <b>Sparks</b>. Select a <b>Group</b> or <b>Dynamic Joint</b> first to nest layers inside it. Click a layer's dot to mute it.</p></div>
-      <div class="qs-step"><div class="n">3</div><b>Tune &amp; drive</b><p>Open the accordions to shape mesh, material and color. Add <b>Drivers</b> to make a layer react to Score, Velocity, cuts &amp; more.</p></div>
-      <div class="qs-step"><div class="n">4</div><b>Check &amp; export</b><p>Watch the <b>Live JSON</b> and <b>Validate</b> tabs. When it's green, hit <b>Export</b> (.json or .reesaber). Your work autosaves in this browser.</p></div>
+      <div class="qs-step"><div class="n">2</div><b>Stack layers</b><p>Use <b>Add layer</b> for a <b>Blade</b>, then <b>Trails</b> and <b>Sparks</b>. Select a <b>Group</b> or <b>Dynamic Joint</b> first to nest layers inside it.</p></div>
+      <div class="qs-step"><div class="n">3</div><b>Tune &amp; drive</b><p>Open the panels to shape mesh, material and color. Add <b>Drivers</b> to make a layer react to score, swing speed and more.</p></div>
+      <div class="qs-step"><div class="n">4</div><b>Check &amp; export</b><p>When <b>Validate</b> is green, hit <b>Export</b>, or <b>Quest</b> to push it to your headset over USB. Your work autosaves in this browser.</p></div>
     </div>
   </div>
 
@@ -622,12 +683,19 @@ input.mini-color{width:36px;height:30px;padding:2px;border-radius:7px;border:1px
         Module Stack<span class="spacer"></span><span class="badge-count" id="moduleCount">0</span>
       </div>
       <div class="col-body">
-        <div class="section-label">Add module</div>
-        <div class="palette" id="palette"></div>
+        <div class="dd add-dd" id="addDd">
+          <button type="button" class="btn primary" id="btnAddLayer" aria-haspopup="true" aria-expanded="false" style="width:100%;justify-content:center">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+            Add layer <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" style="width:13px;height:13px"><polyline points="6 9 12 15 18 9"/></svg>
+          </button>
+          <div class="dd-menu add-menu" id="addMenu">
+            <div class="section-label">Modules</div>
+            <div class="palette" id="palette"></div>
+            <div class="section-label">Snippets <span style="flex:1;height:1px;background:var(--line)"></span></div>
+            <div class="snip-list" id="snippetList"></div>
+          </div>
+        </div>
         <div class="pal-target" id="paletteTarget"></div>
-        <div class="section-label">Snippets <span style="flex:1;height:1px;background:var(--line)"></span></div>
-        <div class="snip-list" id="snippetList"></div>
-        <div class="section-label">Layers <span style="flex:1;height:1px;background:var(--line)"></span></div>
         <div id="pasteBar" class="paste-bar"></div>
         <div id="stackList"></div>
       </div>
@@ -648,6 +716,7 @@ input.mini-color{width:36px;height:30px;padding:2px;border-radius:7px;border:1px
       <div class="insp-body" id="inspBody"></div>
     </section>
 
+    <div class="col-split" id="pvSplit" role="separator" aria-orientation="vertical" aria-label="Resize the preview" tabindex="0" title="Drag to resize the preview. Double-click to reset."></div>
     <!-- Right column: preview / json / validate -->
     <section class="col rightcol">
       <div class="rc-tabs" id="rcTabs">
@@ -665,13 +734,20 @@ input.mini-color{width:36px;height:30px;padding:2px;border-radius:7px;border:1px
           <div class="mini-toggle on" data-pv="hilt" title="Show a stock handle (turn off if your preset builds its own)">Hilt</div>
           <div class="mini-toggle" data-pv="both">Both hands</div>
           <div class="mini-toggle on" data-pv="driveScore" title="Pulse driver values automatically">Sim driver</div>
+          <div class="mini-toggle" data-pv="note" title="Show a note block beside the saber for scale (approximate size)">Note</div>
+          <button type="button" class="btn tiny pv-ib" id="btnFrame" title="Fit the saber in view"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 8V3h5M16 3h5v5M21 16v5h-5M8 21H3v-5"/></svg>Fit</button>
+          <button type="button" class="btn tiny pv-ib" id="btnExpand" title="Expand the preview (Esc to exit)" aria-pressed="false"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M15 3h6v6M9 21H3v-6M21 3l-7 7M3 21l7-7"/></svg><span>Expand</span></button>
         </div>
         <div class="preview-ctrls pv-row2">
           <select id="pvBackdrop" class="mini-sel" aria-label="Preview backdrop" title="Backdrop"></select>
           <select id="pvScheme" class="mini-sel" aria-label="Preview colors" title="Saber colors"></select>
+          <select id="pvView" class="mini-sel" aria-label="Camera view" title="Camera view"></select>
+        </div>
+        <div class="preview-ctrls pv-row2">
           <label class="pv-scrub" title="Driver value (moving it turns off Sim driver)"><span>Driver</span><input type="range" id="pvScrub" min="0" max="1" step="0.01" value="0.5" aria-label="Driver value"></label>
           <button type="button" class="btn tiny" id="btnCapture" title="Save a PNG or record a GIF"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"/><circle cx="12" cy="13" r="4"/></svg>Capture</button>
         </div>
+        <div class="solo-banner" id="compareBanner" hidden>Comparing: <b>left = saved version</b>, right = current<button type="button" class="btn tiny" id="compareExit">Stop comparing</button></div>
         <div class="solo-banner" id="soloBanner" hidden>Solo: <b class="sb-name"></b><button type="button" class="btn tiny" id="soloExit">Show all</button></div>
         <canvas id="glcanvas"></canvas>
         <div class="preview-foot">
@@ -700,7 +776,7 @@ input.mini-color{width:36px;height:30px;padding:2px;border-radius:7px;border:1px
     <div class="foot-left">ReeSaber Studio · single-file app · runs in your browser · targets ReeSabers 0.3.18+</div>
     <div class="foot-right">
       <div class="foot-count" id="footCount" hidden></div>
-      <span class="foot-updated" id="footUpdated" data-updated="2026-10-13T11:34:16Z">Last updated recently</span>
+      <span class="foot-updated" id="footUpdated" data-updated="2026-10-17T11:17:01Z">Last updated recently</span>
       
       <a class="credit" href="https://beatleader.com/u/msploit" target="_blank" rel="noopener" title="MSploit on BeatLeader" onclick="try{window.goatcounter&amp;&amp;window.goatcounter.count({path:'profile-reesaber',title:'BeatLeader profile',event:true})}catch(e){}">
         <img alt="MSploit" src="data:image/png;base64,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" />
@@ -737,19 +813,20 @@ input.mini-color{width:36px;height:30px;padding:2px;border-radius:7px;border:1px
 <div class="help-pop" id="helpPop"></div>
 <div class="wn-back" id="whatsnewBack" hidden>
   <div class="wn-card" role="dialog" aria-modal="true" aria-labelledby="whatsnewTitle">
-    <div class="wn-head"><span class="wn-star"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2l2.4 6.3L21 9l-5 4.2L17.8 20 12 16.5 6.2 20 8 13.2 3 9l6.6-.7z"/></svg></span><h3 id="whatsnewTitle">What's New</h3><span class="wn-chip">6 updates</span></div>
+    <div class="wn-head"><span class="wn-star"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2l2.4 6.3L21 9l-5 4.2L17.8 20 12 16.5 6.2 20 8 13.2 3 9l6.6-.7z"/></svg></span><h3 id="whatsnewTitle">What's New</h3><span class="wn-chip">7 updates</span></div>
     <div class="wn-body">
-      <div class="wn-item"><span class="wn-ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 17c3 0 4-10 9-10s6 10 9 10"/><circle cx="12" cy="7" r="1.5"/></svg></span><div><p class="wn-t">Curve and gradient editors</p><p class="wn-d">Drag points to shape the blade profile and every mapping curve, and paint color gradients along the blade or trail. Open a layer's Blade Shape Curves or Colors &amp; Mappings panel.</p></div></div>
-      <div class="wn-item"><span class="wn-ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 3l-9 9 3 3 9-9z"/><path d="M5 12l-2 7 7-2"/><path d="M17 3c2 1 3 3 4 5"/></svg></span><div><p class="wn-t">Swing test</p><p class="wn-d">Slash the sabers in the preview so trails streak, sparks burst on cuts and dynamic joints jiggle. Turn it on above the 3D view, next to the backdrop and color pickers.</p></div></div>
-      <div class="wn-item"><span class="wn-ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2 2 7l10 5 10-5-10-5z"/><path d="M2 17l10 5 10-5"/><path d="M2 12l10 5 10-5"/></svg></span><div><p class="wn-t">Snippets and layer tools</p><p class="wn-d">Drop in a hilt, guard ring, dangling charm, double-ended staff or outline glow. Duplicate, copy, paste, solo and drag layers into groups from the ⋯ menu.</p></div></div>
-      <div class="wn-item"><span class="wn-ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 14L4 9l5-5"/><path d="M4 9h10.5a5.5 5.5 0 0 1 0 11H11"/></svg></span><div><p class="wn-t">Undo and checkpoints</p><p class="wn-d">Ctrl+Z and Ctrl+Shift+Z, plus named checkpoints so you can try something wild and roll back. The buttons sit next to the editor tabs.</p></div></div>
-      <div class="wn-item"><span class="wn-ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/></svg></span><div><p class="wn-t">Share, gallery and capture</p><p class="wn-d">Copy a share link from Export, open community presets from New Preset ▾ → Browse the gallery, and save a PNG or looping GIF of your saber with Capture.</p></div></div>
-      <div class="wn-item"><span class="wn-ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg></span><div><p class="wn-t">Drop files anywhere</p><p class="wn-d">Drag a .reesaber, .json or .zip onto the page to import it. In Chrome or Edge you can also save straight into your Presets folder from Export.</p></div></div>
+      <div class="wn-item"><span class="wn-ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 9a3 3 0 0 1 3-3h12a3 3 0 0 1 3 3v5a3 3 0 0 1-3 3h-3l-2-2.5h-2L9 17H6a3 3 0 0 1-3-3z"/><circle cx="8.5" cy="11.5" r="1.6"/><circle cx="15.5" cy="11.5" r="1.6"/></svg></span><div><p class="wn-t">Quest over USB</p><p class="wn-d">The in-game editor is PC only, so Studio now talks to your Quest directly. Open the presets on your headset, edit them, and push them back with a list of what changes. Use the Quest button at the top.</p></div></div>
+      <div class="wn-item"><span class="wn-ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M8 3H5a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h3"/><path d="M16 3h3a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-3"/><line x1="12" y1="3" x2="12" y2="21"/></svg></span><div><p class="wn-t">Compare versions</p><p class="wn-d">Imported presets remember the original file. See every change you made, view the original and your edit side by side, or revert. Pin any version to compare against later.</p></div></div>
+      <div class="wn-item"><span class="wn-ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M15 3h6v6M9 21H3v-6M21 3l-7 7M3 21l7-7"/></svg></span><div><p class="wn-t">Bigger preview</p><p class="wn-d">Drag the edge to resize the 3D view, expand it to fill the screen, and it now frames each saber to fit. Try the camera views and the note block for scale.</p></div></div>
+      <div class="wn-item"><span class="wn-ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2 2 7l10 5 10-5-10-5z"/><path d="M2 17l10 5 10-5"/><path d="M2 12l10 5 10-5"/></svg></span><div><p class="wn-t">Layers first</p><p class="wn-d">Your layer list now sits at the top of its column. Modules and snippets live in the Add layer menu.</p></div></div>
+      <div class="wn-item"><span class="wn-ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M13 2 3 14h9l-1 8 10-12h-9z"/></svg></span><div><p class="wn-t">Driver test preset</p><p class="wn-d">Not sure which driver number does what? New Preset → Driver test preset gives you one glowing band per number to try in game.</p></div></div>
+      <div class="wn-item"><span class="wn-ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg></span><div><p class="wn-t">Combined presets</p><p class="wn-d">ReeSabers can stack presets on one saber. Preview a hilt preset with a blade preset together, or a different preset in each hand.</p></div></div>
+      <div class="wn-item"><span class="wn-ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg></span><div><p class="wn-t">Smarter checks</p><p class="wn-d">Click a warning to jump to its layer. Unusual values from imported files are kept and noted, texture sizes are checked, and the performance estimate has a Quest mode.</p></div></div>
     </div>
     <div class="wn-foot"><button type="button" class="btn primary" id="whatsnewClose" style="width:100%;justify-content:center">Got it</button></div>
   </div>
 </div>
-<div class="drop-overlay" id="dropOverlay" aria-hidden="true"><div><b>Drop to import</b><span>.reesaber · .json preset or project · .zip · textures, models, sounds</span></div></div>
+<div class="drop-overlay" id="dropOverlay" aria-hidden="true"><div><b>Drop to import</b><span>.reesaber · .json preset or project · .zip · textures and models</span></div></div>
 <div class="toast" id="toast"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg><span id="toastMsg"></span></div>
 
 <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/build/three.min.js"></script>
@@ -885,16 +962,15 @@ const HELP={
   radius:{t:'Blade Radius',b:'Thickness of the glowing blade core in metres. Small changes are very visible.',g:''},
   zOffset:{t:'Z Offset',b:'Where the blade starts and ends along the hilt. Shift these to grow, shrink, or float the blade.',g:''},
   stretchBias:{t:'Stretch Bias',b:'Biases mesh detail toward the tip or the base of the blade as it stretches during fast swings.',g:''},
-  customMesh:{t:'Preview Mesh',b:'Shows your own 3D model (.obj / .glb / .gltf) in place of this blade in the 3D preview.',g:'Preview only. ReeSabers presets have no custom-mesh slot, so the model is <em>not</em> written to the exported file.'},
+  customMesh:{t:'Preview Mesh',b:'Shows your own 3D model (.obj / .glb / .gltf) in place of this blade in the 3D preview.',g:'Preview only. Studio does not write custom models into presets, so the model is <em>not</em> in the exported file.'},
   customTexture:{t:'Texture Slot',b:'Pick an uploaded image (.png / .jpg). Its file name is written into the preset, and the image itself is embedded in BinaryAssets (.json) or the textures/ folder (.reesaber).',g:''},
-  motionSmoothing:{t:'Motion Smoothing',b:'Purely visual smoothing that interpolates saber motion between frames. Reduces jitter at the cost of a touch of latency.',g:''},
-  visibility:{t:'Visibility',b:'Independently show or hide the saber in the VR headset, on the desktop/Camera2 capture, and in mirror reflections.',g:'Streamers often <em>hide sabers in the headset but show them on stream</em>.'},
   rootType:{t:'Root Type',b:'What this preset attaches to. Saber (0) is the standard type and the only one Studio creates; other values are kept as-is from imported files.',g:''},
   valueSource:{t:'Value Source',b:'Which live game value drives this layer. ReeSabers saves it as a number. The mod does not publish which number means what, so the names here are best guesses; the number itself is what matters and imported numbers are never changed.',g:'If a preset you like reacts the way you want, copy its type number.'},
   curve:{t:'Curve Editor',b:'Drag points to reshape the curve, double-click empty space to add a point, and select a point then press Delete to remove it. Arrow keys nudge the selected point.',g:'Left is the start of the range, right is the end.'},
   gradient:{t:'Gradient Editor',b:'Click the color bar to add a stop, drag the markers below it to move them, and use the box to pick a color. Alpha above 1 acts as extra glow.',g:'White keeps the saber color unchanged; any other color tints it.'},
   mapping:{t:'Mappings',b:'Mappings change color, alpha and scale based on where you are on the layer (along the blade or trail) or how it is seen (viewing / surface angle).',g:'A gradient along the blade gives you a two-tone saber that still follows your color scheme.'},
-  perf:{t:'Performance Estimate',b:'A rough score from mesh resolution, motion blur, trail detail, particle counts and texture size. It is an estimate, not a measurement.',g:'Keep it Light or Medium if the preset should run well on standalone headsets.'},
+  perf:{t:'Performance Estimate',b:'A rough score from mesh resolution, motion blur, trail detail, particle counts and texture memory. It is an estimate, not a measurement. Pick Quest for stricter limits that suit a standalone headset.',g:'Keep it Light or Medium on <em>Quest</em>, where the GPU budget is much smaller than a PC.'},
+  combine:{t:'Combined Presets',b:'In ReeSabers you can stack several presets on one saber, for example a hilt preset, a blade preset and a trail preset. Ticking presets here draws them together in the preview so you can check the combination.',g:'Combine them in the ReeSabers menu the same way. Each preset is still its own file.'},
   previewOnly:{t:'Preview Only',b:'These settings only change the 3D preview here in Studio. They are not written into the preset file. In game, ReeSabers uses your color scheme and applies the preset to both sabers.',g:''}
 };
 
@@ -907,11 +983,11 @@ const state={
   assets:[], // {id,name,kind,ext,dataURL,size, _obj, _tex}
   global:{visibility:{headset:true,desktop:true,mirror:true},motionSmoothing:{enabled:false,amount:0.5},menuPointer:true}
 };
-const pv={spin:true,swing:false,trail:true,glow:true,hilt:true,both:false,driveScore:true,backdrop:'dark',scheme:'preset',scrub:0.5};
+const pv={spin:true,swing:false,trail:true,glow:true,hilt:true,both:false,driveScore:true,note:false,compare:false,backdrop:'dark',scheme:'preset',view:'orbit',scrub:0.5};
 
 function newModule(moduleId){const t=TEMPLATES[moduleId];return{uid:uid(),moduleId,version:t.version,name:t.config.Name,enabled:true,kind:t.kind,config:clone(t.config),customMeshId:'',children:[]};}
 function nextPresetName(){const names=new Set(state.presets.map(p=>p.name));let n=1;while(names.has('Preset '+n))n++;return 'Preset '+n;}
-function newPreset(name){return{id:uid(),name:name||nextPresetName(),modVersion:state.modVersion,hands:{L:true,R:true},color:{left:'#ff1e3c',right:'#1e6bff'},transform:{Position:{x:0,y:0,z:0},Rotation:{x:0,y:0,z:0},Scale:{x:1,y:1,z:1}},rootType:0,modules:[],extraTextures:[],rawGeometry:[]};}
+function newPreset(name){return{id:uid(),name:name||nextPresetName(),modVersion:state.modVersion,hands:{L:true,R:true},color:{left:'#ff1e3c',right:'#1e6bff'},transform:{Position:{x:0,y:0,z:0},Rotation:{x:0,y:0,z:0},Scale:{x:1,y:1,z:1}},rootType:0,modules:[],extraTextures:[],rawGeometry:[],preview:{combine:[],leftId:''}};}
 function activePreset(){return state.presets.find(p=>p.id===state.activePresetId);}
 /* ---- module tree helpers (layers can nest inside Groups / Dynamic Joints) ---- */
 function walkModules(list,fn,parent,depth){depth=depth||0;(list||[]).forEach((m,i)=>{fn(m,parent||null,depth,list,i);walkModules(m.children,fn,m,depth+1);});}
@@ -1019,15 +1095,24 @@ function accordion(title,iconSvg,opts={}){
   a.add=el=>{body.appendChild(el);return a;};
   return a;
 }
+/* Short display form of a number (no float noise like 0.0012500003213062882). */
+function fmtNum(v,sig){v=Number(v);if(!isFinite(v))return '0';if(v===0)return '0';return String(parseFloat(v.toPrecision(sig||6)));}
+/* Slider + number box. The slider covers the usual (safe) range, widened to include the current value.
+   Typed values outside the usual range are kept and flagged amber, never clamped, and nothing is written
+   unless the value actually changes, so tabbing through an imported preset leaves it untouched. */
 function slider(limitKey,val,onInput){
-  const [min,max,step]=LIMITS[limitKey]||[0,1,0.01];val=safeNum(val,(LIMITS[limitKey]||[0,0,0,0])[3]);
+  const L=LIMITS[limitKey]||[0,1,0.01,0];const [min,max,step]=L;val=safeNum(val,L[3]);
+  const lo=Math.min(min,val),hi=Math.max(max,val),hardMin=min>=0?0:-Infinity;
   const w=document.createElement('div');w.className='slider-wrap';
-  w.innerHTML=`<input type="range" min="${min}" max="${max}" step="${step}" value="${clamp(val,min,max)}"><div class="slider-val"><input type="number" min="${min}" max="${max}" step="${step}" value="${val}"></div>`;
+  w.innerHTML=`<input type="range" min="${lo}" max="${hi}" step="any" value="${val}"><div class="slider-val"><input type="number" min="${min}" max="${max}" step="${step}" value="${fmtNum(val)}"></div>`;
   const r=w.querySelector('input[type=range]'),n=w.querySelector('input[type=number]');
-  const commit=v=>{v=clamp(v,min,max);r.value=v;onInput(v);};
-  r.addEventListener('input',()=>{n.value=r.value;onInput(parseFloat(r.value));});
-  n.addEventListener('input',()=>{let v=parseFloat(n.value);if(isNaN(v))return;if(v<min||v>max)n.classList.add('invalid');else n.classList.remove('invalid');r.value=clamp(v,min,max);onInput(clamp(v,min,max));});
-  n.addEventListener('blur',()=>{let v=parseFloat(n.value);if(isNaN(v))v=(LIMITS[limitKey]||[0])[3]||0;n.classList.remove('invalid');n.value=clamp(v,min,max);commit(v);});
+  const usual='Usual range '+fmtNum(min)+' to '+fmtNum(max);
+  const mark=v=>{const odd=v<min||v>max;n.classList.toggle('unusual',odd);n.title=odd?'Outside the usual range ('+fmtNum(min)+' to '+fmtNum(max)+'). Kept as typed.':usual;};
+  mark(val);
+  r.addEventListener('input',()=>{let v=parseFloat(r.value);v=parseFloat((Math.round(v/step)*step).toFixed(6));v=clamp(v,lo,hi);n.value=fmtNum(v);n.classList.remove('invalid');mark(v);val=v;onInput(v);});
+  n.addEventListener('input',()=>{const v=parseFloat(n.value);if(!isFinite(v)||v<hardMin){n.classList.add('invalid');return;}n.classList.remove('invalid');r.value=clamp(v,lo,hi);mark(v);val=v;onInput(v);});
+  /* blur never writes: a bad entry just shows the last good value again */
+  n.addEventListener('blur',()=>{const v=parseFloat(n.value);if(!isFinite(v)||v<hardMin){n.classList.remove('invalid');n.value=fmtNum(val);}});
   return w;
 }
 function rawSlider(min,max,step,val,onInput){
@@ -1063,9 +1148,9 @@ function selectInput(options,val,onChange){
 function vec3Editor(obj,onChange,step){
   step=step||0.01;
   const g=document.createElement('div');g.className='grid3';
-  ['x','y','z'].forEach(ax=>{const i=document.createElement('input');i.type='number';i.step=step;i.value=obj[ax];i.placeholder=ax.toUpperCase();i.setAttribute('aria-label',ax.toUpperCase());
+  ['x','y','z'].forEach(ax=>{const i=document.createElement('input');i.type='number';i.step=step;i.value=fmtNum(obj[ax]);i.placeholder=ax.toUpperCase();i.setAttribute('aria-label',ax.toUpperCase());
     i.addEventListener('input',()=>{const v=parseFloat(i.value);if(!isFinite(v)){i.classList.add('invalid');return;}i.classList.remove('invalid');obj[ax]=v;onChange();});
-    i.addEventListener('blur',()=>{if(!isFinite(parseFloat(i.value))){i.value=obj[ax];i.classList.remove('invalid');}});
+    i.addEventListener('blur',()=>{if(!isFinite(parseFloat(i.value))){i.value=fmtNum(obj[ax]);i.classList.remove('invalid');}});
     g.appendChild(i);});
   return g;
 }
@@ -1116,25 +1201,31 @@ function selectPreset(id){state.activePresetId=id;state.activeModuleId=null;if(s
 /* ===================================================================== */
 /*  RENDER - palette + stack                                             */
 /* ===================================================================== */
-function renderPalette(){
-  const pal=$('#palette');pal.innerHTML='';
+function paletteInto(pal){
+  pal.innerHTML='';
   Object.entries(TEMPLATES).forEach(([mid,t])=>{
     if(t.palette===false)return;
-    const el=document.createElement('div');el.className='pal-item';el.title='Add '+t.label;
+    const el=document.createElement('div');el.className='pal-item';el.title='Add '+t.label;el.dataset.mid=mid;
     el.innerHTML=`<div class="pi-ic">${ICON[t.icon]}</div><div class="pi-name">${t.label}</div><div class="pi-desc">${mid.split('.')[1]}</div>`;
     el.addEventListener('click',()=>addModule(mid));pal.appendChild(el);
   });
 }
+function renderPalette(){
+  paletteInto($('#palette'));
+  const menu=$('#addMenu');if(menu&&!menu.querySelector('.add-tip')){const tip=document.createElement('div');tip.className='fset-note add-tip';tip.style.margin='10px 0 0';tip.textContent='Tip: select a Group or Dynamic Joint in your layers first to add inside it.';menu.appendChild(tip);}
+}
+function closeAddMenu(){const d=$('#addDd');if(d){d.classList.remove('open');const b=$('#btnAddLayer');if(b)b.setAttribute('aria-expanded','false');}}
 function paletteTarget(){const m=activeModule();return isContainer(m)?m:null;}
 function renderPaletteTarget(){
   const el=$('#paletteTarget');if(!el)return;el.innerHTML='';const t=paletteTarget();
   if(!activePreset()){return;}
-  const sp=document.createElement('span');sp.textContent=t?'New layers go inside “'+(t.name||'Group')+'”':'New layers go at the top level. Select a Group or Dynamic Joint to add inside it.';el.appendChild(sp);
+  if(!t)return;
+  const sp=document.createElement('span');sp.textContent='New layers go inside “'+(t.name||'Group')+'”';el.appendChild(sp);
   if(t){const b=document.createElement('button');b.className='btn tiny ghost';b.textContent='Top level instead';b.onclick=()=>{state.activeModuleId=null;state.activeTab='preset';renderAll();};el.appendChild(b);}
 }
 function addModule(mid){
   const p=activePreset();if(!p){toast('Create or select a preset first','err');return;}
-  const target=paletteTarget();const m=newModule(mid);
+  closeAddMenu();const target=paletteTarget();const m=newModule(mid);
   (target?target.children:p.modules).push(m);state.activeModuleId=m.uid;state.activeTab='module';renderAll();T('module-'+mid.split('.').pop());
   toast(TEMPLATES[mid].label+(target?' added inside '+(target.name||'group'):' module added'));
 }
@@ -1145,7 +1236,7 @@ function renderStack(){
   renderPaletteTarget();
   const pb=$('#pasteBar');if(pb){pb.innerHTML='';if(p&&state.layerClip){const b=document.createElement('button');b.className='btn sm';b.innerHTML=ICON.copy+' ';b.appendChild(document.createTextNode('Paste “'+(state.layerClip.name||'layer')+'”'));b.title='Paste the copied layer (Ctrl+V)';b.onclick=pasteLayer;pb.appendChild(b);}}
   if(!p){list.innerHTML='<div class="empty">Select a preset<br>to build its stack.</div>';return;}
-  if(!p.modules.length){list.innerHTML='<div class="empty">'+ICON.layers+'<div>No modules.<br>Add one above.</div></div>';return;}
+  if(!p.modules.length){const e=document.createElement('div');e.className='stack-empty';e.innerHTML='<div class="se-t">No layers yet. Start with a <b>Blade</b>:</div>';const pal=document.createElement('div');pal.className='palette';paletteInto(pal);e.appendChild(pal);list.appendChild(e);return;}
   const draw=(mods,depth)=>mods.forEach((m,i)=>{
     const el=document.createElement('div');el.className='stack-item'+(m.uid===state.activeModuleId?' active':'')+(depth?' nested':'')+(state.soloUid===m.uid?' solo':'');
     if(depth)el.style.marginLeft=(Math.min(depth,8)*14)+'px';
@@ -1153,9 +1244,11 @@ function renderStack(){
     const short=String(m.moduleId).split('.').pop();
     const label=m.name||(TEMPLATES[m.moduleId]||{}).label||short;
     el.innerHTML=`<div class="layer-dot ${m.enabled?'':'off'}" data-act="tog" role="button" tabindex="0" title="${m.enabled?'Enabled (click to mute)':'Muted (click to enable)'}" aria-label="${m.enabled?'Mute layer':'Enable layer'}"></div><div class="si-ic">${kindIcon(m)}</div><div class="si-body"><div class="si-name">${escapeHtml(label)}</div><div class="si-type">${escapeHtml(short)}${tags.length?' · '+escapeHtml(tags.join(' · ')):''}</div></div>
-      <div class="si-ctrls"><button class="btn sm ghost icon" data-act="up" title="Move up" aria-label="Move up" ${i===0?'disabled':''}>${ICON.up}</button><button class="btn sm ghost icon" data-act="down" title="Move down" aria-label="Move down" ${i===mods.length-1?'disabled':''}>${ICON.down}</button><button class="btn sm ghost icon" data-act="menu" title="More: duplicate, copy, solo, move in/out" aria-label="More layer actions" aria-haspopup="menu">${ICON.more}</button><button class="btn sm ghost icon danger" data-act="del" title="Delete layer" aria-label="Delete layer">${ICON.trash}</button></div>`;
+      <div class="si-ctrls"><button class="btn sm ghost icon" data-act="menu" title="More: move, duplicate, copy, solo" aria-label="More layer actions" aria-haspopup="menu">${ICON.more}</button><button class="btn sm ghost icon danger" data-act="del" title="Delete layer" aria-label="Delete layer">${ICON.trash}</button></div>`;
     el.addEventListener('click',e=>{const act=e.target.closest('[data-act]');if(act){e.stopPropagation();if(act.dataset.act==='menu'){layerMenu(m.uid,act);return;}moduleAction(act.dataset.act,m.uid);return;}state.activeModuleId=m.uid;if(state.activeTab!=='drivers')state.activeTab='module';renderAll();});
     wireStackDnD(el,m);
+    el.addEventListener('keydown',e=>{if(e.target!==el||!e.altKey||(e.key!=='ArrowUp'&&e.key!=='ArrowDown'))return;e.preventDefault();const uidm=m.uid;moduleAction(e.key==='ArrowUp'?'up':'down',uidm);const n=$$('#stackList .stack-item').find(x=>x.dataset.uid===uidm);if(n)n.focus();});
+    el.dataset.uid=m.uid;el.tabIndex=0;el.setAttribute('role','button');el.title='Drag to reorder (or Alt+Up / Alt+Down)';
     list.appendChild(el);
     if(m.children&&m.children.length)draw(m.children,depth+1);
   });
@@ -1200,7 +1293,10 @@ function buildPresetForm(){
 
   const ov=accordion('Overview',ICON.bolt);
   if(allModules(p).length)ov.add(perfBlock(p));
-  const exb=document.createElement('button');exb.className='btn sm';exb.textContent='Explain this preset';exb.onclick=openExplainModal;ov.add(exb);
+  const ovb=document.createElement('div');ovb.style.cssText='display:flex;gap:8px;flex-wrap:wrap';
+  const exb=document.createElement('button');exb.className='btn sm';exb.textContent='Explain this preset';exb.onclick=openExplainModal;
+  const cmb=document.createElement('button');cmb.className='btn sm';cmb.id='btnCompare';cmb.textContent=p.baseline?'Compare with saved version':'Pin this version';cmb.title=p.baseline?'See what changed since the saved version, side by side':'Save a version to compare against later';cmb.onclick=openCompareModal;
+  ovb.append(exb,cmb);ov.add(ovb);
   wrap.appendChild(ov);
 
   const tAcc=accordion('Root Transform',ICON.layers,{collapsed:true});
@@ -1216,6 +1312,7 @@ function buildPresetForm(){
   pv2.add(field('Preview hands',ht,null,'previewOnly'));
   pv2.add(field('Left preview color',colorInput(safeColor(p.color.left,'#ff1e3c'),v=>{p.color.left=v;renderPresets();touch();})));
   pv2.add(field('Right preview color',colorInput(safeColor(p.color.right,'#1e6bff'),v=>{p.color.right=v;renderPresets();touch();})));
+  pv2.add(buildComboField(p));
   wrap.appendChild(pv2);
   return wrap;
 }
@@ -1329,7 +1426,7 @@ function buildSparksFields(wrap,cfg,reset){
 function buildJointFields(wrap,cfg,reset){
   const js=cfg.JointSettings;if(!js||typeof js!=='object')throw new Error('no JointSettings');
   const a=accordion('Dynamic Joint',ICON.joint,{reset:reset&&(()=>reset(['JointSettings']))});
-  a.add(noteBox('Everything inside this joint swings and jiggles as you move, like a dangling charm or a floppy handle. Select the joint, then click a module above to add layers inside it.'));
+  a.add(noteBox('Everything inside this joint swings and jiggles as you move, like a dangling charm or a floppy handle. Keep the joint selected and use Add layer to put layers inside it.'));
   a.add(numField('Spring constant','springConstant',safeNum(js.springConstant,100),v=>js.springConstant=v));
   a.add(numField('Damping','jointDamping',safeNum(js.damping,1),v=>js.damping=v));
   a.add(numField('Mass','jointMass',safeNum(js.mass,0.5),v=>js.mass=v));
@@ -1339,7 +1436,7 @@ function buildJointFields(wrap,cfg,reset){
 }
 function buildGroupInfo(wrap,cfg,reset,m){
   const a=accordion('Group',ICON.layers);
-  a.add(noteBox('A container with no look of its own. Its transform moves everything inside it together. Select it, then click a module above to add layers inside. It holds '+allModules({modules:m.children||[]}).length+' layer(s).'));
+  a.add(noteBox('A container with no look of its own. Its transform moves everything inside it together. Keep it selected and use Add layer to put layers inside. It holds '+allModules({modules:m.children||[]}).length+' layer(s).'));
   wrap.appendChild(a);
 }
 function buildCloneInfo(wrap,cfg,reset,m){
@@ -1403,6 +1500,18 @@ function highlightJson(js){
 }
 
 /* ---- validation engine ---- */
+/* "Group › Joint › Blur Saber", plus "#2" when two layers would read the same */
+function layerPath(p,m){
+  const parts=[];(function up(id){const f=findModule(p,id);if(f&&f.parent){up(f.parent.uid);parts.push(f.parent.name||f.parent.moduleId);}})(m.uid);
+  parts.push(m.name||m.moduleId);return parts.join(' › ');
+}
+function layerLabel(p,m){
+  const me=layerPath(p,m);const same=allModules(p).filter(x=>layerPath(p,x)===me);
+  return same.length>1?me+' #'+(same.indexOf(m)+1):me;
+}
+/* numbers the validator checks; a value that still matches the imported file is a note, not a warning */
+const IMP_KEYS={radius:'MeshSettings.radius',particleCount:'MeshSettings.ParticlesCount'};
+function snapshotImp(cfg){const o={};Object.keys(IMP_KEYS).forEach(k=>{const v=get(cfg,IMP_KEYS[k]);if(typeof v==='number'&&isFinite(v))o[k]=v;});return o;}
 function validatePreset(p){
   const out=[];
   if(!p)return out;
@@ -1411,39 +1520,55 @@ function validatePreset(p){
   else if(!all.some(m=>m.enabled))out.push({level:'err',t:'All modules disabled',m:'Every layer is muted, so the saber will be invisible. Enable at least one.'});
   if(all.length&&!all.some(m=>m.kind==='blade'&&m.enabled))out.push({level:'warn',t:'No visible blade',m:'No enabled Blade layer, so you\'ll only see trails and effects with no core saber.'});
   all.forEach(m=>{
-    const nm=m.name||m.moduleId;
-    if(m.kind==='legacy')out.push({level:'err',t:'Not a real ReeSabers module',m:`Layer “${nm}” (${m.moduleId}) was added by an older Studio version. ReeSabers will ignore it or fail to load the preset. Delete it.`});
-    else if(m.kind==='other')out.push({level:'warn',t:'Unknown module type',m:`Layer “${nm}” uses ${m.moduleId}, which Studio can't edit. It is exported unchanged.`});
-    if(m.customMeshId&&!assetById(m.customMeshId))out.push({level:'warn',t:'Missing preview mesh',m:`Layer “${nm}” uses a preview mesh that is no longer loaded.`});
-    collectTexRefs(m.config,new Set()).forEach(n=>{if(!assetByName(n,'texture'))out.push({level:'warn',t:'Texture not loaded',m:`Layer “${nm}” uses “${n}”, which isn't loaded, so it can't be embedded in the export. Import the original .reesaber bundle or upload ${n} in Assets.`});});
-    (driversOf(m)||[]).forEach((d,i)=>{const mp=(d&&d.mappings)||{};if(d&&safeNum(d.valueType,0)!==0&&safeNum(mp.valueFrom,0)===safeNum(mp.valueTo,1))out.push({level:'warn',t:'Flat driver range',m:`Driver ${i+1} on “${nm}” has value from = to, so it can never move. Set a real range.`});});
-    if(m.kind==='clone'&&!resolveCloneTarget(p,get(m.config,'Reference')))out.push({level:'warn',t:'Clone points at nothing',m:`Clone “${nm}” doesn't point at an existing layer. Pick one in its Clone panel.`});
-    const check=(key,val,label)=>{const L=LIMITS[key];if(L&&typeof val==='number'&&(val<L[0]||val>L[1]))out.push({level:'warn',t:'Value out of safe range',m:`“${nm}” ${label} (${val}) is outside the recommended ${L[0]}–${L[1]} range and may cause lag or clipping.`});};
+    const nm=layerLabel(p,m),u=m.uid;
+    if(m.kind==='legacy')out.push({level:'err',uid:u,t:'Not a real ReeSabers module',m:`Layer “${nm}” (${m.moduleId}) was added by an older Studio version. ReeSabers will ignore it or fail to load the preset. Delete it.`});
+    else if(m.kind==='other')out.push({level:'warn',uid:u,t:'Unknown module type',m:`Layer “${nm}” uses ${m.moduleId}, which Studio can't edit. It is exported unchanged.`});
+    if(m.customMeshId&&!assetById(m.customMeshId))out.push({level:'warn',uid:u,t:'Missing preview mesh',m:`Layer “${nm}” uses a preview mesh that is no longer loaded.`});
+    collectTexRefs(m.config,new Set()).forEach(n=>{if(!assetByName(n,'texture'))out.push({level:'warn',uid:u,t:'Texture not loaded',m:`Layer “${nm}” uses “${n}”, which isn't loaded, so it can't be embedded in the export. Import the original .reesaber bundle or upload ${n} in Assets.`});});
+    (driversOf(m)||[]).forEach((d,i)=>{const mp=(d&&d.mappings)||{};if(d&&safeNum(d.valueType,0)!==0&&safeNum(mp.valueFrom,0)===safeNum(mp.valueTo,1))out.push({level:'warn',uid:u,t:'Flat driver range',m:`Driver ${i+1} on “${nm}” has value from = to, so it can never move. Set a real range.`});});
+    if(m.kind==='clone'&&!resolveCloneTarget(p,get(m.config,'Reference')))out.push({level:'warn',uid:u,t:'Clone points at nothing',m:`Clone “${nm}” doesn't point at an existing layer. Pick one in its Clone panel.`});
+    const check=(key,val,label)=>{const L=LIMITS[key];if(!L||typeof val!=='number'||(val>=L[0]&&val<=L[1]))return;
+      const range=fmtNum(L[0])+' to '+fmtNum(L[1]);
+      if(m._imp&&m._imp[key]===val)out.push({level:'info',uid:u,t:'Unusual value, kept as imported',m:`“${nm}” ${label} is ${fmtNum(val)} (usual range ${range}). It came from the imported file, so Studio leaves it alone.`});
+      else out.push({level:'warn',uid:u,t:'Value out of safe range',m:`“${nm}” ${label} is ${fmtNum(val)}, outside the usual ${range} range, and may cause lag or clipping.`});};
     const c=m.config||{};
     if(m.kind==='blade')check('radius',get(c,'MeshSettings.radius'),'blade radius');
     if(m.kind==='vfx')check('particleCount',get(c,'MeshSettings.ParticlesCount'),'particle count');
   });
-  if(all.length){const pe=perfEstimate(p);if(pe.level==='Heavy')out.push({level:'warn',t:'Heavy preset',m:'The performance estimate is Heavy ('+pe.total.toLocaleString()+' pts). It may drop frames, especially on standalone headsets. Lower particle counts or mesh resolutions.'});}
+  textureIssues(p).forEach(x=>out.push(x));
+  if(all.length){const pe=perfEstimate(p);if(pe.level==='Heavy')out.push({level:'warn',t:'Heavy preset',m:'The performance estimate is Heavy for '+(pe.target==='quest'?'Quest':'PC')+' ('+pe.total.toLocaleString()+' pts). It may drop frames'+(pe.target==='quest'?'':', especially on standalone headsets')+'. Lower particle counts, mesh resolutions or texture sizes.'});}
   return out;
 }
+function vitemHtml(it){
+  const ic={err:'✕',warn:'▲',info:'i',ok:'✓'}[it.level]||'•';
+  const go=it.uid?' data-goto="'+escapeHtml(it.uid)+'"':it.action?' data-action="'+escapeHtml(it.action)+'"':'';
+  const link=it.uid?'<div class="vgo">Show layer →</div>':it.action==='assets'?'<div class="vgo">Open Assets →</div>':'';
+  return `<div class="vitem ${it.level}${go?' jump':''}"${go}${go?' role="button" tabindex="0"':''}><div class="vic">${ic}</div><div><div class="vtitle">${escapeHtml(it.t)}</div><div class="vmsg">${escapeHtml(it.m)}</div>${link}</div></div>`;
+}
+/* clicking a validation item jumps to the layer (or the Assets panel) */
+function gotoIssue(el){
+  if(el.dataset.goto){const p=activePreset();if(!findModule(p,el.dataset.goto))return;closeModal();state.activeModuleId=el.dataset.goto;state.activeTab='module';renderAll();T('validate-jump',true);
+    if(window.__setMobileView&&window.matchMedia('(max-width:1100px)').matches)window.__setMobileView('editor');
+    setTimeout(()=>{const a=document.querySelector('#stackList .stack-item.active');if(a&&a.scrollIntoView)a.scrollIntoView({block:'nearest'});},30);}
+  else if(el.dataset.action==='assets'){openAssetModal();}
+}
+document.addEventListener('click',e=>{const el=e.target.closest&&e.target.closest('.vitem.jump');if(el)gotoIssue(el);});
 function renderValidation(){
   const p=activePreset();
   const items=validatePreset(p);
-  const errs=items.filter(i=>i.level==='err').length, warns=items.filter(i=>i.level==='warn').length;
+  const errs=items.filter(i=>i.level==='err').length, warns=items.filter(i=>i.level==='warn').length, notes=items.filter(i=>i.level==='info').length;
   const dot=$('#validDot');dot.innerHTML=errs?'<span class="doterr"></span>':warns?'<span class="dotwarn"></span>':'';
   const sum=$('#validSummary');
   if(!p){sum.innerHTML='<span style="color:var(--txt-mut)">No preset selected.</span>';$('#validBody').innerHTML='';return;}
-  sum.innerHTML = errs? `<span style="color:var(--red)">✕ ${errs} error${errs>1?'s':''}</span>` : (warns? `<span style="color:var(--amber)">▲ ${warns} warning${warns>1?'s':''}</span>` : `<span style="color:var(--green)">✓ All checks passed</span>`) + `<span style="color:var(--txt-mut);font-weight:400;font-size:12px">- “${escapeHtml(p.name)}”</span>`;
+  sum.innerHTML = (errs? `<span style="color:var(--red)">✕ ${errs} error${errs>1?'s':''}</span>` : warns? `<span style="color:var(--amber)">▲ ${warns} warning${warns>1?'s':''}</span>` : `<span style="color:var(--green)">✓ All checks passed</span>`)
+    + (notes?`<span style="color:#8fbaff;font-weight:600;font-size:12px">${notes} note${notes>1?'s':''}</span>`:'')
+    + `<span style="color:var(--txt-mut);font-weight:400;font-size:12px">- “${escapeHtml(p.name)}”</span>`;
   const body=$('#validBody');body.innerHTML='';
-  if(allModules(p).length)body.appendChild(perfBlock(p));
-  if(!items.length){body.insertAdjacentHTML('beforeend',`<div class="vitem ok"><div class="vic">✓</div><div><div class="vtitle">Ready to export</div><div class="vmsg">No structural problems found. This preset should load cleanly in ReeSabers ${escapeHtml(p.modVersion||state.modVersion)}.</div></div></div>`);return;}
-  // successes for context
-  const p2=p;
-  const passed=[];
-  if(allModules(p2).some(m=>m.enabled))passed.push('Has enabled modules');
-  passed.forEach(t=>{body.insertAdjacentHTML('beforeend',`<div class="vitem ok"><div class="vic">✓</div><div><div class="vtitle">${t}</div></div></div>`);});
-  items.sort((a,b)=>(a.level==='err'?0:1)-(b.level==='err'?0:1));
-  items.forEach(it=>{body.insertAdjacentHTML('beforeend',`<div class="vitem ${it.level}"><div class="vic">${it.level==='err'?'✕':'▲'}</div><div><div class="vtitle">${escapeHtml(it.t)}</div><div class="vmsg">${escapeHtml(it.m)}</div></div></div>`);});
+  const problems=items.filter(i=>i.level!=='info').sort((a,b)=>(a.level==='err'?0:1)-(b.level==='err'?0:1));
+  if(!problems.length)body.insertAdjacentHTML('beforeend',`<div class="vitem ok"><div class="vic">✓</div><div><div class="vtitle">Ready to export</div><div class="vmsg">No structural problems found. This preset should load cleanly in ReeSabers ${escapeHtml(p.modVersion||state.modVersion)}.</div></div></div>`);
+  problems.forEach(it=>body.insertAdjacentHTML('beforeend',vitemHtml(it)));
+  const infos=items.filter(i=>i.level==='info');
+  if(infos.length){body.insertAdjacentHTML('beforeend','<div class="section-label" style="margin-top:14px">Notes</div>');infos.forEach(it=>body.insertAdjacentHTML('beforeend',vitemHtml(it)));}
 }
 
 /* ===================================================================== */
@@ -1528,6 +1653,7 @@ function importModule(mo,depth){
   const m={uid:uid(),moduleId:id,version:safeNum(mo.Version,tmpl?tmpl.version:1),name:typeof cfg.Name==='string'?cfg.Name:(tmpl?tmpl.label:id.split('.').pop()),
     enabled:cfg.Enabled!==false,kind:kindOf(id),config:cfg,customMeshId:'',children:[]};
   const dp=detectDriverPath(cfg);if(dp)m._driverPath=dp;
+  const imp=snapshotImp(cfg);if(Object.keys(imp).length)m._imp=imp;
   m.children=(Array.isArray(mo.Children)?mo.Children:[]).map(c=>importModule(c,depth+1)).filter(Boolean);
   return m;
 }
@@ -1596,6 +1722,7 @@ function sanitizeModule(m,depth){
     customMeshId:typeof m.customMeshId==='string'?m.customMeshId:'',children:[]};
   if(typeof m._cloneTargetUid==='string'&&/^[\w-]{1,40}$/.test(m._cloneTargetUid))o._cloneTargetUid=m._cloneTargetUid;
   if(typeof m._driverPath==='string'&&/^[\w.]{1,80}$/.test(m._driverPath))o._driverPath=m._driverPath;
+  if(m._imp&&typeof m._imp==='object'){const imp={};Object.keys(IMP_KEYS).forEach(k=>{if(typeof m._imp[k]==='number'&&isFinite(m._imp[k]))imp[k]=m._imp[k];});if(Object.keys(imp).length)o._imp=imp;}
   /* projects from older Studio versions kept a simplified driver list next to the config: fold it back into the real drivers array */
   if(Array.isArray(m.drivers)){const dp=driverPathFor(o);if(dp)setPath(o.config,dp,m.drivers.filter(d=>d&&typeof d==='object').map(sanitizeDriver).map(driverToReeSaber));}
   if(typeof m.customTextureId==='string'&&m.customTextureId)o._legacyTex=m.customTextureId;
@@ -1613,6 +1740,8 @@ function sanitizePreset(p){
   d.extraTextures=Array.isArray(p.extraTextures)?p.extraTextures.filter(x=>typeof x==='string'):[];
   d.rawGeometry=Array.isArray(p.rawGeometry)?p.rawGeometry:[];
   d.modules=(Array.isArray(p.modules)?p.modules:[]).map(m=>sanitizeModule(m,0)).filter(Boolean);
+  if(p.baseline&&typeof p.baseline==='object'&&typeof p.baseline.json==='string'&&p.baseline.json.length<8e6)d.baseline={label:safeStr(p.baseline.label,'Saved version'),at:safeStr(p.baseline.at,''),json:p.baseline.json};
+  if(p.preview&&typeof p.preview==='object'){d.preview={combine:Array.isArray(p.preview.combine)?p.preview.combine.filter(x=>typeof x==='string'&&/^[\w-]{1,40}$/.test(x)).slice(0,8):[],leftId:(typeof p.preview.leftId==='string'&&/^[\w-]{0,40}$/.test(p.preview.leftId))?p.preview.leftId:''};}
   return d;
 }
 function sanitizeGlobal(g){
@@ -1629,7 +1758,7 @@ function loadProject(obj,mode,opts){
   const idMap={},nameMap={};
   (Array.isArray(obj.assets)?obj.assets:[]).forEach(a=>{
     if(!a||typeof a!=='object')return;
-    const kind=['mesh','texture','sound'].indexOf(a.kind)>=0?a.kind:null;
+    const kind=['mesh','texture'].indexOf(a.kind)>=0?a.kind:null; /* older projects could hold sounds; nothing used them */
     if(!kind||typeof a.dataURL!=='string'||!DATAURL_RE.test(a.dataURL))return;
     const oldId=safeStr(a.id,''),oldName=safeStr(a.name,'')||'asset';
     const ex=state.assets.find(x=>x.kind===kind&&x.dataURL===a.dataURL);
@@ -1682,6 +1811,7 @@ function handleImportData(text,opts){
     if('Modules' in obj||obj.RootSettings||obj.ModVersion){
       if(!Array.isArray(obj.Modules)){toast('This preset has no Modules list, so there is nothing to import','err');return false;}
       const p=importReeSaberPreset(obj,opts.name,opts.map);
+      setBaseline(p,opts.baseLabel||'Imported file');
       state.presets.push(p);state.activePresetId=p.id;state.activeModuleId=null;renderAll();updateAssetCount();
       const nl=allModules(p).length;T('import-preset');toast('Preset imported ('+nl+' layer'+(nl!==1?'s':'')+')');return true;
     }
@@ -1692,11 +1822,12 @@ function handleImportData(text,opts){
 /* ===================================================================== */
 /*  ASSET PIPELINE                                                       */
 /* ===================================================================== */
-const EXT_KIND={obj:'mesh',gltf:'mesh',glb:'mesh',fbx:'mesh',png:'texture',jpg:'texture',jpeg:'texture',webp:'texture',wav:'sound',ogg:'sound',mp3:'sound'};
+const EXT_KIND={obj:'mesh',gltf:'mesh',glb:'mesh',png:'texture',jpg:'texture',jpeg:'texture',webp:'texture'};
 function cacheAsset(a){
   // parse mesh / texture for preview (async, best-effort)
   if(a.kind==='mesh'&&typeof THREE!=='undefined')parseMeshAsset(a);
   if(a.kind==='texture'&&typeof THREE!=='undefined'){try{a._tex=new THREE.TextureLoader().load(a.dataURL,()=>{if(scene)rebuildScene();});}catch(e){}}
+  if(a.kind==='texture'&&!a._w&&typeof Image!=='undefined'){try{const im=new Image();im.onload=()=>{a._w=im.naturalWidth;a._h=im.naturalHeight;scheduleTexRecheck();};im.src=a.dataURL;}catch(e){}}
   return a;
 }
 function parseMeshAsset(a){
@@ -1747,8 +1878,8 @@ function openAssetModal(){
   const body=$('#asBody',m);
   const dz=document.createElement('div');dz.className='drop';dz.id='asDrop';
   dz.innerHTML=`<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
-    <div><b>Drop or click to upload</b></div><div class="fset-note" style="margin-top:6px">Meshes <code class="k">.obj .glb .gltf</code> · Textures <code class="k">.png .jpg</code> · Sounds <code class="k">.wav .ogg</code>, up to 25 MB each. Textures you assign are embedded when you export; meshes are preview-only.</div>`;
-  const fileIn=document.createElement('input');fileIn.type='file';fileIn.multiple=true;fileIn.accept='.obj,.glb,.gltf,.png,.jpg,.jpeg,.webp,.wav,.ogg,.mp3';
+    <div><b>Drop or click to upload</b></div><div class="fset-note" style="margin-top:6px">Textures <code class="k">.png .jpg .webp</code> are embedded in the preset when you use them. Models <code class="k">.obj .glb .gltf</code> are for the 3D preview only and are not exported. Up to 25 MB each.</div>`;
+  const fileIn=document.createElement('input');fileIn.type='file';fileIn.multiple=true;fileIn.accept='.obj,.glb,.gltf,.png,.jpg,.jpeg,.webp';
   dz.onclick=()=>fileIn.click();
   fileIn.onchange=()=>addFiles(fileIn.files,n=>{if(n)toast(n+' asset'+(n>1?'s':'')+' added');openAssetModal();});
   ['dragover','dragenter'].forEach(ev=>dz.addEventListener(ev,e=>{e.preventDefault();dz.classList.add('hot');}));
@@ -1765,14 +1896,16 @@ function openAssetModal(){
       const tile=document.createElement('div');tile.className='asset-tile';
       let thumb;
       if(a.kind==='texture')thumb=`<div class="at-thumb"></div>`;
-      else if(a.kind==='sound')thumb=`<div class="at-thumb">${ICON.sound}</div>`;
       else thumb=`<div class="at-thumb">${a._obj?'<span style="color:var(--green);font-size:11px;font-weight:700">MODEL READY</span>':ICON.cube}</div>`;
       let used=0;state.presets.forEach(p=>walkModules(p.modules,mm=>{if(mm.customMeshId===a.id||(a.kind==='texture'&&collectTexRefs(mm.config,new Set()).has(a.name)))used++;}));
-      const kindCls=['mesh','texture','sound'].indexOf(a.kind)>=0?a.kind:'mesh';
-      tile.innerHTML=`<span class="asset-kind ${kindCls}">${kindCls}</span>${thumb}<div class="at-name" title="${escapeHtml(a.name)}">${escapeHtml(a.name)}</div><div class="at-meta">${escapeHtml(safeExt(a.ext).toUpperCase())} · ${bytesFmt(a.size)}${used?' · used ×'+used:''}</div><div class="at-actions"></div>`;
+      const kindCls=a.kind==='texture'?'texture':'mesh';const kindLbl=a.kind==='texture'?'texture':'model · preview only';
+      const dims=a.kind==='texture'&&a._w?' · '+a._w+'×'+a._h:'';
+      tile.innerHTML=`<span class="asset-kind ${kindCls}">${kindLbl}</span>${thumb}<div class="at-name" title="${escapeHtml(a.name)}">${escapeHtml(a.name)}</div><div class="at-meta">${escapeHtml(safeExt(a.ext).toUpperCase())}${dims} · ${bytesFmt(a.size)}${used?' · used ×'+used:''}</div><div class="at-actions"></div>`;
       if(a.kind==='texture'&&DATAURL_RE.test(a.dataURL))tile.querySelector('.at-thumb').style.backgroundImage='url("'+a.dataURL+'")';
       const acts=tile.querySelector('.at-actions');
-      if(a.kind==='sound'){const pb=document.createElement('button');pb.className='btn tiny';pb.innerHTML=ICON.play+' Play';pb.onclick=()=>{const au=new Audio(a.dataURL);au.play().catch(()=>toast('Cannot play in this browser','err'));};acts.appendChild(pb);}
+      if(a.kind==='texture'&&a._w){const big=Math.max(a._w,a._h)>1024,npot=!isPow2(a._w)||!isPow2(a._h);
+        if(big){const b=document.createElement('button');b.className='btn tiny';b.textContent='Shrink to 1024';b.title='Scale down so the longest side is 1024 px';b.onclick=()=>resizeTextureAsset(a.id,'1024');acts.appendChild(b);}
+        if(npot){const b=document.createElement('button');b.className='btn tiny';b.textContent='Power of two';b.title='Resize to the nearest power-of-two size (like 512 or 1024)';b.onclick=()=>resizeTextureAsset(a.id,'pot');acts.appendChild(b);}}
       const rm=document.createElement('button');rm.className='btn tiny ghost danger';rm.innerHTML=ICON.trash;rm.title='Remove';rm.setAttribute('aria-label','Remove '+a.name);rm.onclick=()=>removeAsset(a.id);acts.appendChild(rm);
       grid.appendChild(tile);
     });
@@ -1803,14 +1936,15 @@ function openExportModal(){
   let checkHtml='';
   if(!p)checkHtml=`<div class="vitem err"><div class="vic">✕</div><div><div class="vtitle">No preset selected</div></div></div>`;
   else if(!errs.length&&!warns.length)checkHtml=`<div class="vitem ok"><div class="vic">✓</div><div><div class="vtitle">Pre-export check passed</div><div class="vmsg">All layers and texture references look good.</div></div></div>`;
-  else{[...errs,...warns].slice(0,6).forEach(it=>{checkHtml+=`<div class="vitem ${it.level}"><div class="vic">${it.level==='err'?'✕':'▲'}</div><div><div class="vtitle">${escapeHtml(it.t)}</div><div class="vmsg">${escapeHtml(it.m)}</div></div></div>`;});}
+  else{[...errs,...warns].slice(0,6).forEach(it=>{checkHtml+=vitemHtml(it);});if(errs.length+warns.length>6)checkHtml+=`<div class="fset-note">${errs.length+warns.length-6} more on the Validate tab.</div>`;}
   const m=openModal(`
     <div class="modal-head"><h3>Export</h3><span class="spacer" style="flex:1"></span><button class="btn ghost icon" id="exX" aria-label="Close">${ICON.x}</button></div>
     <div class="modal-body">
       <div class="acc"><div class="acc-head" style="cursor:default"><span class="acc-ic">${ICON.bolt}</span><span class="acc-title">Pre-export check</span></div><div class="acc-body">${checkHtml}</div></div>
       <div class="acc"><div class="acc-head" style="cursor:default"><span class="acc-ic">${ICON.blade}</span><span class="acc-title">ReeSaber preset</span></div><div class="acc-body">
-        <div class="fset-note">Drops into <code class="k">Beat Saber/UserData/ReeSabers/Presets</code>. <b>.json</b> embeds textures in <code class="k">BinaryAssets</code>; <b>.reesaber</b> is a zip with <code class="k">preset.json</code> plus a <code class="k">textures/</code> folder.</div>
-        <div style="display:flex;gap:8px;flex-wrap:wrap"><button class="btn primary" id="exActive" ${p?'':'disabled'}>${ICON.bolt} Download .json</button><button class="btn" id="exBundle" ${p?'':'disabled'}>${ICON.zip} Download .reesaber</button><button class="btn" id="exAll" ${state.presets.length?'':'disabled'}>${ICON.layers} All ${state.presets.length} as .zip</button></div>
+        <div class="fset-note"><b>PC:</b> put it in <code class="k">Beat Saber/UserData/ReeSabers/Presets</code><br><b>Quest:</b> put it in <code class="k">ModData/com.beatgames.beatsaber/Mods/ReeSabers/Presets</code>, or use <b>Push to Quest</b> below to send it over USB.<br><b>.json</b> carries its textures inside, so it's the only file you need on either one. <b>.reesaber</b> is a zip with <code class="k">preset.json</code> plus a <code class="k">textures/</code> folder.</div>
+        <div style="display:flex;gap:8px;flex-wrap:wrap"><button class="btn primary" id="exActive" ${p?'':'disabled'}>${ICON.bolt} Download .json</button><button class="btn" id="exBundle" ${p?'':'disabled'}>${ICON.zip} Download .reesaber</button><button class="btn" id="exAll" ${state.presets.length?'':'disabled'}>${ICON.layers} All ${state.presets.length} as .zip</button><button class="btn" id="exQuest" ${p?'':'disabled'}>Push to Quest</button></div>
+        <div class="fset-note" style="margin:10px 0 0">Saber visibility (headset, desktop, mirrors) and motion smoothing aren't part of a preset. Set those in the ReeSabers settings in game.</div>
       </div></div>
       <div class="acc"><div class="acc-head" style="cursor:default"><span class="acc-ic">${ICON.link}</span><span class="acc-title">Share</span></div><div class="acc-body">
         <div class="fset-note">A link with the whole preset packed inside it. Anyone who opens it gets a copy in their own Studio. Textures aren't included in links, so share a .reesaber file for textured sabers.</div>
@@ -1834,6 +1968,7 @@ function openExportModal(){
   $('#exAll',m).onclick=()=>{const used={};const files=state.presets.map(pp=>{let n=slug(pp.name);if(used[n]){used[n]++;n+='-'+used[n];}else used[n]=1;return {name:n+'.json',data:new TextEncoder().encode(JSON.stringify(buildPresetExport(pp),null,2))};});
     downloadBlob(zipStore(files),'reesaber-presets.zip');T('export-all-zip');toast('Exported '+files.length+' preset'+(files.length!==1?'s':'')+' in one .zip');closeModal();};
   $('#exShare',m).onclick=()=>{copyShareLink();};
+  $('#exQuest',m).onclick=()=>{T('export-quest',true);openQuestModal();};
   if($('#exFolder',m)){
     updateFolderStatus();
     $('#exFolder',m).onclick=()=>gate(()=>{folderSave(p,false);});
@@ -1867,7 +2002,7 @@ async function unzip(buf){
   return files;
 }
 function bytesToB64(u8){let s='';const CH=0x8000;for(let i=0;i<u8.length;i+=CH)s+=String.fromCharCode.apply(null,u8.subarray(i,i+CH));return btoa(s);}
-async function importReeSaberBundle(buf,fileName){
+async function importReeSaberBundle(buf,fileName,bopts){bopts=bopts||{};
   let files;try{files=await unzip(buf);}catch(e){toast('Could not read .reesaber bundle','err');return false;}
   const names=Object.keys(files);
   const jsons=names.filter(k=>/\.json$/i.test(k));
@@ -1885,7 +2020,7 @@ async function importReeSaberBundle(buf,fileName){
   let probe=null;try{probe=JSON.parse(text);}catch(e){}
   if(!probe||probe.__reesaberStudio||!Array.isArray(probe.Modules)){return handleImportData(text,{name:fileBaseName(fileName)});}
   const map=importAssetList(list);updateAssetCount();T('import-reesaber');
-  return handleImportData(text,{name:fileBaseName(fileName),map});
+  return handleImportData(text,{name:fileBaseName(fileName),map,baseLabel:bopts.baseLabel});
 }
 /* Read a dropped/selected file: sniff for a zip (PK) → bundle, else treat as JSON text. */
 function importFile(file,done){
@@ -1918,25 +2053,6 @@ function openImportModal(){
   ['dragleave','drop'].forEach(ev=>dz.addEventListener(ev,e=>{e.preventDefault();dz.classList.remove('hot');}));
   dz.addEventListener('drop',e=>{const f=e.dataTransfer.files[0];if(f)importFile(f,closeModal);});
   $('#imX',m).onclick=closeModal;$('#imC',m).onclick=closeModal;$('#imGo',m).onclick=()=>{const t=$('#pasteBox',m).value.trim();if(!t){toast('Paste JSON or drop a file','err');return;}if(handleImportData(t)===true)closeModal();};
-}
-function openGlobalModal(){T('global-open',true);
-  const g=state.global;
-  const m=openModal(`<div class="modal-head"><h3>Global settings</h3><span class="spacer" style="flex:1"></span><button class="btn ghost icon" id="gX">${ICON.x}</button></div><div class="modal-body" id="gBody"></div><div class="modal-foot"><button class="btn primary" id="gDone">Done</button></div>`);
-  const body=$('#gBody',m);
-  const note=document.createElement('div');note.className='vitem warn';note.innerHTML='<div class="vic">!</div><div><div class="vtitle">Studio notes only, not exported</div><div class="vmsg">ReeSabers keeps these options in its own in-game settings, not in preset files. Use this panel to note how you plan to set them; it is saved with your Studio project.</div></div>';body.appendChild(note);
-  const vis=accordion('VR / Camera Visibility',ICON.blade);
-  vis.add(field('',toggle(g.visibility.headset,'Visible in VR headset',v=>{g.visibility.headset=v;scheduleSave();},'visibility')));
-  vis.add(field('',toggle(g.visibility.desktop,'Visible on desktop / Camera2',v=>{g.visibility.desktop=v;scheduleSave();})));
-  vis.add(field('',toggle(g.visibility.mirror,'Visible in mirror reflections',v=>{g.visibility.mirror=v;scheduleSave();})));
-  body.appendChild(vis);
-  const sm=accordion('Motion Smoothing',ICON.wave,{magenta:true});
-  sm.add(field('',toggle(g.motionSmoothing.enabled,'Enable motion smoothing',v=>{g.motionSmoothing.enabled=v;scheduleSave();},'motionSmoothing')));
-  sm.add(field('Smoothing amount',slider('smoothing',g.motionSmoothing.amount,v=>{g.motionSmoothing.amount=v;scheduleSave();})));
-  body.appendChild(sm);
-  const mp=accordion('Menu',ICON.edit,{collapsed:true});
-  mp.add(field('',toggle(g.menuPointer,'Show sabers in menu',v=>{g.menuPointer=v;scheduleSave();})));
-  body.appendChild(mp);
-  $('#gX',m).onclick=closeModal;$('#gDone',m).onclick=closeModal;
 }
 function slug(s){return (s||'preset').toLowerCase().replace(/[^a-z0-9]+/g,'-').replace(/^-|-$/g,'')||'preset';}
 function downloadBlob(blob,name){const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download=name;document.body.appendChild(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(a.href),4000);}
@@ -1979,13 +2095,35 @@ const STARTERS={
     const tip=newModule('reezonate.simple-trail');tip.name='Tip Trail';tip.config.Name=tip.name;tip.config.MaterialSettings.trailType=0;tip.config.MaterialSettings.width=0.05;tip.config.MeshSettings.TrailLength=0.4;
     const light=newModule('reezonate.simple-trail');light.name='Light Trail';light.config.Name=light.name;light.config.MeshSettings.TrailLength=0.2;
     const dark=newModule('reezonate.simple-trail');dark.name='Dark Trail';dark.config.Name=dark.name;dark.config.MaterialSettings.generalSettings.blendingMode=1;dark.config.MeshSettings.TrailLength=0.12;
-    p.modules.push(bl,tip,light,dark);return p;}}
+    p.modules.push(bl,tip,light,dark);return p;}},
+  drivers:{label:'Driver test preset',desc:'One glowing band per driver number, to learn what each does in game',build:()=>buildDriverTestPreset()}
 };
+/* Driver calibration: band N (counting up from the hilt) lights up as driver type N rises.
+   Load it in game, play a song, and note which band reacts to what. */
+const DRIVER_TEST_COLORS=[['red',0],['orange',0.07],['yellow',0.15],['green',0.33],['cyan',0.5],['blue',0.62],['purple',0.76],['pink',0.88],['white',0]];
+function buildDriverTestPreset(){
+  const p=newPreset('Driver Test');p.color.left='#ffffff';p.color.right='#ffffff';
+  const g=newModule('reezonate.empty');g.name='Driver bands';g.config.Name=g.name;
+  for(let i=1;i<=9;i++){
+    const [cname,hue]=DRIVER_TEST_COLORS[i-1];
+    const b=newModule('reezonate.blur-saber');b.name='Type '+i+' · '+cname;b.config.Name=b.name;
+    Object.assign(b.config.MeshSettings,{zOffsetFrom:r3((i-1)/9),zOffsetTo:r3(i/9-0.015),radius:0.02});b.config.MeshSettings.saberProfile=CURVE1(1);
+    b.config.ForceColorOverride=true;Object.assign(b.config.ColorOverride,{hue:hue,saturation:i===9?0:1,value:1});
+    b.config.MaterialSettings.maskSettings.drivers.push(makeDriver({valueType:i,valueFrom:0,valueTo:1,alpha0:0.12,alpha1:1,scale0:0.6,scale1:1.25,color:'#ffffff',interp:0}));
+    g.children.push(b);
+  }
+  p.modules.push(g);return p;
+}
+function driverTestHelp(){return 'Band 1 sits at the hilt and band 9 at the tip: '+DRIVER_TEST_COLORS.map((c,i)=>(i+1)+' '+c[0]).join(', ')+'. Each band brightens and thickens as its driver number rises from 0 to 1. Export it, load it in game, play a song, and watch which band reacts to swinging, scoring, missing and so on.';}
+function openDriverTestInfo(){
+  const m=openModal(`<div class="modal-head"><h3>Driver test preset</h3><span class="spacer" style="flex:1"></span><button class="btn ghost icon" id="dtX" aria-label="Close">${ICON.x}</button></div><div class="modal-body"><p class="explain-sum"></p><p class="fset-note">ReeSabers stores drivers as numbers and doesn't publish which number is which game value, so Studio's names are guesses. This preset lets you see for yourself. If you work one out, <a href="https://github.com/Spanky3651/ReeSaber-Studio/issues" target="_blank" rel="noopener" style="color:var(--cyan)">open an issue on GitHub</a> so Studio can drop the guess labels.</p></div><div class="modal-foot"><button class="btn primary" id="dtOk">Got it</button></div>`);
+  $('.explain-sum',m).textContent=driverTestHelp();$('#dtX',m).onclick=closeModal;$('#dtOk',m).onclick=closeModal;
+}
 function renderStarterMenu(){
   const menu=$('#newDdMenu');menu.innerHTML='';
   Object.entries(STARTERS).forEach(([k,s])=>{
     const it=document.createElement('div');it.className='dd-item';it.innerHTML=`<b>${s.label}</b><span>${s.desc}</span>`;
-    it.onclick=()=>{const p=s.build();state.presets.push(p);$('#newDd').classList.remove('open');selectPreset(p.id);toast(s.label+' created');T('starter-'+k);};
+    it.onclick=()=>{const p=s.build();state.presets.push(p);$('#newDd').classList.remove('open');selectPreset(p.id);toast(s.label+' created');T('starter-'+k);if(k==='drivers')openDriverTestInfo();};
     menu.appendChild(it);
   });
   const g=document.createElement('div');g.className='dd-item dd-gallery';g.innerHTML='<b>Browse the gallery…</b><span>Open a community preset</span>';g.onclick=()=>{$('#newDd').classList.remove('open');openGalleryModal();T('gallery-browse');};menu.appendChild(g);
@@ -2023,7 +2161,7 @@ function interpSelect(c,onChange){
 function r3(x){return Math.round(x*1000)/1000;}
 function sizeCanvas(cv,h){const dpr=Math.min(window.devicePixelRatio||1,2);const w=Math.max(160,cv.clientWidth||320);if(cv.width!==Math.round(w*dpr)||cv.height!==Math.round(h*dpr)){cv.width=Math.round(w*dpr);cv.height=Math.round(h*dpr);}const ctx=cv.getContext('2d');ctx.setTransform(dpr,0,0,dpr,0,0);return {ctx,w,h};}
 function cbPair(text,input){const w=document.createElement('span');w.className='cb-pair';const l=document.createElement('span');l.className='cb-lbl';l.textContent=text;w.append(l,input);return w;}
-function numBox(val,step,onInput,label){const i=document.createElement('input');i.type='number';i.step=step;i.value=val;if(label){i.setAttribute('aria-label',label);i.title=label;}
+function numBox(val,step,onInput,label){const i=document.createElement('input');i.type='number';i.step=step;i.value=fmtNum(val);if(label){i.setAttribute('aria-label',label);i.title=label;}
   i.addEventListener('input',()=>{const v=parseFloat(i.value);if(!isFinite(v)){i.classList.add('invalid');return;}i.classList.remove('invalid');onInput(v);});
   i.addEventListener('blur',()=>{if(!isFinite(parseFloat(i.value)))i.classList.remove('invalid');});return i;}
 
@@ -2202,6 +2340,8 @@ function buildDriversForm(){
   const intro=document.createElement('div');intro.className='fset-note';intro.style.marginBottom='14px';
   intro.innerHTML=`A driver ${helpIcon('driver')} maps a live game value onto this layer's color, alpha and scale. Drag the <b>Driver value</b> slider under the 3D preview to test it.`;
   wrap.appendChild(intro);
+  const cal=document.createElement('button');cal.type='button';cal.className='btn sm ghost';cal.style.cssText='margin:-6px 0 12px';cal.textContent='Not sure which number is which? Make a driver test preset';
+  cal.onclick=()=>{const p=buildDriverTestPreset();state.presets.push(p);selectPreset(p.id);T('starter-drivers');openDriverTestInfo();};wrap.appendChild(cal);
   const addBtn=document.createElement('button');addBtn.className='btn primary';addBtn.style.cssText='width:100%;justify-content:center;margin-bottom:16px';addBtn.innerHTML=ICON.plus+' Add driver';
   addBtn.addEventListener('click',()=>{T('driver-add');driversOf(m,true).push(makeDriver({valueType:1}));renderStack();renderInspector();touch();});
   wrap.appendChild(addBtn);
@@ -2331,6 +2471,7 @@ function layerMenu(id,anchor){
   const p=activePreset();const f=findModule(p,id);if(!f)return;
   const prev=f.list[f.index-1];
   const items=[
+    ...(f.index>0?[['Move up','up']]:[]),...(f.index<f.list.length-1?[['Move down','down']]:[]),
     ['Duplicate','dup'],['Copy','copy'],
     [state.soloUid===id?'Stop solo':'Solo in preview','solo'],
     ...(prev&&isContainer(prev)?[['Move into “'+(prev.name||'group')+'”','in']]:[]),
@@ -2413,7 +2554,7 @@ const SNIPPETS={
 };
 function addSnippet(key){
   const p=activePreset();if(!p){toast('Create or select a preset first','err');return;}
-  const s=SNIPPETS[key];const mods=s.build(p);if(!mods)return;
+  closeAddMenu();const s=SNIPPETS[key];const mods=s.build(p);if(!mods)return;
   const t=paletteTarget();(t?t.children:p.modules).push(...mods);state.activeModuleId=mods[0].uid;state.activeTab='module';renderAll();
   toast(s.label+' added'+(t?' inside '+(t.name||'group'):''));T('snippet-'+key);
 }
@@ -2428,7 +2569,8 @@ function renderSnippets(){
 /*  a root rotated so +z points up the screen.                            */
 /* ===================================================================== */
 let renderer,scene,camera,animReq,clock,gridHelper;
-let orbit={az:0.6,el:0.2,dist:3.4,drag:false,px:0,py:0};
+let orbit={az:0.6,el:0.2,dist:3.4,drag:false,px:0,py:0,tx:0,ty:0.45,tz:0};
+let noteObj=null,lastFrameKey='';
 let sabers=[];let simTime=0;
 const CAPTURE={active:false};
 const SCHEMES={preset:{n:'Preset colors'},redblue:{n:'Red / Blue',L:'#ff1e3c',R:'#1e6bff'},pinkcyan:{n:'Pink / Cyan',L:'#ff3fb4',R:'#21e6ff'},orangepurple:{n:'Orange / Purple',L:'#ff8a1e',R:'#8a3dff'},greengold:{n:'Green / Gold',L:'#2bdc5a',R:'#ffc23d'},mono:{n:'White / Grey',L:'#ffffff',R:'#8a8f98'},dark:{n:'Dark colors (stress test)',L:'#3a1414',R:'#14213a'}};
@@ -2444,7 +2586,8 @@ function initThree(){
   canvas.addEventListener('pointerdown',e=>{orbit.drag=true;orbit.px=e.clientX;orbit.py=e.clientY;try{canvas.setPointerCapture(e.pointerId);}catch(_){}});
   canvas.addEventListener('pointermove',e=>{if(!orbit.drag)return;orbit.az+=(e.clientX-orbit.px)*0.008;orbit.el=clamp(orbit.el+(e.clientY-orbit.py)*0.008,-1.2,1.2);orbit.px=e.clientX;orbit.py=e.clientY;});
   canvas.addEventListener('pointerup',()=>orbit.drag=false);
-  canvas.addEventListener('wheel',e=>{e.preventDefault();orbit.dist=clamp(orbit.dist+e.deltaY*0.002,1.5,8);},{passive:false});
+  canvas.addEventListener('wheel',e=>{e.preventDefault();orbit.dist=clamp(orbit.dist*(1+e.deltaY*0.0012),0.5,12);},{passive:false});
+  canvas.addEventListener('dblclick',()=>{frameCamera(true);});
   resizeThree();window.addEventListener('resize',resizeThree);rebuildScene();animate();
 }
 function applyBackdrop(){
@@ -2494,19 +2637,25 @@ function gradColors(geo,axisFn,col,grad){
   geo.setAttribute('color',new THREE.BufferAttribute(arr,3));
 }
 function rebuildScene(){
-  if(!scene)return;disposeSabers();const p=activePreset();updatePreviewFoot();updateSoloBanner();if(!p)return;
+  if(!scene)return;disposeSabers();const p=activePreset();updatePreviewFoot();updateSoloBanner();updateCompareBanner();
+  if(noteObj){scene.remove(noteObj);disposeObj(noteObj);noteObj=null;}
+  if(!p)return;
   syncCloneRefs(p);
-  const hands=[];if(p.hands.L)hands.push('L');if(p.hands.R)hands.push('R');
+  let hands=[];if(p.hands.L)hands.push('L');if(p.hands.R)hands.push('R');
   if(pv.both){if(hands.indexOf('L')<0)hands.push('L');if(hands.indexOf('R')<0)hands.push('R');}
   if(!hands.length)hands.push('R');
+  const base=pv.compare?baselinePreset(p):null;if(base)hands=['L','R'];
+  const comb=comboPresets(p),leftAlt=p.preview&&p.preview.leftId?state.presets.find(x=>x.id===p.preview.leftId&&x!==p):null;
+  const setFor=hk=>base?(hk==='L'?[base]:[p]):[(hk==='L'&&leftAlt)?leftAlt:p].concat(comb);
   const solo=soloSets(p);
   hands.forEach((hk,idx)=>{
     const pivot=new THREE.Group();pivot.position.set(hands.length>1?(idx===0?-0.7:0.7):0,-0.3,0);
     const root=new THREE.Group();root.position.y=0.18;root.rotation.x=-Math.PI/2;root.scale.setScalar(1.5);pivot.add(root);
-    const pt=new THREE.Group();const T=p.transform;
-    pt.position.set(T.Position.x,T.Position.y,T.Position.z);pt.rotation.order='YXZ';
-    pt.rotation.set(THREE.MathUtils.degToRad(T.Rotation.x),THREE.MathUtils.degToRad(T.Rotation.y),THREE.MathUtils.degToRad(T.Rotation.z));
-    pt.scale.set(T.Scale.x,T.Scale.y,T.Scale.z);root.add(pt);
+    const mkPT=q=>{const pt=new THREE.Group();const T=q.transform;
+      pt.position.set(T.Position.x,T.Position.y,T.Position.z);pt.rotation.order='YXZ';
+      pt.rotation.set(THREE.MathUtils.degToRad(T.Rotation.x),THREE.MathUtils.degToRad(T.Rotation.y),THREE.MathUtils.degToRad(T.Rotation.z));
+      pt.scale.set(T.Scale.x,T.Scale.y,T.Scale.z);root.add(pt);return pt;};
+    const sets=setFor(hk);const pts=sets.map(mkPT);const pt=pts[0];
     if(pv.hilt){
       const hg=new THREE.CylinderGeometry(0.018,0.021,0.17,16);hg.rotateX(Math.PI/2);
       const hilt=new THREE.Mesh(hg,new THREE.MeshStandardMaterial({color:0x151515,metalness:0.8,roughness:0.4}));hilt.position.z=-0.085;root.add(hilt);
@@ -2546,7 +2695,7 @@ function rebuildScene(){
       const grad=get(cfg,'MaterialSettings.maskSettings.lengthMappings.colorOverValue');
       const tA=assetByIdOrName(get(cfg,'MaterialSettings.generalSettings.customTextureId'));
       /* resting preview: the streak a sideways swing would leave, fanned around the hand */
-      const tg=new THREE.Group();const N=24,sweep=clamp(tl*3.2,0.15,1.6),zp=-0.09;
+      const tg=new THREE.Group();tg.userData.noFrame=true;const N=24,sweep=clamp(tl*3.2,0.15,1.6),zp=-0.09;
       const pos=new Float32Array((N+1)*2*3),cols=new Float32Array((N+1)*2*3),uvs=new Float32Array((N+1)*2*2),fidx=[];
       for(let k=0;k<=N;k++){const a=k/N,th=-a*sweep,c=grad?evalGradient(grad,a):{r:1,g:1,b:1,a:1},f=(1-a)*clamp(c.a,0,2)*0.8;
         [span.top,span.bot].forEach((z,j)=>{const v=(k*2+j);pos[v*3]=Math.sin(th)*(z-zp);pos[v*3+1]=0;pos[v*3+2]=zp+Math.cos(th)*(z-zp);
@@ -2577,9 +2726,10 @@ function rebuildScene(){
       for(let i=0;i<cnt;i++){e.life[i]=0;e.pos[i*3+1]=-999;}
       sb.emitters.push(e);return {mesh:pts,geo};
     }
-    function drawNode(m,parent,depth,forceShow){
+    function drawNode(m,parent,depth,forceShow,q){
       if(!m||depth>24)return;const cfg=m.config||{};if(m.enabled===false||cfg.Enabled===false)return;
-      const inSolo=forceShow||!solo||solo.sub.has(m.uid);if(!inSolo&&!solo.anc.has(m.uid))return;
+      const so=q===p?solo:null;
+      const inSolo=forceShow||!so||so.sub.has(m.uid);if(!inSolo&&!so.anc.has(m.uid))return;
       const g=new THREE.Group();const lt=cfg.LocalTransform;g.rotation.order='YXZ';
       if(lt){if(lt.Position)g.position.set(safeNum(lt.Position.x,0),safeNum(lt.Position.y,0),safeNum(lt.Position.z,0));
         if(lt.Rotation)g.rotation.set(THREE.MathUtils.degToRad(safeNum(lt.Rotation.x,0)),THREE.MathUtils.degToRad(safeNum(lt.Rotation.y,0)),THREE.MathUtils.degToRad(safeNum(lt.Rotation.z,0)));
@@ -2595,14 +2745,47 @@ function rebuildScene(){
         } else if(kind==='blade'){sb.rec.push({m,mesh:drawBlade(cfg,g,nodeColor(cfg,baseColor,false)),type:'blade'});}
         else if(kind==='trail'&&pv.trail){sb.rec.push({m,mesh:drawTrail(cfg,g,nodeColor(cfg,baseColor,false)),type:'trail'});}
         else if(kind==='vfx'){const v=drawVfx(cfg,g,nodeColor(cfg,baseColor),m);sb.rec.push({m,mesh:v.mesh,type:'vfx'});}
-        else if(kind==='clone'){const tgt=resolveCloneTarget(p,cfg.Reference);if(tgt&&tgt!==m)drawNode(tgt,g,depth+6,true);}
+        else if(kind==='clone'){const tgt=resolveCloneTarget(q,cfg.Reference);if(tgt&&tgt!==m)drawNode(tgt,g,depth+6,true,q);}
         if(kind==='joint'&&cfg.JointSettings)sb.joints.push({g,bx:g.rotation.x,by:g.rotation.y,js:cfg.JointSettings,ax:0,ay:0,vx:0,vy:0});
       }
-      (m.children||[]).forEach(c=>drawNode(c,g,depth+1,forceShow));
+      (m.children||[]).forEach(c=>drawNode(c,g,depth+1,forceShow,q));
     }
-    p.modules.forEach(m=>drawNode(m,pt,0,false));
+    sets.forEach((q,i)=>q.modules.forEach(m=>drawNode(m,pts[i],0,false,q)));
     scene.add(pivot);sabers.push(sb);
   });
+  if(pv.note)addNoteBlock(hands.length>1,presetColorFor(p,'R'));
+  const fk=p.id+'|'+hands.length+'|'+(base?1:0)+'|'+comb.length;
+  if(fk!==lastFrameKey){lastFrameKey=fk;frameCamera(false);}
+}
+/* fit the camera to whatever is drawn (rest pose), keeping the current viewing angle */
+function frameCamera(user){
+  if(!scene||!sabers.length)return;
+  /* frame the solid parts (blades, hilts, models); the faint resting trail fans may spill past the edge */
+  const box=new THREE.Box3(),tmp=new THREE.Box3();
+  const skip=o=>{for(let x=o;x;x=x.parent){if(x.userData&&x.userData.noFrame)return true;}return false;};
+  sabers.forEach(sb=>{sb.group.updateMatrixWorld(true);sb.group.traverse(o=>{if(!o.isMesh||!o.geometry||skip(o))return;if(!o.geometry.boundingBox)o.geometry.computeBoundingBox();tmp.copy(o.geometry.boundingBox).applyMatrix4(o.matrixWorld);box.union(tmp);});});
+  if(noteObj)box.expandByObject(noteObj);
+  if(box.isEmpty())return;
+  const c=new THREE.Vector3();box.getCenter(c);const sph=new THREE.Sphere();box.getBoundingSphere(sph);
+  const r=Math.max(sph.radius,0.15);const vf=THREE.MathUtils.degToRad(camera.fov)/2;const aspect=camera.aspect||1;
+  const hf=Math.atan(Math.tan(vf)*aspect);const f=Math.min(vf,hf);
+  orbit.dist=clamp(r/Math.sin(f)*1.08,0.5,12);orbit.tx=c.x;orbit.ty=c.y;orbit.tz=c.z;
+  if(user)T('preview-frame',true);
+}
+const VIEWS={orbit:{n:'Orbit view'},front:{n:'Front',az:Math.PI/2,el:0.08},side:{n:'Side',az:0,el:0.08},hilt:{n:'Hilt view',az:Math.PI/2,el:-1.05,k:0.6},top:{n:'Tip view',az:Math.PI/2,el:1.15,k:0.8}};
+function setCameraView(v){
+  const d=VIEWS[v]||VIEWS.orbit;pv.view=v in VIEWS?v:'orbit';frameCamera(false);
+  if(d.az!=null){orbit.az=d.az;orbit.el=d.el;if(d.k)orbit.dist*=d.k;if(pv.spin){pv.spin=false;syncPreviewToggles();}}
+  T('view-'+pv.view,true);
+}
+function addNoteBlock(both,col){
+  const g=new THREE.Group();const S=0.45*1.5;/* roughly a Beat Saber note, in preview units (1 m = 1.5) */
+  const cube=new THREE.Mesh(new THREE.BoxGeometry(S,S,S),new THREE.MeshStandardMaterial({color:col,roughness:0.45,metalness:0.2,emissive:col,emissiveIntensity:0.12}));
+  g.add(cube);
+  const tri=new THREE.Shape();tri.moveTo(-S*0.28,S*0.08);tri.lineTo(S*0.28,S*0.08);tri.lineTo(0,-S*0.2);tri.lineTo(-S*0.28,S*0.08);
+  const arrow=new THREE.Mesh(new THREE.ShapeGeometry(tri),new THREE.MeshBasicMaterial({color:0xffffff}));arrow.position.z=S/2+0.002;g.add(arrow);
+  if(both)g.position.set(0,0.3,-1.0);else g.position.set(0.85,0.45,0);
+  g.rotation.y=both?0:-0.5;noteObj=g;scene.add(g);
 }
 function animate(){
   animReq=requestAnimationFrame(animate);if(CAPTURE.active)return;
@@ -2615,7 +2798,7 @@ const SWING={A:1.05,w:Math.PI*2/1.05};
 function stepPreview(dt){
   simTime+=dt;const t=simTime;
   if(pv.spin)orbit.az+=dt*0.35;
-  camera.position.set(Math.cos(orbit.az)*Math.cos(orbit.el)*orbit.dist,Math.sin(orbit.el)*orbit.dist+0.5,Math.sin(orbit.az)*Math.cos(orbit.el)*orbit.dist);camera.lookAt(0,0.45,0);
+  camera.position.set(orbit.tx+Math.cos(orbit.az)*Math.cos(orbit.el)*orbit.dist,orbit.ty+Math.sin(orbit.el)*orbit.dist+0.05,orbit.tz+Math.sin(orbit.az)*Math.cos(orbit.el)*orbit.dist);camera.lookAt(orbit.tx,orbit.ty,orbit.tz);
   const dv=driveValue(t);
   sabers.forEach(sb=>stepSaber(sb,dt,t,dv));
 }
@@ -2706,6 +2889,17 @@ function exportPNG(scale,transparent){
   const p=activePreset();const a=document.createElement('a');a.href=url;a.download=slug(p?p.name:'saber')+'-preview.png';document.body.appendChild(a);a.click();a.remove();
   toast('PNG saved');T('export-png');return url;
 }
+/* 480x360 PNG on the current backdrop, the size the gallery uses */
+function exportThumb(){
+  if(!renderer){toast('The 3D preview is not available','err');return null;}
+  const w=480,h=360;let url=null;
+  const save={az:orbit.az,el:orbit.el,dist:orbit.dist,tx:orbit.tx,ty:orbit.ty,tz:orbit.tz,aspect:camera.aspect};
+  try{camera.aspect=w/h;camera.updateProjectionMatrix();frameCamera(false);orbit.dist*=0.92;stepPreview(0);
+    const r=withCaptureRenderer(w,h,false,(r,cam)=>{cam.position.copy(camera.position);cam.quaternion.copy(camera.quaternion);r.render(scene,cam);url=r.domElement.toDataURL('image/png');return r;});disposeCaptureRenderer(r);}
+  finally{Object.assign(orbit,{az:save.az,el:save.el,dist:save.dist,tx:save.tx,ty:save.ty,tz:save.tz});camera.aspect=save.aspect;camera.updateProjectionMatrix();}
+  const p=activePreset();const a=document.createElement('a');a.href=url;a.download=slug(p?p.name:'saber')+'.png';document.body.appendChild(a);a.click();a.remove();
+  toast('Gallery thumbnail saved (480×360)');T('export-thumb');return url;
+}
 function wait0(){return new Promise(r=>setTimeout(r,0));}
 async function recordGIF(o){
   o=Object.assign({size:360,fps:15,seconds:3,motion:'spin'},o||{});
@@ -2777,6 +2971,9 @@ function openCaptureModal(){T('capture-open',true);
   const tr=toggle(true,'Transparent background',()=>{});png.add(field('',tr));
   const pb=document.createElement('button');pb.className='btn primary';pb.innerHTML=ICON.img+' Save PNG';pb.onclick=()=>{exportPNG(parseFloat(sc.value)||1,tr.querySelector('input').checked);};png.add(pb);
   body.appendChild(png);
+  const th=accordion('Gallery thumbnail',ICON.img,{collapsed:true});
+  th.add(noteBox('A 480×360 PNG on the current backdrop, framed to fit. That is the size the Studio gallery uses, so attach it when you submit a preset.'));
+  const tb=document.createElement('button');tb.className='btn';tb.innerHTML=ICON.img+' Save thumbnail';tb.onclick=()=>exportThumb();th.add(tb);body.appendChild(th);
   const gif=accordion('Looping clip (.gif)',ICON.play);
   const mo=selectInput([{v:'spin',n:'360° spin'},{v:'swing',n:'Swing test'}],'spin',()=>{});gif.add(field('Motion',mo));
   const sz=selectInput([{v:240,n:'240 px'},{v:360,n:'360 px'},{v:480,n:'480 px'}],360,()=>{});gif.add(field('Size',sz));
@@ -2792,7 +2989,11 @@ function syncPreviewToggles(){$$('.preview-ctrls .mini-toggle').forEach(mt=>{con
 /* ===================================================================== */
 /*  PERFORMANCE ESTIMATE                                                  */
 /* ===================================================================== */
+const PERF_T={pc:{n:'PC',light:1500,medium:4000,tex:30},quest:{n:'Quest',light:900,medium:2400,tex:60}};
+let perfTarget='pc';try{const t=localStorage.getItem('ree_perf_target');if(t in PERF_T)perfTarget=t;}catch(e){}
+function setPerfTarget(t){if(!(t in PERF_T))return;perfTarget=t;try{localStorage.setItem('ree_perf_target',t);}catch(e){}T('perf-target-'+t,true);renderInspector();renderValidation();}
 function perfEstimate(p){
+  const PT=PERF_T[perfTarget]||PERF_T.pc;
   const items=[];let total=0;
   allModules(p).forEach(m=>{
     if(!m.enabled)return;const c=m.config||{};let pts=0,why='';
@@ -2804,18 +3005,20 @@ function perfEstimate(p){
     pts=Math.round(pts);total+=pts;items.push({name:m.name||m.moduleId,pts,why});
   });
   const refs=new Set();allModules(p).forEach(m=>collectTexRefs(m.config,refs));
-  let texBytes=0;refs.forEach(n=>{const a=assetByName(n,'texture');if(a)texBytes+=a.size||0;});
-  const texPts=Math.round(texBytes/1048576*150);if(texPts){total+=texPts;items.push({name:'Textures ('+bytesFmt(texBytes)+')',pts:texPts,why:'texture memory'});}
+  /* textures cost GPU memory by pixel count (with mipmaps), not by file size */
+  let mem=0;refs.forEach(n=>{const a=assetByName(n,'texture');if(!a)return;mem+=(a._w&&a._h)?a._w*a._h*4*1.33:(a.size||0)*4;});
+  const texPts=Math.round(mem/1048576*PT.tex);if(texPts){total+=texPts;items.push({name:'Textures (about '+bytesFmt(Math.round(mem))+' of GPU memory)',pts:texPts,why:'texture memory'});}
   items.sort((a,b)=>b.pts-a.pts);
-  const level=total<1500?'Light':total<4000?'Medium':'Heavy';
-  return {total,level,items};
+  const level=total<PT.light?'Light':total<PT.medium?'Medium':'Heavy';
+  return {total,level,items,target:perfTarget};
 }
 function perfBlock(p){
   const e=perfEstimate(p);const el=document.createElement('div');el.className='perf perf-'+e.level.toLowerCase();
   const pct=clamp(e.total/6000,0.02,1);
-  el.innerHTML='<div class="perf-top"><b>Performance estimate</b>'+helpIcon('perf')+'<span class="perf-lvl"></span></div><div class="perf-bar"><span></span></div><div class="perf-list"></div>';
+  el.innerHTML='<div class="perf-top"><b>Performance estimate</b>'+helpIcon('perf')+'<span class="perf-lvl"></span></div><div class="perf-bar"><span></span></div><div class="perf-list"></div><div class="perf-sub"><span>Estimate for</span><span class="perf-tgt" role="group" aria-label="Estimate for"></span></div>';
+  const tg=el.querySelector('.perf-tgt');Object.keys(PERF_T).forEach(k=>{const b=document.createElement('button');b.type='button';b.className='perf-tb'+(k===e.target?' on':'');b.textContent=PERF_T[k].n;b.setAttribute('aria-pressed',k===e.target?'true':'false');b.title='Estimate for '+PERF_T[k].n;b.onclick=ev=>{ev.stopPropagation();setPerfTarget(k);};tg.appendChild(b);});
   el.querySelector('.perf-lvl').textContent=e.level+' · '+e.total.toLocaleString()+' pts';
-  el.querySelector('.perf-bar span').style.width=(pct*100)+'%';
+  el.querySelector('.perf-bar span').style.width=(clamp(e.total/(PERF_T[e.target].medium*1.5),0.02,1)*100)+'%';
   const list=el.querySelector('.perf-list');
   e.items.slice(0,4).forEach(it=>{const d=document.createElement('div');d.textContent=it.name+': '+it.pts.toLocaleString()+' ('+it.why+')';list.appendChild(d);});
   return el;
@@ -2827,15 +3030,15 @@ function perfBlock(p){
 const BLEND_NAMES=['additive glow','alpha blend','multiply'];
 function describeModule(m,p){
   const c=m.config||{},nm='“'+(m.name||m.moduleId)+'”';let s='';
-  const cm=v=>Math.round(safeNum(v,0)*1000)/10;
+  const cm=v=>fmtNum(Math.round(safeNum(v,0)*1000)/10,4);
   if(m.kind==='blade'){const ms=c.MeshSettings||{};const tex=get(c,'TexturesSettings.mainTextureId');
-    s='Blade '+nm+' from '+safeNum(ms.zOffsetFrom,0)+' m to '+safeNum(ms.zOffsetTo,1)+' m along the saber, '+cm(ms.radius)+' cm thick';
+    s='Blade '+nm+' from '+cm(ms.zOffsetFrom)+' cm to '+cm(safeNum(ms.zOffsetTo,1))+' cm along the saber, '+cm(ms.radius)+' cm thick';
     if(!NO_TEX(tex))s+=', textured with '+tex;}
-  else if(m.kind==='trail'){const mt=c.MaterialSettings||{};s='Trail '+nm+', '+safeNum(get(c,'MeshSettings.TrailLength'),0.3)+' long, '+(safeNum(mt.trailType,1)===0?'tip':'full-blade')+' style, '+(BLEND_NAMES[safeNum(get(mt,'generalSettings.blendingMode'),0)]||'custom blending');
+  else if(m.kind==='trail'){const mt=c.MaterialSettings||{};s='Trail '+nm+', length '+fmtNum(safeNum(get(c,'MeshSettings.TrailLength'),0.3),3)+', '+(safeNum(mt.trailType,1)===0?'tip':'full-blade')+' style, '+(BLEND_NAMES[safeNum(get(mt,'generalSettings.blendingMode'),0)]||'custom blending');
     const tex=get(mt,'generalSettings.customTextureId');if(!NO_TEX(tex))s+=', textured with '+tex;}
-  else if(m.kind==='vfx'){const trg=['all the time','on note cuts','on misses'][safeNum(get(c,'TriggerSettings.type'),0)]||'on a custom trigger';s='Sparks '+nm+': up to '+safeNum(get(c,'MeshSettings.ParticlesCount'),0)+' particles, emitted '+trg;}
+  else if(m.kind==='vfx'){const trg=['all the time','on note cuts','on misses'][safeNum(get(c,'TriggerSettings.type'),0)]||'on a custom trigger';s='Sparks '+nm+': up to '+fmtNum(safeNum(get(c,'MeshSettings.ParticlesCount'),0),6)+' particles, emitted '+trg;}
   else if(m.kind==='group')s='Group '+nm+' holding '+allModules({modules:m.children||[]}).length+' layer(s)';
-  else if(m.kind==='joint'){const js=c.JointSettings||{};s='Dynamic joint '+nm+' (jiggles, spring '+safeNum(js.springConstant,100)+', limit '+safeNum(get(js,'angularLimit.x'),35)+'°) holding '+allModules({modules:m.children||[]}).length+' layer(s)';}
+  else if(m.kind==='joint'){const js=c.JointSettings||{};s='Dynamic joint '+nm+' (jiggles, spring '+fmtNum(safeNum(js.springConstant,100),4)+', limit '+fmtNum(safeNum(get(js,'angularLimit.x'),35),4)+'°) holding '+allModules({modules:m.children||[]}).length+' layer(s)';}
   else if(m.kind==='clone'){const t=m._cloneTargetUid?findModule(p,m._cloneTargetUid):null;s='Clone '+nm+' repeating '+(t?'“'+(t.m.name||t.m.moduleId)+'”':'another layer')+' with its own transform';}
   else if(m.kind==='legacy')s='Studio-only layer '+nm+' (not a real ReeSabers module, delete it)';
   else s='Layer '+nm+' ('+m.moduleId+', kept as imported)';
@@ -2937,16 +3140,17 @@ async function openSharedFromHash(){
 /*  GALLERY + "OPEN IN STUDIO" LINKS (?src=)                              */
 /* ===================================================================== */
 const SRC_HOSTS=['raw.githubusercontent.com','gist.githubusercontent.com','spanky3651.github.io'];
+const GALLERY_SUBMIT='https://github.com/Spanky3651/ReeSaber-Studio/issues/new?template=gallery-submission.yml';
 const GALLERY_FILE=/^[\w\- .]{1,80}\.(json|reesaber)$/i,GALLERY_IMG=/^[\w\- .]{1,80}\.(png|jpe?g|webp|gif)$/i;
 async function fetchLimited(url,limit){
   const r=await fetch(url,{credentials:'omit'});if(!r.ok)throw new Error('HTTP '+r.status);
   const len=parseInt(r.headers.get('content-length')||'0',10);if(len>limit)throw new Error('file is too large');
   const buf=await r.arrayBuffer();if(buf.byteLength>limit)throw new Error('file is too large');return buf;
 }
-async function importBuffer(buf,name){
-  const u=new Uint8Array(buf);
-  if(u[0]===0x50&&u[1]===0x4B)return importReeSaberBundle(buf,name);
-  return handleImportData(new TextDecoder().decode(u),{name:fileBaseName(name)});
+async function importBuffer(buf,name,opts){
+  const u=new Uint8Array(buf);opts=opts||{};
+  if(u[0]===0x50&&u[1]===0x4B)return importReeSaberBundle(buf,name,opts);
+  return handleImportData(new TextDecoder().decode(u),{name:fileBaseName(name),baseLabel:opts.baseLabel});
 }
 function srcAllowed(s){try{const u=new URL(s);return u.protocol==='https:'&&SRC_HOSTS.indexOf(u.hostname)>=0?u:null;}catch(e){return null;}}
 function openFromSrcParam(){
@@ -2971,7 +3175,8 @@ async function openGalleryModal(){
   catch(e){body.innerHTML='';body.appendChild(noteBox('The gallery could not be loaded here'+(location.protocol==='file:'?' (it only works on the website, not from a downloaded file)':'')+'. Open '+LIVE_URL+' to browse it.'));return;}
   const items=(idx&&Array.isArray(idx.presets)?idx.presets:[]).filter(x=>x&&typeof x==='object'&&GALLERY_FILE.test(String(x.file||''))).slice(0,200);
   body.innerHTML='';
-  body.appendChild(noteBox('Community presets you can open and remix. Want yours here? Open a pull request that adds it to the gallery folder of the GitHub repo.'));
+  const gn=document.createElement('div');gn.className='fset-note';gn.innerHTML='Community presets you can open and remix. Want yours here? <a href="'+GALLERY_SUBMIT+'" target="_blank" rel="noopener" style="color:var(--cyan)" id="galSubmit">Submit it on GitHub</a>. It\'s a short form, no coding needed. Make the thumbnail with <b>Capture → Gallery thumbnail</b>.';
+  body.appendChild(gn);const gsl=$('#galSubmit',gn);if(gsl)gsl.onclick=()=>T('gallery-submit-link');
   if(!items.length){body.insertAdjacentHTML('beforeend','<div class="empty">No presets in the gallery yet.</div>');return;}
   const grid=document.createElement('div');grid.className='gallery-grid';
   items.forEach(it=>{
@@ -3086,6 +3291,327 @@ function openTextureMaker(tab){T(tab==='sheet'?'sprite-sheet-open':'texture-make
 }
 
 /* ===================================================================== */
+/*  TEXTURE CHECKS + RESIZE                                               */
+/* ===================================================================== */
+function isPow2(n){n=n|0;return n>0&&(n&(n-1))===0;}
+function nearestPow2(n){return Math.pow(2,Math.round(Math.log2(Math.max(1,n))));}
+let texRecheckTimer=0;
+function scheduleTexRecheck(){clearTimeout(texRecheckTimer);texRecheckTimer=setTimeout(()=>{try{renderValidation();if(state.activeTab==='preset')renderInspector();}catch(e){}},120);}
+function textureIssues(p){
+  const out=[];const refs=new Set();allModules(p).forEach(m=>collectTexRefs(m.config,refs));
+  refs.forEach(n=>{const a=assetByName(n,'texture');if(!a||!a._w)return;
+    const d=a._w+'×'+a._h;
+    if(Math.max(a._w,a._h)>2048)out.push({level:'warn',action:'assets',t:'Large texture',m:`“${n}” is ${d} px. Textures over 2048 px use a lot of GPU memory, especially on Quest. Open Assets to shrink it.`});
+    else if(!isPow2(a._w)||!isPow2(a._h))out.push({level:'info',action:'assets',t:'Texture size is not a power of two',m:`“${n}” is ${d} px. Sizes like 256, 512 or 1024 are the safest choice for game textures. Assets can resize it in one click.`});
+  });
+  return out;
+}
+/* resizing makes a new asset with the same name (references stay valid, and Undo can bring the old one back) */
+function resizeTextureAsset(id,mode){
+  const a=assetById(id);if(!a||a.kind!=='texture')return;
+  const im=new Image();
+  im.onload=()=>{
+    let w=im.naturalWidth,h=im.naturalHeight;
+    if(mode==='1024'){const k=Math.min(1,1024/Math.max(w,h));w=Math.max(1,Math.round(w*k));h=Math.max(1,Math.round(h*k));}
+    if(mode==='pot'){w=Math.min(nearestPow2(w),2048);h=Math.min(nearestPow2(h),2048);}
+    if(w===im.naturalWidth&&h===im.naturalHeight){toast('Already that size','warn');return;}
+    const cv=document.createElement('canvas');cv.width=w;cv.height=h;const ctx=cv.getContext('2d');ctx.imageSmoothingQuality='high';ctx.drawImage(im,0,0,w,h);
+    const du=cv.toDataURL('image/png');
+    const na=cacheAsset({id:'a'+uid(),name:a.name,kind:'texture',ext:'png',dataURL:du,size:Math.round(b64Of(du).length*0.75)});na._w=w;na._h=h;
+    const i=state.assets.indexOf(a);if(i>=0)state.assets[i]=na;
+    vaultAssets();T('texture-resize');toast('Resized '+a.name+' to '+w+'×'+h);
+    renderAll();updateAssetCount();if($('#modalBack').classList.contains('show')&&$('#asBody'))openAssetModal();
+  };
+  im.onerror=()=>toast('Could not read '+a.name,'err');
+  im.src=a.dataURL;
+}
+
+/* ===================================================================== */
+/*  COMPARE WITH A SAVED VERSION (imported file or a pinned version)      */
+/* ===================================================================== */
+function stripTextureData(obj){const o=clone(obj);if(o.BinaryAssets&&Array.isArray(o.BinaryAssets.Textures))o.BinaryAssets.Textures=o.BinaryAssets.Textures.map(t=>({AssetName:t&&t.AssetName}));return o;}
+function setBaseline(p,label){if(!p)return;p.baseline={label:label||'Pinned version',at:new Date().toISOString(),json:JSON.stringify(stripTextureData(buildPresetExport(p)))};}
+const BASE_CACHE=new WeakMap();
+function baselinePreset(p){
+  if(!p||!p.baseline||typeof p.baseline.json!=='string')return null;
+  const c=BASE_CACHE.get(p);if(c&&c.json===p.baseline.json){c.preset.color=clone(p.color);return c.preset;}
+  let q=null;try{q=importReeSaberPreset(JSON.parse(p.baseline.json),p.name+' (saved)');q.color=clone(p.color);}catch(e){q=null;}
+  if(q)BASE_CACHE.set(p,{json:p.baseline.json,preset:q});return q;
+}
+function updateCompareBanner(){const b=$('#compareBanner');if(!b)return;const p=activePreset();const on=pv.compare&&!!(p&&p.baseline);if(pv.compare&&!on)pv.compare=false;b.hidden=!on;}
+/* flatten an exported preset into readable "Layer › setting" paths */
+function flatPreset(o){
+  const out=new Map();
+  const show=v=>typeof v==='number'?fmtNum(v):typeof v==='string'?'“'+(v.length>40?v.slice(0,40)+'…':v)+'”':JSON.stringify(v).slice(0,60);
+  const walk=(v,path)=>{
+    if(v&&typeof v==='object'){
+      if(Array.isArray(v)){if(!v.length){out.set(path,'[]');return;}v.forEach((x,i)=>walk(x,path+'['+i+']'));return;}
+      const ks=Object.keys(v);if(!ks.length){out.set(path,'{}');return;}ks.forEach(k=>walk(v[k],path?path+'.'+k:k));return;}
+    out.set(path,show(v));
+  };
+  const mods=(list,prefix)=>{const seen={};(list||[]).forEach(m=>{if(!m||typeof m!=='object')return;
+    const cfg=m.Config||{};let nm=(typeof cfg.Name==='string'&&cfg.Name)||String(m.ModuleId||'layer').split('.').pop();
+    seen[nm]=(seen[nm]||0)+1;if(seen[nm]>1)nm+=' #'+seen[nm];const lab=(prefix?prefix+' › ':'')+nm;
+    out.set(lab+' › type',show(String(m.ModuleId||''))+' v'+fmtNum(safeNum(m.Version,1)));
+    walk(cfg,lab+' ›');mods(m.Children,lab);});};
+  ['ModVersion','RootSettings','LocalTransform'].forEach(k=>{if(k in o)walk(o[k],k);});
+  mods(o.Modules,'');
+  const tex=(o.BinaryAssets&&o.BinaryAssets.Textures)||[];tex.forEach(t=>{if(t&&t.AssetName)out.set('Texture “'+t.AssetName+'”','included');});
+  /* "Layer ›.Name" style keys read better as "Layer › Name" */
+  const fixed=new Map();out.forEach((v,k)=>fixed.set(k.replace(/ ›\./g,' › '),v));return fixed;
+}
+function diffPresets(a,b){
+  const A=flatPreset(a),B=flatPreset(b),lines=[];
+  A.forEach((v,k)=>{if(!B.has(k))lines.push({k,kind:'removed',from:v});else if(B.get(k)!==v)lines.push({k,kind:'changed',from:v,to:B.get(k)});});
+  B.forEach((v,k)=>{if(!A.has(k))lines.push({k,kind:'added',to:v});});
+  /* collapse many changes inside one layer's removed/added block into one line */
+  const out=[];const grp={};
+  lines.forEach(l=>{if(l.kind!=='changed'){const m=l.k.match(/^(.*?) › type$/);if(m){grp[m[1]+'|'+l.kind]=1;out.push({k:m[1],kind:l.kind==='added'?'layer-added':'layer-removed'});return;}
+      const owner=Object.keys(grp).find(g=>{const [lab,kind]=g.split('|');return kind===l.kind&&l.k.indexOf(lab+' › ')===0;});if(owner)return;}
+    out.push(l);});
+  return out;
+}
+function diffHtml(lines,max){
+  const esc=escapeHtml;max=max||30;let h='';
+  lines.slice(0,max).forEach(l=>{
+    if(l.kind==='layer-added')h+=`<li><span class="df-add">+ layer</span> ${esc(l.k)}</li>`;
+    else if(l.kind==='layer-removed')h+=`<li><span class="df-rem">− layer</span> ${esc(l.k)}</li>`;
+    else if(l.kind==='added')h+=`<li><span class="df-add">+</span> ${esc(l.k)}: ${esc(l.to)}</li>`;
+    else if(l.kind==='removed')h+=`<li><span class="df-rem">−</span> ${esc(l.k)} (was ${esc(l.from)})</li>`;
+    else h+=`<li>${esc(l.k)}: <span class="df-old">${esc(l.from)}</span> → <span class="df-new">${esc(l.to)}</span></li>`;
+  });
+  if(lines.length>max)h+=`<li class="df-more">…and ${lines.length-max} more</li>`;
+  return h;
+}
+function revertToBaseline(p){
+  const q=baselinePreset(p);if(!q)return;
+  const fresh=importReeSaberPreset(JSON.parse(p.baseline.json),p.name);
+  p.modules=fresh.modules;p.transform=fresh.transform;p.rootType=fresh.rootType;p.modVersion=fresh.modVersion;
+  state.activeModuleId=null;state.soloUid=null;renderAll();T('compare-revert');toast('Back to the saved version (Undo brings your changes back)');
+}
+function openCompareModal(){
+  const p=activePreset();if(!p)return;T('compare-open');
+  const m=openModal(`<div class="modal-head"><h3>Compare versions</h3><span class="spacer" style="flex:1"></span><button class="btn ghost icon" id="cmpX" aria-label="Close">${ICON.x}</button></div><div class="modal-body" id="cmpBody"></div><div class="modal-foot" id="cmpFoot"></div>`);
+  const body=$('#cmpBody',m),foot=$('#cmpFoot',m);
+  const pin=document.createElement('button');pin.className='btn';pin.textContent=p.baseline?'Pin current as the saved version':'Pin this version';
+  pin.onclick=()=>{setBaseline(p,'Pinned version');refreshOutputs();T('compare-pin');toast('Version pinned. Changes from here on show up in Compare.');openCompareModal();};
+  if(!p.baseline){
+    body.appendChild(noteBox('Pin a version to compare against later. Imported presets are pinned automatically, so you can always see what you changed from the original file.'));
+    const close=document.createElement('button');close.className='btn ghost';close.textContent='Close';close.onclick=closeModal;foot.append(close,pin);
+    $('#cmpX',m).onclick=closeModal;return;
+  }
+  const when=p.baseline.at?new Date(p.baseline.at).toLocaleString():'';
+  const info=document.createElement('p');info.className='explain-sum';info.textContent='Saved version: '+(p.baseline.label||'Pinned version')+(when?' ('+when+')':'')+'.';body.appendChild(info);
+  let lines=[];try{lines=diffPresets(JSON.parse(p.baseline.json),stripTextureData(buildPresetExport(p)));}catch(e){}
+  if(!lines.length)body.appendChild(noteBox('No changes. The current preset matches the saved version.'));
+  else{const h=document.createElement('div');h.innerHTML='<div class="section-label">'+lines.length+' change'+(lines.length>1?'s':'')+' since then</div><ul class="difflist">'+diffHtml(lines,40)+'</ul>';body.appendChild(h);}
+  const side=document.createElement('button');side.className='btn primary';side.textContent='Show side by side';side.title='Left hand: saved version. Right hand: current.';
+  side.onclick=()=>{pv.compare=true;closeModal();selectRightTab('preview');if(window.__setMobileView&&window.matchMedia('(max-width:1100px)').matches)window.__setMobileView('preview');rebuildScene();T('compare-preview',true);};
+  const rev=document.createElement('button');rev.className='btn ghost danger';rev.textContent='Revert to saved';rev.disabled=!lines.length;
+  rev.onclick=()=>confirmModal('Revert to the saved version?','Your layers go back to how they were in “'+escapeHtml(p.baseline.label||'the saved version')+'”. Undo brings your changes back.',()=>revertToBaseline(p),'Revert');
+  foot.append(rev,pin,side);
+  $('#cmpX',m).onclick=closeModal;
+}
+
+/* ===================================================================== */
+/*  COMBINED PREVIEW (several presets on one saber, like ReeSabers does)  */
+/* ===================================================================== */
+function comboPresets(p){const ids=(p&&p.preview&&Array.isArray(p.preview.combine))?p.preview.combine:[];return ids.map(id=>state.presets.find(x=>x.id===id)).filter(q=>q&&q!==p).slice(0,4);}
+function buildComboField(p){
+  const wrap=document.createElement('div');
+  const others=state.presets.filter(x=>x!==p);
+  if(!others.length){wrap.appendChild(field('Show together with',noteBox('ReeSabers can stack several presets on one saber (for example a hilt preset plus a blade preset). Make or import another preset and you can preview them together here.'),null,'combine'));return wrap;}
+  if(!p.preview||typeof p.preview!=='object')p.preview={combine:[],leftId:''};
+  const box=document.createElement('div');box.className='combo-list';
+  others.forEach(q=>{const l=document.createElement('label');l.className='sheet-item';const cb=document.createElement('input');cb.type='checkbox';cb.checked=p.preview.combine.indexOf(q.id)>=0;
+    cb.onchange=()=>{const c=p.preview.combine;const i=c.indexOf(q.id);if(cb.checked&&i<0)c.push(q.id);else if(!cb.checked&&i>=0)c.splice(i,1);T('preview-combine',true);touch();};
+    const n=document.createElement('span');n.textContent=q.name;l.append(cb,n);box.appendChild(l);});
+  wrap.appendChild(field('Show together with',box,'ReeSabers can combine presets on one saber. Tick the ones to stack on top of this one in the preview.','combine'));
+  const opts=[{v:'',n:'This preset'}].concat(others.map(q=>({v:q.id,n:q.name})));
+  wrap.appendChild(field('Left hand shows',strSelect(opts,p.preview.leftId||'',v=>{p.preview.leftId=v;if(v&&!p.hands.L)p.hands.L=true;T('preview-left-preset',true);renderInspector();touch();}),'Preview a different preset in the left hand, the way you can assign one per hand in game.'));
+  return wrap;
+}
+
+/* ===================================================================== */
+/*  META QUEST OVER USB (ADB over WebUSB, same approach as HSV Config     */
+/*  Generator). The in-game Preset Editor is PC only, so this is how      */
+/*  Quest players edit presets: load one from the headset, change it,     */
+/*  push it back.                                                         */
+/* ===================================================================== */
+const QUEST_DIR='/sdcard/ModData/com.beatgames.beatsaber/Mods/ReeSabers/Presets';
+const QUEST={adb:null,transport:null,device:null,connecting:false,busy:false,model:'',dir:QUEST_DIR,files:null,dirOk:null,log:[],lastErr:'',names:{}};
+try{const d=localStorage.getItem('ree_quest_dir');if(d&&/^\/[\w.\/ -]{1,200}$/.test(d))QUEST.dir=d;}catch(e){}
+function qlog(msg,cls){QUEST.log.push({t:new Date().toLocaleTimeString(),msg:String(msg),cls:cls||''});if(QUEST.log.length>80)QUEST.log.shift();const el=$('#qLog');if(el)renderQuestLog(el);}
+function renderQuestLog(el){el.innerHTML='';if(!QUEST.log.length){el.innerHTML='<div class="ql-dim">Connection steps and results appear here.</div>';return;}QUEST.log.forEach(l=>{const d=document.createElement('div');d.className='ql-'+(l.cls||'n');d.textContent='['+l.t+'] '+l.msg;el.appendChild(d);});el.scrollTop=el.scrollHeight;}
+function webusbCheck(){
+  if(!('usb' in navigator)||!navigator.usb)return {ok:false,why:'This browser has no WebUSB. Use Chrome or Edge on a desktop or laptop (not a phone) with the Quest plugged in by USB.'};
+  if(!window.isSecureContext)return {ok:false,why:'WebUSB needs a secure page. Open the live site at '+LIVE_URL+' in Chrome or Edge.'};
+  if(window.self!==window.top)return {ok:'maybe',why:'Studio looks embedded in another page. If the device picker doesn\'t open, open '+LIVE_URL+' in its own tab.'};
+  return {ok:true};
+}
+function classifyUsbError(e){const n=(e&&e.name)||'',m=String((e&&e.message)||e||'');
+  if(n==='NotFoundError'||/no device selected/i.test(m))return 'cancelled';
+  if(n==='SecurityError'||/permissions policy|secure context/i.test(m))return 'security';
+  if(n==='NetworkError'||/claim|busy|in use|access denied|unable to open|LIBUSB/i.test(m))return 'locked';
+  return 'other';}
+let _adbLibs=null;
+async function loadAdbLibs(){
+  if(_adbLibs)return _adbLibs;let lastErr;
+  for(const v of ['@2.1.0','']){
+    try{qlog('Loading the ADB library'+(v?' '+v:' (latest)')+'…','dim');const base='https://esm.sh/@yume-chan/';
+      const [adbMod,usbMod,credMod]=await Promise.all([import(base+'adb'+v),import(base+'adb-daemon-webusb'+v),import(base+'adb-credential-web'+v)]);
+      _adbLibs={adbMod,usbMod,credMod};qlog('ADB library ready.','ok');return _adbLibs;}
+    catch(e){lastErr=e;qlog('Load attempt failed: '+((e&&e.message)||e),'warn');}
+  }
+  throw new Error('Could not load the ADB library. Check your internet connection. ('+((lastErr&&lastErr.message)||lastErr)+')');
+}
+async function questConnect(){
+  if(QUEST.connecting)return;const chk=webusbCheck();if(chk.ok===false){qlog(chk.why,'err');toast('WebUSB is not available here','err');return;}
+  QUEST.connecting=true;renderQuestPanel();
+  try{
+    const {adbMod,usbMod,credMod}=await loadAdbLibs();
+    const Manager=usbMod.AdbDaemonWebUsbDeviceManager&&usbMod.AdbDaemonWebUsbDeviceManager.BROWSER;
+    if(!Manager)throw new Error('WebUSB device manager unavailable in this browser.');
+    qlog('Opening the device picker. Choose your Quest…','dim');
+    const device=await Manager.requestDevice();
+    if(!device){qlog('No device selected.','warn');return;}
+    QUEST.device=device;qlog('Selected '+(device.name||device.serial||'device')+'.','ok');
+    const connection=await device.connect();
+    qlog('USB open. Approve "Allow USB debugging" inside the headset if it asks…','dim');
+    const Cred=credMod.AdbWebCredentialStore||credMod.default;
+    const transport=await adbMod.AdbDaemonTransport.authenticate({serial:device.serial,connection,credentialStore:new Cred('ReeSaber Studio')});
+    QUEST.transport=transport;QUEST.adb=new adbMod.Adb(transport);
+    try{QUEST.model=(QUEST.adb.banner&&QUEST.adb.banner.model)||'';}catch(e){QUEST.model='';}
+    qlog('Connected'+(QUEST.model?' to '+QUEST.model:'')+'.','ok');T('quest-connect');toast('Quest connected');
+    await questListPresets();
+  }catch(e){
+    const msg=((e&&e.name)?e.name+': ':'')+((e&&e.message)||String(e));QUEST.lastErr=msg;qlog('Connection failed: '+msg,'err');
+    const k=classifyUsbError(e);
+    if(k==='locked'){qlog('Another program is holding the Quest\'s USB debugging connection (SideQuest, Meta Quest Link, Android Studio or a terminal adb). See "Connection trouble" below.','warn');QUEST.showDiag=true;}
+    else if(k==='security')qlog('The browser blocked WebUSB here. Open '+LIVE_URL+' in its own Chrome or Edge tab.','warn');
+    else if(k==='cancelled')qlog('The device picker closed without a selection.','dim');
+    else toast('Could not connect to the Quest','err');
+  }finally{QUEST.connecting=false;renderQuestPanel();}
+}
+async function questDisconnect(){try{await QUEST.transport&&QUEST.transport.close&&QUEST.transport.close();}catch(e){}try{await QUEST.adb&&QUEST.adb.close&&QUEST.adb.close();}catch(e){}
+  QUEST.adb=null;QUEST.transport=null;QUEST.device=null;QUEST.files=null;QUEST.dirOk=null;qlog('Disconnected.','dim');renderQuestPanel();}
+function questDir(){return String(QUEST.dir||QUEST_DIR).trim().replace(/\/+$/,'');}
+async function questListPresets(){
+  if(!QUEST.adb){QUEST.files=null;return null;}
+  let names=null;
+  try{const sync=await QUEST.adb.sync();
+    try{let ents;if(sync.readdir)ents=await sync.readdir(questDir());else{ents=[];for await(const x of sync.opendir(questDir()))ents.push(x);}
+      names=ents.filter(x=>x&&x.name&&x.name!=='.'&&x.name!=='..'&&/\.(json|reesaber)$/i.test(x.name)&&x.type!==4).map(x=>x.name).sort((a,b)=>a.localeCompare(b));QUEST.dirOk=true;}
+    finally{try{sync.dispose&&await sync.dispose();}catch(e){}}}
+  catch(e){QUEST.dirOk=false;qlog('Could not read '+questDir()+': '+((e&&e.message)||e)+'. Launch Beat Saber once with ReeSabers installed, or fix the folder path.','warn');}
+  QUEST.files=names;renderQuestPanel();return names;
+}
+async function questReadFile(path,limit){
+  const sync=await QUEST.adb.sync();
+  try{const reader=sync.read(path).getReader();const chunks=[];let total=0;
+    for(;;){const {done,value}=await reader.read();if(done)break;chunks.push(value);total+=value.length;if(total>(limit||30*1024*1024)){try{await reader.cancel();}catch(e){}throw new Error('file is too large');}}
+    const all=new Uint8Array(total);let o=0;chunks.forEach(c=>{all.set(c,o);o+=c.length;});return all;}
+  finally{try{sync.dispose&&await sync.dispose();}catch(e){}}
+}
+async function questLoad(name){
+  if(!QUEST.adb||QUEST.busy)return;QUEST.busy=true;renderQuestPanel();
+  try{const path=questDir()+'/'+name;qlog('Reading '+path+'…','dim');const u8=await questReadFile(path);
+    const ok=await importBuffer(u8.buffer.slice(u8.byteOffset,u8.byteOffset+u8.byteLength),name,{baseLabel:'Loaded from Quest'});
+    if(ok===true||ok==='deferred'){const p=activePreset();if(p)QUEST.names[p.id]=name;qlog('Loaded '+name+'. Push saves your changes back to it.','ok');T('quest-load');}
+  }catch(e){qlog('Load failed: '+((e&&e.message)||e),'err');toast('Load failed','err');}
+  finally{QUEST.busy=false;renderQuestPanel();}
+}
+function questFileName(p){let n=(QUEST.names[p.id]||slug(p.name)+'.json').split(/[\/\\]/).pop().replace(/^\.+/,'').trim()||'preset.json';if(!/\.json$/i.test(n))n=n.replace(/\.[^.]*$/,'')+'.json';return n;}
+async function questPushSummary(p,fname){
+  const full=questDir()+'/'+fname;let html='<p class="fset-note">Saving to <code class="k">'+escapeHtml(full)+'</code></p>';
+  const names=await questListPresets();
+  if(!names)return html+'<p class="fset-note">Studio couldn\'t check what\'s on the headset, so changes can\'t be shown. If a file with this name exists, pushing replaces it.</p>';
+  const existing=names.find(n=>n.toLowerCase()===fname.toLowerCase());
+  if(!existing)return html+'<p class="fset-note">This is a <b>new file</b> on the headset. Nothing gets replaced.</p>';
+  if(existing!==fname)html+='<p class="fset-note">The headset already has <code class="k">'+escapeHtml(existing)+'</code>. File names there ignore upper and lower case, so this replaces it.</p>';
+  let old;try{old=JSON.parse(new TextDecoder().decode(await questReadFile(questDir()+'/'+existing,30*1024*1024)));}
+  catch(e){return html+'<p class="fset-note">The copy on the headset couldn\'t be read as a preset, so changes can\'t be shown. Pushing replaces it.</p>';}
+  const lines=diffPresets(stripTextureData(old),stripTextureData(buildPresetExport(p)));
+  if(!lines.length)return html+'<p class="fset-note">No changes: it already matches the copy on the headset.</p>';
+  return html+'<div class="section-label">Changes compared with the copy on the headset</div><ul class="difflist">'+diffHtml(lines,30)+'</ul>';
+}
+async function questPush(){
+  const p=activePreset();if(!p||!QUEST.adb||QUEST.busy)return;
+  const inp=$('#qName');if(inp&&inp.value.trim())QUEST.names[p.id]=inp.value.trim();
+  const fname=questFileName(p);
+  QUEST.busy=true;renderQuestPanel();let html;
+  try{html=await questPushSummary(p,fname);}catch(e){html='<p class="fset-note">Could not prepare the push: '+escapeHtml((e&&e.message)||String(e))+'</p>';}
+  finally{QUEST.busy=false;}
+  const errs=validatePreset(p).filter(i=>i.level==='err');
+  const m=openModal(`<div class="modal-head"><h3>Push to Quest?</h3></div><div class="modal-body">${errs.length?'<div class="vitem err"><div class="vic">✕</div><div><div class="vtitle">'+errs.length+' blocking issue'+(errs.length>1?'s':'')+'</div><div class="vmsg">The preset may not load in ReeSabers. Check the Validate tab.</div></div></div>':''}${html}</div><div class="modal-foot"><button class="btn ghost" id="qpBack">Back</button><button class="btn primary" id="qpGo">Push</button></div>`);
+  $('#qpBack',m).onclick=()=>openQuestModal();
+  $('#qpGo',m).onclick=async()=>{
+    const full=questDir()+'/'+fname;const bytes=new TextEncoder().encode(JSON.stringify(buildPresetExport(p),null,2));
+    openQuestModal();QUEST.busy=true;renderQuestPanel();
+    try{qlog('Pushing '+bytesFmt(bytes.length)+' to '+full+'…','dim');const sync=await QUEST.adb.sync();
+      try{await sync.write({filename:full,file:new ReadableStream({start(c){c.enqueue(bytes);c.close();}}),permission:0o644});}
+      finally{try{sync.dispose&&await sync.dispose();}catch(e){}}
+      QUEST.names[p.id]=fname;qlog('Pushed. In Beat Saber, open the ReeSabers menu and pick "'+fname.replace(/\.json$/i,'')+'" (re-select it if it was already active).','ok');T('quest-push');toast('Pushed to Quest');
+      await questListPresets();
+    }catch(e){const msg=(e&&e.message)||String(e);qlog('Push failed: '+msg,'err');if(/No such file|ENOENT|not a directory/i.test(msg))qlog('The Presets folder probably doesn\'t exist yet. Launch Beat Saber once with ReeSabers installed, or fix the folder path.','warn');toast('Push failed','err');}
+    finally{QUEST.busy=false;renderQuestPanel();}
+  };
+}
+function questStatus(){if(QUEST.connecting)return ['connecting','Connecting…'];if(QUEST.adb)return ['on','Connected'+(QUEST.model?' · '+QUEST.model:'')];return ['off','Not connected'];}
+function updateQuestBadge(){const b=$('#btnQuest');if(b)b.classList.toggle('q-on',!!QUEST.adb);}
+function renderQuestPanel(){
+  updateQuestBadge();
+  const root=$('#qPanel');if(!root)return;const p=activePreset();
+  const [st,txt]=questStatus();const pill=$('#qPill',root);pill.className='q-pill '+st;pill.textContent=txt;
+  $('#qConnect',root).textContent=QUEST.adb?'Reconnect':'Connect';$('#qConnect',root).disabled=QUEST.connecting||webusbCheck().ok===false;
+  $('#qDisconnect',root).hidden=!QUEST.adb;
+  const dirSt=$('#qDirSt',root);dirSt.textContent=QUEST.adb?(QUEST.dirOk===true?'found':QUEST.dirOk===false?'not found':''):'';dirSt.className='q-dirst '+(QUEST.dirOk===true?'ok':QUEST.dirOk===false?'bad':'');
+  const list=$('#qList',root);list.innerHTML='';
+  if(!QUEST.adb)list.innerHTML='<div class="empty" style="padding:14px">Connect to see the presets on your headset.</div>';
+  else if(!QUEST.files)list.innerHTML='<div class="empty" style="padding:14px">'+(QUEST.dirOk===false?'Presets folder not found.':'Reading the headset…')+'</div>';
+  else if(!QUEST.files.length)list.innerHTML='<div class="empty" style="padding:14px">No presets on the headset yet. Push one below.</div>';
+  else QUEST.files.forEach(n=>{const row=document.createElement('div');row.className='q-row';const s=document.createElement('span');s.textContent=n;const b=document.createElement('button');b.type='button';b.className='btn tiny';b.textContent='Open';b.disabled=QUEST.busy;b.onclick=()=>questLoad(n);row.append(s,b);list.appendChild(row);});
+  $('#qRefresh',root).disabled=!QUEST.adb||QUEST.busy;
+  const nm=$('#qName',root);if(p&&document.activeElement!==nm)nm.value=questFileName(p);nm.disabled=!p;
+  $('#qPush',root).disabled=!QUEST.adb||!p||QUEST.busy;
+  $('#qPushWhat',root).textContent=p?p.name:'no preset selected';
+  const diag=$('#qDiag',root);if(diag&&QUEST.showDiag){diag.classList.remove('collapsed');}
+  const le=$('#qLog',root);if(le)renderQuestLog(le);
+}
+function openQuestModal(){
+  T('quest-open',true);const chk=webusbCheck();
+  const cmd=c=>`<div class="q-cmd"><code class="k">${c}</code><button type="button" class="btn tiny" data-copy="${c}">Copy</button></div>`;
+  const m=openModal(`<div class="modal-head"><h3>Meta Quest (USB)</h3><span class="spacer" style="flex:1"></span><button class="btn ghost icon" id="qX" aria-label="Close">${ICON.x}</button></div>
+  <div class="modal-body" id="qPanel">
+    <div class="fset-note">The ReeSabers in-game Preset Editor is PC only. On Quest, connect the headset here to open presets that are on it, edit them in Studio, and push them back. Needs <b>Chrome or Edge on a computer</b>, a USB data cable, and <b>Developer Mode</b> on (Meta Horizon phone app → your headset → Developer Mode).</div>
+    ${chk.ok===true?'':`<div class="vitem ${chk.ok===false?'err':'warn'}"><div class="vic">${chk.ok===false?'✕':'▲'}</div><div><div class="vtitle">${chk.ok===false?'Not available here':'Heads up'}</div><div class="vmsg"></div></div></div>`}
+    <div class="q-bar"><span class="q-pill off" id="qPill">Not connected</span><span class="spacer" style="flex:1"></span><button type="button" class="btn ghost sm" id="qDisconnect" hidden>Disconnect</button><button type="button" class="btn primary sm" id="qConnect" ${chk.ok===false?'disabled':''}>Connect</button></div>
+    <div class="field"><label>Presets folder on the headset <span class="q-dirst" id="qDirSt"></span></label><input type="text" id="qDir" spellcheck="false"></div>
+    <div class="section-label">On your headset <span style="flex:1;height:1px;background:var(--line)"></span><button type="button" class="btn tiny ghost" id="qRefresh">Refresh</button></div>
+    <div class="q-list" id="qList"></div>
+    <div class="section-label" style="margin-top:14px">Push the active preset <span style="flex:1;height:1px;background:var(--line)"></span></div>
+    <div class="fset-note" style="margin-bottom:6px">Sends “<b id="qPushWhat"></b>” as a .json with its textures inside. You see what changes before anything is replaced.</div>
+    <div class="q-bar"><input type="text" id="qName" spellcheck="false" aria-label="File name on the headset" style="flex:1"><button type="button" class="btn primary sm" id="qPush">Push</button></div>
+    <div class="acc collapsed" id="qDiag" style="margin-top:14px"><div class="acc-head"><span class="acc-ic">${ICON.bolt}</span><span class="acc-title">Connection trouble</span><span class="acc-caret"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="6 9 12 15 18 9"/></svg></span></div><div class="acc-body">
+      <p class="fset-note">Only one program can use the Quest's USB debugging connection at a time. If connecting fails with a claim or busy error, SideQuest, Meta Quest Link, Android Studio or a terminal <code class="k">adb</code> is holding it. Unplug the Quest, run one of these, fully quit those apps, plug it back in and connect again.</p>
+      <div class="fset-note" style="margin:8px 0 4px"><b>Windows</b></div>${cmd('adb kill-server')}${cmd('taskkill /F /IM adb.exe')}
+      <div class="fset-note" style="margin:8px 0 4px"><b>macOS / Linux</b></div>${cmd('killall adb')}
+      <p class="fset-note" style="margin-top:8px">Also check that the headset is awake, the cable carries data (not just charging), and you ticked <b>Always allow</b> on the USB debugging prompt inside the headset.</p>
+    </div></div>
+    <div class="section-label" style="margin-top:12px">Log</div>
+    <div class="q-log" id="qLog" role="log" aria-live="polite"></div>
+  </div>`);
+  if(chk.ok!==true)$('.vitem .vmsg',m).textContent=chk.why;
+  $('#qX',m).onclick=closeModal;
+  const dir=$('#qDir',m);dir.value=QUEST.dir;dir.onchange=()=>{const v=dir.value.trim();if(!/^\/[\w.\/ -]{1,200}$/.test(v)){toast('Use a folder path like '+QUEST_DIR,'err');dir.value=QUEST.dir;return;}QUEST.dir=v;try{localStorage.setItem('ree_quest_dir',v);}catch(e){}if(QUEST.adb)questListPresets();};
+  $('#qConnect',m).onclick=questConnect;$('#qDisconnect',m).onclick=questDisconnect;$('#qRefresh',m).onclick=()=>questListPresets();$('#qPush',m).onclick=questPush;
+  $('#qName',m).onchange=e=>{const p=activePreset();if(p&&e.target.value.trim())QUEST.names[p.id]=e.target.value.trim();};
+  const dg=$('#qDiag',m);dg.querySelector('.acc-head').onclick=()=>{dg.classList.toggle('collapsed');if(!dg.classList.contains('collapsed'))T('quest-diag',true);};
+  $$('[data-copy]',m).forEach(b=>b.onclick=()=>copyText(b.dataset.copy).then(()=>toast('Copied: '+b.dataset.copy),()=>toast('Copy failed','err')));
+  renderQuestPanel();
+}
+
+/* ===================================================================== */
 /*  PREVIEW CONTROL BAR + SHORTCUTS                                       */
 /* ===================================================================== */
 function wirePreviewBar(){
@@ -3094,7 +3620,34 @@ function wirePreviewBar(){
   if(sc){Object.entries(SCHEMES).forEach(([k,s])=>{const o=document.createElement('option');o.value=k;o.textContent=s.n;sc.appendChild(o);});sc.value=pv.scheme;sc.onchange=()=>{pv.scheme=sc.value;rebuildScene();T('scheme-'+sc.value,true);};}
   if(sr){sr.value=pv.scrub;sr.oninput=()=>{T('driver-scrub',true);pv.scrub=parseFloat(sr.value)||0;if(pv.driveScore){pv.driveScore=false;syncPreviewToggles();}};}
   const cap=$('#btnCapture');if(cap)cap.onclick=openCaptureModal;
+  const vw=$('#pvView');if(vw){Object.entries(VIEWS).forEach(([k,v])=>{const o=document.createElement('option');o.value=k;o.textContent=v.n;vw.appendChild(o);});vw.value=pv.view;vw.onchange=()=>setCameraView(vw.value);}
+  const fr=$('#btnFrame');if(fr)fr.onclick=()=>{frameCamera(true);const d=VIEWS[pv.view];if(d&&d.az!=null)setCameraView(pv.view);};
+  const ex=$('#btnExpand');if(ex)ex.onclick=()=>setExpanded(!document.body.classList.contains('pv-full'));
+  const ce=$('#compareExit');if(ce)ce.onclick=()=>{pv.compare=false;rebuildScene();};
+  wireSplitter();
   const so=$('#soloExit');if(so)so.onclick=()=>{state.soloUid=null;rebuildScene();renderStack();};
+}
+function setExpanded(on){
+  document.body.classList.toggle('pv-full',on);const ex=$('#btnExpand');
+  if(ex){ex.setAttribute('aria-pressed',on?'true':'false');const sp=ex.querySelector('span');if(sp)sp.textContent=on?'Exit':'Expand';}
+  if(on){selectRightTab('preview');T('preview-expand',true);}
+  setTimeout(()=>{resizeThree();frameCamera(false);},40);
+}
+/* drag the bar between the editor and the preview to resize it; double-click resets */
+const PV_W_KEY='ree_pv_w';
+function applyPvWidth(w){if(w)document.documentElement.style.setProperty('--pv-w',Math.round(w)+'px');else document.documentElement.style.removeProperty('--pv-w');setTimeout(resizeThree,20);}
+function wireSplitter(){
+  const sp=$('#pvSplit');if(!sp)return;
+  try{const w=parseInt(localStorage.getItem(PV_W_KEY)||'',10);if(w>=300)applyPvWidth(w);}catch(e){}
+  const maxW=()=>Math.max(320,innerWidth-250-300-320);
+  let drag=false;
+  const set=w=>{w=clamp(w,300,maxW());applyPvWidth(w);return w;};
+  sp.addEventListener('pointerdown',e=>{drag=true;sp.classList.add('drag');try{sp.setPointerCapture(e.pointerId);}catch(_){}e.preventDefault();});
+  sp.addEventListener('pointermove',e=>{if(drag)set(innerWidth-e.clientX-3);});
+  const end=()=>{if(!drag)return;drag=false;sp.classList.remove('drag');const w=parseInt(getComputedStyle(document.documentElement).getPropertyValue('--pv-w'),10);try{if(w)localStorage.setItem(PV_W_KEY,String(w));}catch(e){}T('preview-resize',true);};
+  sp.addEventListener('pointerup',end);sp.addEventListener('pointercancel',end);
+  sp.addEventListener('dblclick',()=>{applyPvWidth(0);try{localStorage.removeItem(PV_W_KEY);}catch(e){}});
+  sp.addEventListener('keydown',e=>{if(e.key!=='ArrowLeft'&&e.key!=='ArrowRight')return;e.preventDefault();const cur=$('.col.rightcol').getBoundingClientRect().width;const w=set(cur+(e.key==='ArrowLeft'?24:-24));try{localStorage.setItem(PV_W_KEY,String(w));}catch(_){}});
 }
 document.addEventListener('keydown',e=>{
   const tag=(e.target&&e.target.tagName)||'';const typing=/^(INPUT|TEXTAREA|SELECT)$/.test(tag)||(e.target&&e.target.isContentEditable);
@@ -3114,11 +3667,12 @@ function renderAll(){renderPresets();renderStack();renderInspector();rebuildScen
 function touch(){rebuildScene();refreshOutputs();}
 const HAS_THREE=(typeof THREE!=='undefined');
 
-$('#btnNewPreset').onclick=e=>{const dd=$('#newDd');dd.classList.toggle('open');e.stopPropagation();};
-document.addEventListener('click',e=>{if(!e.target.closest('#newDd'))$('#newDd').classList.remove('open');});
+$('#btnNewPreset').onclick=e=>{const dd=$('#newDd');closeAddMenu();dd.classList.toggle('open');e.stopPropagation();};
+$('#btnAddLayer').onclick=e=>{const dd=$('#addDd');$('#newDd').classList.remove('open');const o=dd.classList.toggle('open');$('#btnAddLayer').setAttribute('aria-expanded',o?'true':'false');if(o)T('add-menu-open',true);e.stopPropagation();};
+document.addEventListener('click',e=>{if(!e.target.closest('#newDd'))$('#newDd').classList.remove('open');if(!e.target.closest('#addDd'))closeAddMenu();});
 $('#btnExport').onclick=openExportModal;
 $('#btnImport').onclick=openImportModal;
-$('#btnGlobals').onclick=openGlobalModal;
+$('#btnQuest').onclick=openQuestModal;
 $('#btnAssets').onclick=openAssetModal;
 $('#qsHead').onclick=()=>{const c=$('#quickstart').classList.toggle('collapsed');T(c?'quickstart-close':'quickstart-open',true);try{localStorage.setItem('ree_qs_collapsed',c?'1':'0');}catch(e){}};
 $$('#inspTabs .insp-tab').forEach(tb=>tb.onclick=()=>{state.activeTab=tb.dataset.tab;renderInspector();});
@@ -3128,7 +3682,7 @@ $('#btnUndo').onclick=undo;$('#btnRedo').onclick=redo;$('#btnHistory').onclick=o
 function fallbackCopy(t){return new Promise((res,rej)=>{const ta=document.createElement('textarea');ta.value=t;ta.setAttribute('readonly','');ta.style.cssText='position:fixed;left:-9999px;top:0;opacity:0';document.body.appendChild(ta);ta.select();let ok=false;try{ok=document.execCommand('copy');}catch(e){}ta.remove();ok?res():rej(new Error('copy blocked'));});}
 function copyText(t){if(navigator.clipboard&&navigator.clipboard.writeText)return navigator.clipboard.writeText(t).catch(()=>fallbackCopy(t));return fallbackCopy(t);}
 $('#btnCopyJson').onclick=()=>{const p=activePreset();if(!p)return;T('copy-json');copyText(JSON.stringify(buildPresetExport(p),null,2)).then(()=>toast('JSON copied'),()=>toast('The browser blocked clipboard access. Use Export instead.','err'));};
-document.addEventListener('keydown',e=>{if(e.key==='Escape'){closeModal();helpPop.classList.remove('show');}});
+document.addEventListener('keydown',e=>{if(e.key==='Escape'){const hadModal=$('#modalBack').classList.contains('show')||!$('#whatsnewBack').hidden;closeModal();helpPop.classList.remove('show');$$('.dd.open').forEach(d=>d.classList.remove('open'));closeRowMenu();if(!hadModal&&document.body.classList.contains('pv-full'))setExpanded(false);}});
 
 /* ---- autosave (IndexedDB, falls back to localStorage) ---- */
 const AUTOSAVE={ready:false,pending:false,timer:null,db:null};
@@ -3189,10 +3743,10 @@ restoreAutosave().then(async had=>{histReset();updateHistButtons();await openSha
 /* ===================================================================== */
 /*  WHAT'S NEW (shown once to returning visitors)                         */
 /* ===================================================================== */
-const WHATSNEW_KEY='reeStudio.whatsnew.v1';
+const WHATSNEW_KEY='reeStudio.whatsnew.v2';
 function maybeWhatsNew(hadAutosave){
   let seen=null,returning=!!hadAutosave;
-  try{seen=localStorage.getItem(WHATSNEW_KEY);if(localStorage.getItem('ree_qs_collapsed')!==null||localStorage.getItem('ree_folder_auto')!==null)returning=true;}catch(e){return;}
+  try{seen=localStorage.getItem(WHATSNEW_KEY);if(localStorage.getItem('ree_qs_collapsed')!==null||localStorage.getItem('ree_folder_auto')!==null||localStorage.getItem('reeStudio.whatsnew.v1')!==null)returning=true;}catch(e){return;}
   if(seen)return;
   /* first-time visitors get the Quick Start instead; remember so they only see future updates */
   if(!returning){try{localStorage.setItem(WHATSNEW_KEY,'1');}catch(e){}return;}
@@ -3293,7 +3847,7 @@ function routeDroppedFiles(files){
   // contextual jumps: pick a preset -> Modules; add/pick a module -> Editor
   document.addEventListener('click',function(e){
     if(!mq.matches)return;
-    if(e.target.closest('#palette .pal-item')){setTimeout(function(){setView('editor');},0);return;}
+    if(e.target.closest('#palette .pal-item')||e.target.closest('.stack-empty .pal-item')||e.target.closest('#snippetList .snip-item')){setTimeout(function(){setView('editor');},0);return;}
     var si=e.target.closest('#stackList .stack-item');if(si&&!e.target.closest('[data-act]')){setTimeout(function(){setView('editor');},0);return;}
     var pc=e.target.closest('#presetList .preset-card');if(pc&&!e.target.closest('[data-act]')){setTimeout(function(){setView('modules');},0);return;}
   },true);
@@ -3349,18 +3903,23 @@ function routeDroppedFiles(files){
      Dashboard: https://reesaberstudio.goatcounter.com/  (log in there to view stats).
      Counts page views automatically; the app also sends custom feature events under app/
      via window.goatcounter.count(). Repeat-heavy actions are counted once per visit (*).
-       Header:   export, import, assets, new-preset, global-open*
-       Building: starter-<name>, module-<type>, snippet-<name>, layer-duplicate*, layer-copy*,
-                 layer-paste*, layer-drag*, layer-solo*, layer-move-in*, layer-move-out*,
-                 curve-edit*, gradient-edit*, driver-add, driver-delete*, undo*, redo*,
-                 history-open*, checkpoint-save, checkpoint-restore, explain
-       Preview:  preview-<toggle>-on/off*, backdrop-<name>*, scheme-<name>*, driver-scrub*,
-                 capture-open*, export-png, export-gif, tab-<preview|json|valid>*
-       Assets:   asset-upload-<kind>, texture-maker-open*, texture-make, sprite-sheet-open*, sprite-sheet
-       Files:    export-json, export-reesaber, export-all-zip, export-project, copy-json,
+       Header:   export, import, assets, new-preset, quest-open*
+       Building: starter-<name> (incl. starter-drivers), module-<type>, snippet-<name>, add-menu-open*,
+                 layer-duplicate*, layer-copy*, layer-paste*, layer-drag*, layer-solo*, layer-move-in*,
+                 layer-move-out*, curve-edit*, gradient-edit*, driver-add, driver-delete*, undo*, redo*,
+                 history-open*, checkpoint-save, checkpoint-restore, explain, validate-jump*
+       Compare:  compare-open, compare-pin, compare-revert, compare-preview*
+       Preview:  preview-<toggle>-on/off*, backdrop-<name>*, scheme-<name>*, driver-scrub*, view-<name>*,
+                 preview-frame*, preview-expand*, preview-resize*, preview-combine*, preview-left-preset*,
+                 perf-target-<pc|quest>*, capture-open*, export-png, export-thumb, export-gif,
+                 tab-<preview|json|valid>*
+       Assets:   asset-upload-<kind>, texture-resize, texture-maker-open*, texture-make,
+                 sprite-sheet-open*, sprite-sheet
+       Files:    export-json, export-reesaber, export-all-zip, export-project, export-quest*, copy-json,
                  import-preset, import-reesaber, import-project-<replace|merge>, drop-import,
                  drop-saber-file, folder-save, folder-sync-on
-       Sharing:  share-link, share-open, gallery-browse, gallery-open, open-src
+       Quest:    quest-open*, quest-connect, quest-load, quest-push, quest-diag*
+       Sharing:  share-link, share-open, gallery-browse, gallery-open, gallery-submit-link, open-src
        Other:    quickstart-open*, quickstart-close*, whatsnew-shown, whatsnew-close
 ============================================================================ -->
 <script data-goatcounter="https://reesaberstudio.goatcounter.com/count"

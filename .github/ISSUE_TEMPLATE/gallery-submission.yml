@@ -1,0 +1,56 @@
+name: Submit a preset to the gallery
+description: Share a ReeSabers preset so it shows up in the ReeSaber Studio gallery.
+title: "[Gallery] "
+labels: ["gallery"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for sharing! Fill this in, attach your files below, and it gets added to the gallery in ReeSaber Studio.
+
+        **Thumbnail:** in Studio, open the preset and use **Capture → Gallery thumbnail** to save a 480×360 PNG.
+        **Preset:** use **Export → Download .reesaber** (or .json). GitHub can't attach those file types directly, so put the file in a **.zip** first.
+  - type: input
+    id: name
+    attributes:
+      label: Preset name
+      placeholder: Neon Dragon
+    validations:
+      required: true
+  - type: input
+    id: author
+    attributes:
+      label: Author name to credit
+      description: Your BeatLeader, Discord or GitHub name.
+    validations:
+      required: true
+  - type: textarea
+    id: description
+    attributes:
+      label: Short description
+      description: One or two sentences. What makes it stand out? Does it use drivers, joints or textures?
+    validations:
+      required: true
+  - type: textarea
+    id: files
+    attributes:
+      label: Files
+      description: Drag in the .zip with your preset and the 480×360 PNG thumbnail.
+    validations:
+      required: true
+  - type: dropdown
+    id: platform
+    attributes:
+      label: Tested on
+      multiple: true
+      options:
+        - PC
+        - Quest
+        - Not tested in game yet
+  - type: checkboxes
+    id: rights
+    attributes:
+      label: Permission
+      options:
+        - label: I made this preset, or the creator said it's OK to share it here.
+          required: true
