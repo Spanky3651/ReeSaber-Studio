@@ -6,7 +6,7 @@
 
 ReeSaber Studio lets you build and edit ReeSabers presets in your browser: stack and nest layers, tune materials, wire up gameplay-reactive drivers, add your own textures, and export a ready-to-use `.json` or `.reesaber` file. No build step, no install, no backend. The whole app is one HTML file.
 
-The ReeSabers in-game Preset Editor only runs on PC, so Studio is also a handy way to build presets for **Quest**: export the `.json` and copy it to the headset.
+The ReeSabers in-game Preset Editor only runs on PC, so Studio is also the way to edit presets for **Quest**: plug the headset in, open the presets on it, change them, and push them back over USB.
 
 ![ReeSaber Studio: the layer stack, the curve editor and a swing test in the live 3D preview](docs/screenshot.png)
 
@@ -14,6 +14,7 @@ The ReeSabers in-game Preset Editor only runs on PC, so Studio is also a handy w
 
 ## Features
 
+- **Quest over USB.** In Chrome or Edge on a computer, connect a Quest (Developer Mode on) and Studio lists the presets in its ReeSabers folder. Open one, edit it, and push it back. Every push shows what changes compared with the copy on the headset first. Built on [ya-webadb](https://github.com/yume-chan/ya-webadb), the same approach as the HSV Config Generator.
 - **Presets.** Create, duplicate, rename and delete presets, or start from a template (Basic Neon, Reactive Velocity, Layered Trail, Driver test).
 - **Layer tree.** Use **Add layer** for Blade (`blur-saber`), Trail (`simple-trail`), Sparks (`sparks-vfx`), Group (`empty`) and Dynamic Joint (`dynamic-joint`) layers. Select a Group or Dynamic Joint first to nest layers inside it. Reorder (drag, the ⋯ menu, or Alt+Up / Alt+Down), mute and delete at any depth.
 - **Curve and gradient editors.** Drag points to shape the blade profile, handle mask and every mapping curve, and edit color gradients along the blade or trail. Double-click adds a point, Delete removes one.
@@ -34,13 +35,13 @@ The ReeSabers in-game Preset Editor only runs on PC, so Studio is also a handy w
 - **Drop files anywhere.** Drop a `.reesaber`, a preset or project `.json`, a `.zip` of presets, or textures and preview models onto the page. Custom Sabers `.saber` files are recognised and explained (they are Unity asset bundles for a different mod and can't be converted).
 - **Save to your Presets folder.** In Chrome and Edge, link `UserData/ReeSabers/Presets` once and save straight into it, optionally keeping the active preset synced while you edit.
 - **Share links and gallery.** Copy a link with the whole preset packed inside it, open community presets from the built-in gallery, or link to a preset on GitHub with an "Open in Studio" URL.
-- **Works on phones and tablets.** Below 1100px wide the app switches to a tabbed layout with a bottom tab bar.
+- **Works on phones and tablets.** Below 1100px wide the app switches to a tabbed layout with a bottom tab bar. (Quest over USB needs a computer.)
 
 ---
 
 ## Getting started
 
-Nothing to install. Open the [live app](https://spanky3651.github.io/ReeSaber-Studio/), or download [`index.html`](index.html) and open it in a modern browser (Chrome, Edge, Firefox). An internet connection is only needed for the 3D preview (Three.js loads from a CDN); editing, import, export and validation work offline.
+Nothing to install. Open the [live app](https://spanky3651.github.io/ReeSaber-Studio/), or download [`index.html`](index.html) and open it in a modern browser (Chrome, Edge, Firefox). An internet connection is only needed for the 3D preview (Three.js loads from a CDN); editing, import, export, validation and Quest over USB work offline.
 
 ---
 
@@ -56,14 +57,23 @@ Nothing to install. Open the [live app](https://spanky3651.github.io/ReeSaber-St
    - **Download .reesaber**: a zip with `preset.json` plus a `textures/` folder.
    - **All as .zip**: every preset in one download.
 
-   Copy it into the Presets folder, then pick it in the ReeSabers menu in game:
+   Then pick it in the ReeSabers menu in game:
 
-   | | Presets folder | Shortcut |
+   | | Presets folder | Shortcut in Studio |
    |---|---|---|
    | **PC** | `Beat Saber/UserData/ReeSabers/Presets/` | **Save to folder** (Chrome or Edge) |
-   | **Quest** | `ModData/com.beatgames.beatsaber/Mods/ReeSabers/Presets/` | Copy the file over, for example with SideQuest |
+   | **Quest** | `ModData/com.beatgames.beatsaber/Mods/ReeSabers/Presets/` | **Quest** button: push over USB |
 
    A `.json` carries its textures inside, so it's the only file you need on either one. Saber visibility and motion smoothing are ReeSabers' own in-game settings, not part of a preset.
+
+### Quest over USB
+
+1. Turn on **Developer Mode** for the headset in the Meta Horizon phone app, and plug it into your computer with a USB data cable.
+2. Open Studio in **Chrome or Edge** and click **Quest**, then **Connect**. Pick the headset and allow USB debugging inside it (tick *Always allow*).
+3. Open a preset from **On your headset**, or build one. **Push** shows what will change before anything is replaced.
+4. In game, re-select the preset in the ReeSabers menu.
+
+If connecting fails with a "claim" or "busy" error, another program (SideQuest, Meta Quest Link, Android Studio or a terminal `adb`) is holding the connection. The **Connection trouble** section in the Quest panel has the commands to free it. If the status says **No answer**, the headset never replied: another Chrome tab that connected to it (HSV Config Generator, Playlist Studio, MBF) is the usual cause, so close it, unplug and replug, and connect again. **Approve in headset** means it is waiting for you to allow USB debugging inside the headset.
 
 ---
 
@@ -128,6 +138,7 @@ ReeSaber-Studio/
 
 - Vanilla JavaScript, HTML and CSS in one file. No framework, no bundler.
 - [Three.js](https://threejs.org/) r128 from a CDN for the preview, plus its OBJ/GLTF loaders.
+- [ya-webadb](https://github.com/yume-chan/ya-webadb) (adb 2.6.4, adb-daemon-webusb 2.3.2, adb-credential-web 2.1.0), built into the page as one matched release, for Quest over USB.
 - Privacy-friendly page counts with [GoatCounter](https://www.goatcounter.com/) (no cookies).
 
 ## More tools
