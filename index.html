@@ -78,7 +78,9 @@
   .quickstart{background:linear-gradient(90deg,#0c1622,#0a0e15);border-bottom:1px solid var(--line);overflow:hidden;transition:.25s;position:relative;z-index:20}
   .qs-head{display:flex;align-items:center;gap:10px;padding:9px 18px;cursor:pointer;font-size:13px;font-weight:600}
   .qs-head .qs-ic{color:var(--cyan);display:flex}.qs-head .qs-ic svg{width:17px;height:17px}
-  .qs-head .qs-caret{margin-left:auto;transition:.2s;color:var(--txt-mut);display:flex}
+  .qs-new{margin-left:auto;font-size:12.5px;font-weight:700;color:var(--cyan);text-decoration:none;padding:3px 10px;border:1px solid var(--cyan-dim);border-radius:20px;white-space:nowrap}
+  .qs-new:hover{background:rgba(30,107,255,.12)}
+  .qs-head .qs-caret{margin-left:6px;transition:.2s;color:var(--txt-mut);display:flex}
   .qs-head .qs-caret svg{width:16px;height:16px}
   .quickstart.collapsed .qs-body{display:none}
   .quickstart.collapsed .qs-caret{transform:rotate(-90deg)}
@@ -116,6 +118,8 @@
   .dd-item{padding:9px 10px;border-radius:7px;cursor:pointer;font-size:13px;transition:.12s}
   .dd-item:hover{background:#16161f}
   .dd-item b{display:block;font-size:13px}.dd-item span{font-size:11px;color:var(--txt-mut)}
+  .dd-feature{background:rgba(30,107,255,.08);border:1px solid var(--cyan-dim);margin-bottom:4px}.dd-feature b{color:#cfe4ff}
+  .dd-sep{font-size:10.5px;font-weight:700;letter-spacing:1.2px;text-transform:uppercase;color:var(--txt-mut);padding:8px 10px 4px;font-family:var(--mono)}
 
   /* preset cards */
   .preset-card{border:1px solid var(--line);border-radius:var(--r);background:var(--panel-2);padding:11px 12px;margin-bottom:10px;cursor:pointer;transition:.15s;position:relative;overflow:hidden}
@@ -168,8 +172,8 @@
   .empty{text-align:center;color:var(--txt-mut);font-size:13px;padding:26px 14px;border:1px dashed var(--line-2);border-radius:10px}
   .empty svg{width:26px;height:26px;opacity:.4;margin-bottom:8px}
 
-  .insp-tabs{display:flex;gap:2px;padding:0 14px;border-bottom:1px solid var(--line);background:var(--panel)}
-  .insp-tab{padding:11px 14px;font-size:12.5px;font-weight:600;color:var(--txt-mut);cursor:pointer;border-bottom:2px solid transparent;transition:.15s;letter-spacing:.3px}
+  .insp-tabs{display:flex;gap:2px;padding:0 10px;border-bottom:1px solid var(--line);background:var(--panel);flex-wrap:wrap;align-items:center}
+  .insp-tab{padding:11px 11px;font-size:12.5px;font-weight:600;color:var(--txt-mut);cursor:pointer;border-bottom:2px solid transparent;transition:.15s;letter-spacing:.3px}
   .insp-tab:hover{color:var(--txt-dim)}
   .insp-tab.active{color:var(--cyan);border-bottom-color:var(--cyan)}
   .insp-body{overflow-y:auto;flex:1;padding:14px 16px}
@@ -358,7 +362,7 @@
   /* ===== Mobile: single-view + bottom tab bar ===== */
   .m-tabbar{display:none}
   @media(min-width:1101px) and (max-width:1399px){
-    .col.presets{width:210px}.col.builder{width:250px}.col.inspector{min-width:300px}.col.rightcol{width:var(--pv-w,360px)}
+    .col.presets{width:210px}.col.builder{width:250px}.col.inspector{min-width:300px}.col.rightcol{width:var(--pv-w,clamp(360px,30vw,420px))}
   }
   @media(max-width:1100px){
     html,body{height:auto}
@@ -487,8 +491,22 @@ a.kofi-support:hover{transform:translateY(-2px);border-color:#ff2740;box-shadow:
 <style>.foot-more{width:100%;text-align:center;font-family:var(--mono);font-size:12px;color:var(--txt-mut);letter-spacing:.3px;margin-top:8px;}.foot-more a{color:var(--cyan);text-decoration:none;}.foot-more a:hover{color:#fff;text-decoration:underline;}.foot-more .sep{color:var(--txt-mut);margin:0 6px;}</style><style>.footlinks a.src-badge{font-family:system-ui,'Segoe UI',Arial,sans-serif;font-size:14px;font-weight:800;letter-spacing:.2px;padding:9px 16px;border-radius:11px;}</style>
 <style>
 /* ===== v3 tools: curve/gradient editors, layer tools, preview bar, capture, gallery ===== */
-.insp-tools{margin-left:auto;display:flex;align-items:center;gap:2px}
+.insp-tools{margin-left:auto;display:flex;align-items:center;gap:2px;padding:3px 0}
 .insp-tools .btn.icon{padding:6px}
+body:not(.adv-on) .adv{display:none!important}
+body.adv-on .simple-note{display:none}
+.simple-note{font-size:12px;color:var(--txt-mut);display:flex;align-items:center;gap:8px;flex-wrap:wrap;padding:10px 12px;border:1px dashed var(--line-2);border-radius:9px;margin-top:4px}
+.adv-sw{display:inline-flex;align-items:center;gap:6px;cursor:pointer;margin-right:6px;font-size:11.5px;font-weight:700;color:var(--txt-mut);position:relative}
+.adv-sw input{position:absolute;opacity:0;width:0;height:0;margin:0}
+.adv-sw .track{width:30px;height:17px;border-radius:20px;background:#1a1a26;border:1px solid var(--line-2);position:relative;transition:.2s}
+.adv-sw .track::after{content:"";position:absolute;top:2px;left:2px;width:11px;height:11px;border-radius:50%;background:#5a5a70;transition:.2s}
+.adv-sw input:checked + .track{background:rgba(30,107,255,.2);border-color:var(--cyan-dim)}
+.adv-sw input:checked + .track::after{transform:translateX(13px);background:var(--cyan)}
+.adv-sw input:checked ~ .adv-l{color:var(--cyan)}
+.adv-sw input:focus-visible + .track{outline:2px solid var(--cyan);outline-offset:2px}
+@media(max-width:1100px){.adv-sw{min-height:36px;padding:0 4px}.pv-main .mini-toggle,.pv-main .btn{min-height:34px}.pv-main .pv-icon{min-width:36px;justify-content:center}.qs-new{min-height:34px;display:inline-flex;align-items:center}}
+@media(max-width:700px){.insp-tabs{flex-wrap:wrap}.insp-tools{width:100%;justify-content:flex-end;border-top:1px solid var(--line);padding:2px 0}}
+@media(max-width:420px){.adv-sw .adv-l{font-size:10.5px}}
 .curve-ed,.grad-ed{border:1px solid var(--line);border-radius:9px;background:#040406;padding:6px;margin-top:2px}
 .curve-cv,.grad-cv{display:block;width:100%;border-radius:6px;cursor:crosshair;touch-action:none}
 .curve-cv:focus-visible,.grad-cv:focus-visible{outline:2px solid var(--cyan);outline-offset:1px}
@@ -516,7 +534,18 @@ input.mini-color{width:36px;height:30px;padding:2px;border-radius:7px;border:1px
 .snip-item:hover{border-color:var(--violet);background:#120a18}
 .snip-item b{display:block;font-size:12px}.snip-item span{display:block;font-size:10.5px;color:var(--txt-mut);line-height:1.35;margin-top:2px}
 .pv-row2{padding-top:6px}
-#pvScheme{max-width:150px}#pvBackdrop{max-width:130px}#pvView{max-width:120px}
+.pv-main{position:relative;z-index:8;gap:5px}
+.pv-main .mini-toggle{padding:4px 8px}
+.pv-icon .pv-lbl{display:none}.pv-icon{padding:4px 7px}
+.pv-main .mini-toggle{white-space:nowrap}
+.pv-dd{position:static}
+.pv-menu{left:12px;right:12px;top:calc(100% - 2px);padding:12px;display:none}
+.pv-dd.open .pv-menu{display:block}
+.pv-tgls{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:10px}
+.pv-sel{display:flex;align-items:center;gap:10px;font-size:12px;color:var(--txt-mut);font-weight:600;margin-top:8px}
+.pv-sel span{width:70px;flex:none}.pv-sel select{flex:1;max-width:none;width:auto}
+.preview-ctrls[hidden]{display:none}
+#btnCapture svg{width:13px;height:13px}
 .pv-scrub{display:inline-flex;align-items:center;gap:6px;font-size:11px;color:var(--txt-mut);font-weight:600;flex:1;min-width:120px}
 .pv-scrub input{flex:1;min-width:60px}
 .solo-banner{display:flex;align-items:center;gap:8px;padding:6px 12px;font-size:12px;color:var(--amber);background:rgba(255,194,61,.08);border-bottom:1px solid rgba(255,194,61,.3)}
@@ -538,6 +567,12 @@ input.mini-color{width:36px;height:30px;padding:2px;border-radius:7px;border:1px
 .explain-sum{font-size:14px;line-height:1.6;color:var(--txt-dim);margin-bottom:12px}
 .explain-tree{font-size:13px;line-height:1.6;color:var(--txt);padding-left:18px;margin-bottom:14px}
 .explain-tree ul{padding-left:18px}
+.ex-main{width:100%;justify-content:center;padding:12px 16px;font-size:14.5px}
+.ex-more{margin-top:12px}.ex-more summary{cursor:pointer;font-size:12.5px;font-weight:700;color:var(--txt-dim);padding:4px 0}
+.guide h4{font-size:14px;margin:16px 0 6px;color:#cfe4ff}.guide h4:first-child{margin-top:0}
+.guide p,.guide li{font-size:13.5px;line-height:1.6;color:var(--txt-dim)}.guide p{margin-bottom:8px}
+.guide ul,.guide ol{padding-left:20px;margin:4px 0 8px}.guide li{margin:4px 0}
+.guide a{color:var(--cyan)}.guide b{color:var(--txt)}
 .difflist{list-style:none;padding:0;margin:4px 0 0;font-size:12.5px;line-height:1.55;color:var(--txt-dim);font-family:var(--mono);max-height:46vh;overflow:auto;border:1px solid var(--line);border-radius:8px;padding:8px 10px;background:#05070b}
 .difflist li{padding:2px 0;border-bottom:1px solid #10141d;overflow-wrap:anywhere}.difflist li:last-child{border-bottom:0}
 .df-add{color:var(--green);font-weight:700}.df-rem{color:var(--red);font-weight:700}.df-old{color:#ff9fb0}.df-new{color:#8fffd0}.df-more{color:var(--txt-mut)}
@@ -639,7 +674,8 @@ html:not(.no-quest-usb) [data-no-usb]{display:none!important;}
       <div><h1>Ree<span>Saber</span> Studio</h1><div class="sub">Config Generator &amp; Editor</div></div>
     </div>
     <div class="spacer"></div>
-    <div class="modver" id="modverTag">ModVersion 0.3.18</div>
+    <div class="modver adv" id="modverTag">ModVersion 0.3.18</div>
+    <button class="btn ghost" id="btnGuide" title="New to ReeSabers? What it is, how to get it, and how to use your presets" aria-label="Guide"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M2 4h7a3 3 0 0 1 3 3v13a2 2 0 0 0-2-2H2z"/><path d="M22 4h-7a3 3 0 0 0-3 3v13a2 2 0 0 1 2-2h8z"/></svg>Guide</button>
     <button class="btn ghost" id="btnAssets" title="Assets" aria-label="Assets"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/><polyline points="3.27 6.96 12 12.01 20.73 6.96"/><line x1="12" y1="22.08" x2="12" y2="12"/></svg>Assets <span class="badge-count" id="assetCount" style="margin-left:2px">0</span></button>
     <button class="btn ghost" id="btnQuest" data-needs-usb title="Meta Quest: open and push presets over USB" aria-label="Quest"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 9a3 3 0 0 1 3-3h12a3 3 0 0 1 3 3v5a3 3 0 0 1-3 3h-3l-2-2.5h-2L9 17H6a3 3 0 0 1-3-3z"/><circle cx="8.5" cy="11.5" r="1.6"/><circle cx="15.5" cy="11.5" r="1.6"/></svg>Quest</button>
     <button class="btn ghost" id="btnImport" title="Import" aria-label="Import"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>Import</button>
@@ -651,10 +687,11 @@ html:not(.no-quest-usb) [data-no-usb]{display:none!important;}
     <div class="qs-head" id="qsHead" role="button" tabindex="0" aria-label="Toggle Quick Start">
       <span class="qs-ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg></span>
       <span><b>Quick Start</b> - how to build a ReeSaber preset in 4 steps</span>
+      <a href="#" class="qs-new" id="qsNew">New to ReeSabers?</a>
       <span class="qs-caret" id="qsCaret"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="6 9 12 15 18 9"/></svg></span>
     </div>
     <div class="qs-body">
-      <div class="qs-step"><div class="n">1</div><b>Pick a starter</b><p>Use <em style="color:var(--cyan);font-style:normal">New ▾ → template</em> for a ready-made saber, or start blank. Each preset is one saber config file.</p></div>
+      <div class="qs-step"><div class="n">1</div><b>Pick a starter</b><p>Use <em style="color:var(--cyan);font-style:normal">New Preset ▾</em> to open a community saber from the gallery or a template, then make it yours. Each preset is one saber file.</p></div>
       <div class="qs-step"><div class="n">2</div><b>Stack layers</b><p>Use <b>Add layer</b> for a <b>Blade</b>, then <b>Trails</b> and <b>Sparks</b>. Select a <b>Group</b> or <b>Dynamic Joint</b> first to nest layers inside it.</p></div>
       <div class="qs-step"><div class="n">3</div><b>Tune &amp; drive</b><p>Open the panels to shape mesh, material and color. Add <b>Drivers</b> to make a layer react to score, swing speed and more.</p></div>
       <div class="qs-step"><div class="n">4</div><b>Check &amp; export</b><p>When <b>Validate</b> is green, hit <b>Export</b><span data-needs-usb>, or <b>Quest</b> to push it to your headset over USB</span>. Your work autosaves in this browser.</p></div>
@@ -712,6 +749,7 @@ html:not(.no-quest-usb) [data-no-usb]{display:none!important;}
         <div class="insp-tab" data-tab="module">Module</div>
         <div class="insp-tab" data-tab="drivers">Drivers</div>
         <div class="insp-tools">
+          <label class="adv-sw" title="Show every setting, including the technical ones"><input type="checkbox" id="advToggle"><span class="track"></span><span class="adv-l">Advanced</span></label>
           <button type="button" class="btn sm ghost icon" id="btnUndo" title="Undo (Ctrl+Z)" aria-label="Undo" disabled><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 14L4 9l5-5"/><path d="M4 9h10.5a5.5 5.5 0 0 1 0 11H11"/></svg></button>
           <button type="button" class="btn sm ghost icon" id="btnRedo" title="Redo (Ctrl+Shift+Z)" aria-label="Redo" disabled><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M15 14l5-5-5-5"/><path d="M20 9H9.5a5.5 5.5 0 0 0 0 11H13"/></svg></button>
           <button type="button" class="btn sm ghost icon" id="btnHistory" title="History and checkpoints" aria-label="History and checkpoints"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9"/><polyline points="12 7 12 12 15 14"/></svg></button>
@@ -730,26 +768,32 @@ html:not(.no-quest-usb) [data-no-usb]{display:none!important;}
       </div>
       <!-- preview pane -->
       <div class="rc-pane active" data-pane="preview">
-        <div class="preview-ctrls">
-          <div class="mini-toggle on" data-pv="spin">Auto-spin</div>
+        <div class="preview-ctrls pv-main">
           <div class="mini-toggle" data-pv="swing" title="Slash the sabers so trails, sparks and jiggle joints show">Swing test</div>
-          <div class="mini-toggle on" data-pv="trail">Trail</div>
-          <div class="mini-toggle on" data-pv="glow">Glow</div>
-          <div class="mini-toggle on" data-pv="hilt" title="Show a stock handle (turn off if your preset builds its own)">Hilt</div>
           <div class="mini-toggle" data-pv="both">Both hands</div>
-          <div class="mini-toggle on" data-pv="driveScore" title="Pulse driver values automatically">Sim driver</div>
-          <div class="mini-toggle" data-pv="note" title="Show a note block beside the saber for scale (approximate size)">Note</div>
-          <button type="button" class="btn tiny pv-ib" id="btnFrame" title="Fit the saber in view"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 8V3h5M16 3h5v5M21 16v5h-5M8 21H3v-5"/></svg>Fit</button>
-          <button type="button" class="btn tiny pv-ib" id="btnExpand" title="Expand the preview (Esc to exit)" aria-pressed="false"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M15 3h6v6M9 21H3v-6M21 3l-7 7M3 21l7-7"/></svg><span>Expand</span></button>
+          <div class="dd pv-dd" id="pvViewDd">
+            <button type="button" class="btn tiny pv-ib" id="btnViewMenu" aria-haspopup="true" aria-expanded="false" title="Backdrop, colors, camera and more"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="4" y1="21" x2="4" y2="14"/><line x1="4" y1="10" x2="4" y2="3"/><line x1="12" y1="21" x2="12" y2="12"/><line x1="12" y1="8" x2="12" y2="3"/><line x1="20" y1="21" x2="20" y2="16"/><line x1="20" y1="12" x2="20" y2="3"/><line x1="1" y1="14" x2="7" y2="14"/><line x1="9" y1="8" x2="15" y2="8"/><line x1="17" y1="16" x2="23" y2="16"/></svg>View</button>
+            <div class="dd-menu pv-menu" id="pvViewMenu">
+              <div class="pv-tgls">
+                <div class="mini-toggle on" data-pv="spin">Auto-spin</div>
+                <div class="mini-toggle on" data-pv="trail">Trail</div>
+                <div class="mini-toggle on" data-pv="glow">Glow</div>
+                <div class="mini-toggle on" data-pv="hilt" title="Show a stock handle (turn off if your preset builds its own)">Hilt</div>
+                <div class="mini-toggle on" data-pv="driveScore" title="Pulse driver values automatically">Sim driver</div>
+                <div class="mini-toggle" data-pv="note" title="Show a note block beside the saber for scale (approximate size)">Note</div>
+              </div>
+              <label class="pv-sel"><span>Backdrop</span><select id="pvBackdrop" class="mini-sel" aria-label="Preview backdrop"></select></label>
+              <label class="pv-sel"><span>Colors</span><select id="pvScheme" class="mini-sel" aria-label="Preview colors"></select></label>
+              <label class="pv-sel"><span>Camera</span><select id="pvView" class="mini-sel" aria-label="Camera view"></select></label>
+            </div>
+          </div>
+          <span style="flex:1"></span>
+          <button type="button" class="btn tiny pv-ib pv-icon" id="btnFrame" title="Fit the saber in view" aria-label="Fit the saber in view"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 8V3h5M16 3h5v5M21 16v5h-5M8 21H3v-5"/></svg><span class="pv-lbl">Fit</span></button>
+          <button type="button" class="btn tiny pv-ib pv-icon" id="btnExpand" title="Expand the preview (Esc to exit)" aria-label="Expand the preview" aria-pressed="false"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M15 3h6v6M9 21H3v-6M21 3l-7 7M3 21l7-7"/></svg><span class="pv-lbl">Expand</span></button>
+          <button type="button" class="btn tiny pv-ib pv-icon" id="btnCapture" title="Capture: save a PNG or record a GIF" aria-label="Capture a PNG or GIF"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"/><circle cx="12" cy="13" r="4"/></svg><span class="pv-lbl">Capture</span></button>
         </div>
-        <div class="preview-ctrls pv-row2">
-          <select id="pvBackdrop" class="mini-sel" aria-label="Preview backdrop" title="Backdrop"></select>
-          <select id="pvScheme" class="mini-sel" aria-label="Preview colors" title="Saber colors"></select>
-          <select id="pvView" class="mini-sel" aria-label="Camera view" title="Camera view"></select>
-        </div>
-        <div class="preview-ctrls pv-row2">
+        <div class="preview-ctrls pv-row2" id="pvDriverRow" hidden>
           <label class="pv-scrub" title="Driver value (moving it turns off Sim driver)"><span>Driver</span><input type="range" id="pvScrub" min="0" max="1" step="0.01" value="0.5" aria-label="Driver value"></label>
-          <button type="button" class="btn tiny" id="btnCapture" title="Save a PNG or record a GIF"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"/><circle cx="12" cy="13" r="4"/></svg>Capture</button>
         </div>
         <div class="solo-banner" id="compareBanner" hidden>Comparing: <b>left = saved version</b>, right = current<button type="button" class="btn tiny" id="compareExit">Stop comparing</button></div>
         <div class="solo-banner" id="soloBanner" hidden>Solo: <b class="sb-name"></b><button type="button" class="btn tiny" id="soloExit">Show all</button></div>
@@ -780,7 +824,7 @@ html:not(.no-quest-usb) [data-no-usb]{display:none!important;}
     <div class="foot-left">ReeSaber Studio · single-file app · runs in your browser · targets ReeSabers 0.3.18+</div>
     <div class="foot-right">
       <div class="foot-count" id="footCount" hidden></div>
-      <span class="foot-updated" id="footUpdated" data-updated="2026-10-18T00:00:00Z">Last updated recently</span>
+      <span class="foot-updated" id="footUpdated" data-updated="2026-10-18T11:32:11Z">Last updated recently</span>
       
       <a class="credit" href="https://beatleader.com/u/msploit" target="_blank" rel="noopener" title="MSploit on BeatLeader" onclick="try{window.goatcounter&amp;&amp;window.goatcounter.count({path:'profile-reesaber',title:'BeatLeader profile',event:true})}catch(e){}">
         <img alt="MSploit" src="data:image/png;base64,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" />
@@ -817,15 +861,12 @@ html:not(.no-quest-usb) [data-no-usb]{display:none!important;}
 <div class="help-pop" id="helpPop"></div>
 <div class="wn-back" id="whatsnewBack" hidden>
   <div class="wn-card" role="dialog" aria-modal="true" aria-labelledby="whatsnewTitle">
-    <div class="wn-head"><span class="wn-star"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2l2.4 6.3L21 9l-5 4.2L17.8 20 12 16.5 6.2 20 8 13.2 3 9l6.6-.7z"/></svg></span><h3 id="whatsnewTitle">What's New</h3><span class="wn-chip">7 updates</span></div>
+    <div class="wn-head"><span class="wn-star"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2l2.4 6.3L21 9l-5 4.2L17.8 20 12 16.5 6.2 20 8 13.2 3 9l6.6-.7z"/></svg></span><h3 id="whatsnewTitle">What's New</h3><span class="wn-chip">4 updates</span></div>
     <div class="wn-body">
-      <div class="wn-item" data-needs-usb><span class="wn-ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 9a3 3 0 0 1 3-3h12a3 3 0 0 1 3 3v5a3 3 0 0 1-3 3h-3l-2-2.5h-2L9 17H6a3 3 0 0 1-3-3z"/><circle cx="8.5" cy="11.5" r="1.6"/><circle cx="15.5" cy="11.5" r="1.6"/></svg></span><div><p class="wn-t">Quest over USB</p><p class="wn-d">The in-game editor is PC only, so Studio now talks to your Quest directly. Open the presets on your headset, edit them, and push them back with a list of what changes. Use the Quest button at the top.</p></div></div>
-      <div class="wn-item"><span class="wn-ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M8 3H5a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h3"/><path d="M16 3h3a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-3"/><line x1="12" y1="3" x2="12" y2="21"/></svg></span><div><p class="wn-t">Compare versions</p><p class="wn-d">Imported presets remember the original file. See every change you made, view the original and your edit side by side, or revert. Pin any version to compare against later.</p></div></div>
-      <div class="wn-item"><span class="wn-ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M15 3h6v6M9 21H3v-6M21 3l-7 7M3 21l7-7"/></svg></span><div><p class="wn-t">Bigger preview</p><p class="wn-d">Drag the edge to resize the 3D view, expand it to fill the screen, and it now frames each saber to fit. Try the camera views and the note block for scale.</p></div></div>
-      <div class="wn-item"><span class="wn-ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2 2 7l10 5 10-5-10-5z"/><path d="M2 17l10 5 10-5"/><path d="M2 12l10 5 10-5"/></svg></span><div><p class="wn-t">Layers first</p><p class="wn-d">Your layer list now sits at the top of its column. Modules and snippets live in the Add layer menu.</p></div></div>
-      <div class="wn-item"><span class="wn-ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M13 2 3 14h9l-1 8 10-12h-9z"/></svg></span><div><p class="wn-t">Driver test preset</p><p class="wn-d">Not sure which driver number does what? New Preset → Driver test preset gives you one glowing band per number to try in game.</p></div></div>
-      <div class="wn-item"><span class="wn-ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg></span><div><p class="wn-t">Combined presets</p><p class="wn-d">ReeSabers can stack presets on one saber. Preview a hilt preset with a blade preset together, or a different preset in each hand.</p></div></div>
-      <div class="wn-item"><span class="wn-ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg></span><div><p class="wn-t">Smarter checks</p><p class="wn-d">Click a warning to jump to its layer. Unusual values from imported files are kept and noted, texture sizes are checked, and the performance estimate has a Quest mode.</p></div></div>
+      <div class="wn-item"><span class="wn-ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M2 4h7a3 3 0 0 1 3 3v13a2 2 0 0 0-2-2H2z"/><path d="M22 4h-7a3 3 0 0 0-3 3v13a2 2 0 0 1 2-2h8z"/></svg></span><div><p class="wn-t">New to ReeSabers? Read the Guide</p><p class="wn-d">The Guide button explains what ReeSabers is, how to get it, and how to get your preset into the game on PC or Quest, including copying files to the headset.</p></div></div>
+      <div class="wn-item"><span class="wn-ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="4" y1="21" x2="4" y2="14"/><line x1="4" y1="10" x2="4" y2="3"/><line x1="12" y1="21" x2="12" y2="12"/><line x1="12" y1="8" x2="12" y2="3"/><line x1="20" y1="21" x2="20" y2="16"/><line x1="20" y1="12" x2="20" y2="3"/></svg></span><div><p class="wn-t">Simple and Advanced</p><p class="wn-d">Settings now use plain names like Thickness (cm) and Edge glow, and every one has a ? explaining it. The technical ones hide until you flip on Advanced next to the editor tabs.</p></div></div>
+      <div class="wn-item"><span class="wn-ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M15 3h6v6M9 21H3v-6M21 3l-7 7M3 21l7-7"/></svg></span><div><p class="wn-t">More room for the saber</p><p class="wn-d">The preview buttons fit on one row, with backdrop, colors and camera under View, so the 3D view is much bigger on laptops.</p></div></div>
+      <div class="wn-item"><span class="wn-ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg></span><div><p class="wn-t">One-click export</p><p class="wn-d">Export has one main button, Download for Beat Saber, plus where to put the file and how to pick it in game.</p></div></div>
     </div>
     <div class="wn-foot"><button type="button" class="btn primary" id="whatsnewClose" style="width:100%;justify-content:center">Got it</button></div>
   </div>
@@ -942,9 +983,9 @@ const TEMPLATES={
    so names past 0 are Studio's best guesses; imported numbers are always kept exactly. */
 const DRIVER_SOURCES=[
   {v:0,name:'Unused / constant'},
-  {v:1,name:'Score (guess)'},{v:2,name:'Velocity (guess)'},{v:3,name:'Cut direction (guess)'},
-  {v:4,name:'Saber speed (guess)'},{v:5,name:'Hand position X (guess)'},{v:6,name:'Hand position Y (guess)'},
-  {v:7,name:'Hand position Z (guess)'},{v:8,name:'Time after miss (guess)'},{v:9,name:'Time loop (guess)'}
+  {v:1,name:'Score'},{v:2,name:'Velocity'},{v:3,name:'Cut direction'},
+  {v:4,name:'Saber speed'},{v:5,name:'Hand position X'},{v:6,name:'Hand position Y'},
+  {v:7,name:'Hand position Z'},{v:8,name:'Time after miss'},{v:9,name:'Time loop'}
 ];
 const sourceName=v=>(DRIVER_SOURCES.find(s=>s.v===v)||{name:'Type '+Math.trunc(safeNum(v,0))}).name;
 const COLOR_SOURCES=[{v:0,n:'Custom (this override)'},{v:1,n:'Game Saber Color'},{v:2,n:'Game Note Color A/B'},{v:3,n:'Opposite Game Color'}];
@@ -955,27 +996,27 @@ const COLOR_MODES=[{v:0,n:'Multiply'},{v:1,n:'Hue Override'},{v:2,n:'Add'},{v:3,
 /* ===================================================================== */
 const HELP={
   driver:{t:'Driver',b:'A driver links a live game value to how a layer looks - turning a static effect into a reactive one.',g:'e.g. a driver on <em>Velocity</em> makes your trail brighten the faster you swing.'},
-  cutDirection:{t:'Cut Direction Trigger',b:'"On cut" fires the effect only when you slice a note; the value reflects the swing direction/angle.',g:'Use it to <em>spawn sparks only on a hit</em>, not continuously.'},
+  cutDirection:{t:'Burst Size',b:'How big each burst is when the trigger fires.',g:''},
   transform:{t:'Transform Math',b:'Position moves the layer (metres), Rotation tilts it (degrees), Scale resizes it. These stack on top of the preset root transform.',g:'Tiny numbers go a long way - <em>0.1 position ≈ a hand-width</em>.'},
   valueRange:{t:'Value From → To',b:'The raw game value that maps to the start and end of the curve. Anything below "from" clamps to 0, above "to" clamps to 1.',g:'Score 0→1,000,000 or Velocity 0→30 m/s are common ranges.'},
   resistance:{t:'Rise / Fall Resistance',b:'Smoothing (0–1). Higher values make the driver react more slowly, so the effect eases instead of snapping.',g:'Adds <em>inertia</em> so fast score jumps don\'t flicker the saber.'},
   hue:{t:'Hue',b:'Position on the color wheel (0–1). 0 = red, ~0.33 = green, ~0.66 = blue, back to red at 1.',g:'Only used when <em>Force color override</em> is on.'},
   saturation:{t:'Saturation',b:'Color intensity. 0 = white/grey, 1 = fully vivid.',g:''},
   value:{t:'Value (Brightness)',b:'How bright the color is. 0 = black, 1 = full brightness.',g:''},
-  fresnel:{t:'Fresnel Power',b:'Controls the glowing rim on edges facing away from you. Higher = a tighter, brighter outline.',g:'Gives blades that <em>neon-edge</em> look.'},
-  roughness:{t:'Roughness',b:'Surface finish. 0 = mirror-smooth and shiny, 1 = matte and diffuse.',g:''},
-  metallic:{t:'Metallic',b:'How metal the surface behaves. Higher reflects the environment more like chrome.',g:''},
-  blur:{t:'Motion Blur',b:'Blur frames = how much the blade smears while moving. Sensitivity = how much speed is needed to trigger it.',g:'Makes fast swings feel <em>silky</em>.'},
+  fresnel:{t:'Edge Glow (Fresnel)',b:'How strong the glowing outline is on the edges of the blade. Higher gives a tighter, brighter rim.',g:'Gives blades that <em>neon tube</em> look.'},
+  roughness:{t:'Roughness',b:'Surface finish. 0 is mirror-shiny, 1 is matte. Mostly matters for solid parts such as hilts.',g:''},
+  metallic:{t:'Metallic',b:'How much the surface reflects its surroundings like metal. Mostly matters for solid parts such as hilts.',g:''},
+  blur:{t:'Motion Blur',b:'How much the blade smears while it moves. 0 turns the smear off.',g:'Makes fast swings feel <em>smooth</em>.'},
   trailLength:{t:'Trail Length',b:'How far the trail streaks behind the tip. Longer trails cost a little more performance.',g:''},
   blending:{t:'Blending Mode',b:'How the layer mixes with what\'s behind it. Additive = glowing/light, Alpha = normal transparency, Multiply = darkening.',g:'Additive is the classic <em>laser glow</em>.'},
   colorSource:{t:'Color Source',b:'Where the base color comes from: your custom pick, or synced to the live in-game saber / note color so it always matches the map.',g:'Sync keeps sabers matching <em>gameplay color events</em>.'},
   forceOverride:{t:'Force Color Override',b:'When on, this layer ignores the normal color and uses the Hue/Sat/Value below instead.',g:'Turn on to <em>lock a layer to one color</em> regardless of hand.'},
-  particleCount:{t:'Particle Count',b:'How many spark particles can exist at once. More = denser bursts but heavier on the GPU.',g:''},
-  turbulence:{t:'Turbulence',b:'Adds swirling noise to particle motion. Scale = size of the swirls, Power = how strongly they push.',g:'Makes sparks <em>drift and dance</em> instead of flying straight.'},
-  triggerType:{t:'Trigger Type',b:'When the effect emits: Continuous (always), On cut (only when slicing a note), or On miss.',g:''},
-  radius:{t:'Blade Radius',b:'Thickness of the glowing blade core in metres. Small changes are very visible.',g:''},
-  zOffset:{t:'Z Offset',b:'Where the blade starts and ends along the hilt. Shift these to grow, shrink, or float the blade.',g:''},
-  stretchBias:{t:'Stretch Bias',b:'Biases mesh detail toward the tip or the base of the blade as it stretches during fast swings.',g:''},
+  particleCount:{t:'How Many Sparks',b:'How many sparks can exist at once. More means denser bursts but more work for the GPU, especially on Quest.',g:''},
+  turbulence:{t:'Turbulence',b:'Adds swirling motion to sparks. Size sets how big the swirls are, strength how hard they push.',g:'Makes sparks <em>drift and dance</em> instead of flying straight.'},
+  triggerType:{t:'When Sparks Appear',b:'All the time, only when you cut a note, or only when you miss.',g:'On cut is the classic <em>hit sparks</em> look.'},
+  radius:{t:'Thickness',b:'How thick the glowing blade is, in centimetres. Small changes are very visible: 1 to 2 cm is a normal saber.',g:''},
+  zOffset:{t:'Starts at',b:'Where the blade begins, measured along the saber in centimetres. 0 is where the handle meets the blade; negative values reach down into the handle.',g:'Lower it to make a blade that <em>covers the hilt</em>.'},
+  stretchBias:{t:'Stretch Bias',b:'Moves mesh detail toward the tip or the base of the blade as it stretches during fast swings. Most presets leave it alone.',g:''},
   customMesh:{t:'Preview Mesh',b:'Shows your own 3D model (.obj / .glb / .gltf) in place of this blade in the 3D preview.',g:'Preview only. Studio does not write custom models into presets, so the model is <em>not</em> in the exported file.'},
   customTexture:{t:'Texture Slot',b:'Pick an uploaded image (.png / .jpg). Its file name is written into the preset, and the image itself is embedded in BinaryAssets (.json) or the textures/ folder (.reesaber).',g:''},
   rootType:{t:'Root Type',b:'What this preset attaches to. Saber (0) is the standard type and the only one Studio creates; other values are kept as-is from imported files.',g:''},
@@ -985,6 +1026,39 @@ const HELP={
   mapping:{t:'Mappings',b:'Mappings change color, alpha and scale based on where you are on the layer (along the blade or trail) or how it is seen (viewing / surface angle).',g:'A gradient along the blade gives you a two-tone saber that still follows your color scheme.'},
   perf:{t:'Performance Estimate',b:'A rough score from mesh resolution, motion blur, trail detail, particle counts and texture memory. It is an estimate, not a measurement. Pick Quest for stricter limits that suit a standalone headset.',g:'Keep it Light or Medium on <em>Quest</em>, where the GPU budget is much smaller than a PC.'},
   combine:{t:'Combined Presets',b:'In ReeSabers you can stack several presets on one saber, for example a hilt preset, a blade preset and a trail preset. Ticking presets here draws them together in the preview so you can check the combination.',g:'Combine them in the ReeSabers menu the same way. Each preset is still its own file.'},
+  zOffsetTo:{t:'Ends at',b:'Where the blade ends, measured along the saber in centimetres. 100 is a full one-metre saber.',g:'Shorten it for a <em>dagger</em>, lengthen it for a <em>spear</em>.'},
+  resolution:{t:'Mesh Detail',b:'How many segments the blade is built from, along its length and around it. Higher looks smoother but costs a little performance.',g:'The default is fine for nearly every saber.'},
+  blurSensitivity:{t:'Blur Sensitivity',b:'How fast you have to swing before the motion blur kicks in.',g:''},
+  envLight:{t:'Environment Light',b:'How much the surroundings light up this layer.',g:''},
+  sceneReflections:{t:'Scene Reflections',b:'Lets this layer reflect the game environment. Costs some performance.',g:''},
+  sceneLights:{t:'Scene Lights',b:'Lets the game\'s lights shine on this layer, for example the map\'s light show.',g:''},
+  trailWidth:{t:'Trail Width',b:'How much of the blade the trail covers, from the tip down.',g:''},
+  trailType:{t:'Trail Type',b:'Tip only leaves a thin streak from the saber tip. Full blade leaves a wide ribbon along the whole blade.',g:''},
+  trailOffset:{t:'Position on the Blade',b:'Where the trail sits along the blade. 1 is the tip.',g:''},
+  distortion:{t:'Distortion',b:'Strength of the trail\'s distortion effect.',g:''},
+  lifetime:{t:'Spark Life',b:'How long each spark lasts, in seconds. Each spark picks a time between the shortest and longest life.',g:''},
+  sparkWidth:{t:'Streak Width',b:'How wide each spark\'s streak is.',g:''},
+  bladeInertia:{t:'Follow the Swing',b:'How much new sparks carry the saber\'s motion. Higher flings them along with your swing.',g:''},
+  triggerPeriod:{t:'Burst Length',b:'How long each burst keeps spawning sparks, in seconds.',g:''},
+  burstSpread:{t:'Burst Spread',b:'How widely a burst sprays out.',g:''},
+  damping:{t:'Slow-down',b:'How quickly sparks lose speed after they spawn.',g:''},
+  gravity:{t:'Gravity',b:'Pulls sparks in a direction (x, y, z). Leave it at 0 for weightless sparks.',g:''},
+  springConstant:{t:'Stiffness',b:'How strongly the joint springs back to rest. Low values give a loose, floppy swing.',g:''},
+  jointDamping:{t:'Settling',b:'How quickly the jiggle calms down after you stop moving.',g:''},
+  jointMass:{t:'Weight',b:'How heavy the swinging part feels.',g:''},
+  angularLimit:{t:'Swing Limit',b:'The furthest the joint can swing, in degrees, around each axis.',g:''},
+  linearLimit:{t:'Slide Limit',b:'How far the joint can slide, in metres. Usually 0.',g:''},
+  layerName:{t:'Layer Name',b:'Your label for this layer. Studio and the game store it in the preset, but it doesn\'t change how the saber looks.',g:''},
+  layerEnabled:{t:'Layer Enabled',b:'Turn a layer off to hide it without deleting it. Off layers are saved but not drawn.',g:''},
+  textureMaps:{t:'Extra Texture Maps',b:'Advanced texture slots (glow, normal, color, metallic, roughness, opacity) for detailed materials. Most sabers only use the main texture.',g:''},
+  hueShift:{t:'Color Cycle Speed',b:'Makes the color spin around the color wheel over time. 0 keeps it still.',g:'Small values give a slow <em>rainbow</em> effect.'},
+  fakeGlow:{t:'Glow Boost',b:'Multiplies how bright this layer glows.',g:''},
+  rotation:{t:'Rotation',b:'Tilts the layer, in degrees around each axis. 180 on X flips it to point the other way.',g:''},
+  scale:{t:'Scale',b:'Resizes the layer. 1 is normal size.',g:''},
+  handleMask:{t:'Handle Mask',b:'Hides parts of the blade near the handle, from the base (left) toward the tip (right).',g:''},
+  scaleCurve:{t:'Scale Curve',b:'Changes this layer\'s size based on where you are on it, or on a driver value.',g:''},
+  presetName:{t:'Preset Name',b:'The name you pick in the ReeSabers menu in game, and the file name when you export.',g:''},
+  previewColor:{t:'Preview Colors',b:'Only for the preview here. In game the colors come from your color scheme or the map.',g:''},
   previewOnly:{t:'Preview Only',b:'These settings only change the 3D preview here in Studio. They are not written into the preset file. In game, ReeSabers uses your color scheme and applies the preset to both sabers.',g:''}
 };
 
@@ -1114,19 +1188,20 @@ function fmtNum(v,sig){v=Number(v);if(!isFinite(v))return '0';if(v===0)return '0
 /* Slider + number box. The slider covers the usual (safe) range, widened to include the current value.
    Typed values outside the usual range are kept and flagged amber, never clamped, and nothing is written
    unless the value actually changes, so tabbing through an imported preset leaves it untouched. */
-function slider(limitKey,val,onInput){
+function slider(limitKey,val,onInput,opts){
+  opts=opts||{};const k=opts.scale||1;
   const L=LIMITS[limitKey]||[0,1,0.01,0];const [min,max,step]=L;val=safeNum(val,L[3]);
   const lo=Math.min(min,val),hi=Math.max(max,val),hardMin=min>=0?0:-Infinity;
+  const D=v=>fmtNum(v*k);/* shown value (e.g. metres shown as cm) */
   const w=document.createElement('div');w.className='slider-wrap';
-  w.innerHTML=`<input type="range" min="${lo}" max="${hi}" step="any" value="${val}"><div class="slider-val"><input type="number" min="${min}" max="${max}" step="${step}" value="${fmtNum(val)}"></div>`;
+  w.innerHTML=`<input type="range" min="${lo}" max="${hi}" step="any" value="${val}"><div class="slider-val"><input type="number" min="${fmtNum(min*k)}" max="${fmtNum(max*k)}" step="${fmtNum(step*k)}" value="${D(val)}"></div>`;
   const r=w.querySelector('input[type=range]'),n=w.querySelector('input[type=number]');
-  const usual='Usual range '+fmtNum(min)+' to '+fmtNum(max);
-  const mark=v=>{const odd=v<min||v>max;n.classList.toggle('unusual',odd);n.title=odd?'Outside the usual range ('+fmtNum(min)+' to '+fmtNum(max)+'). Kept as typed.':usual;};
+  const mark=v=>{const odd=v<min||v>max;n.classList.toggle('unusual',odd);n.title=odd?'Outside the usual range ('+D(min)+' to '+D(max)+'). Kept as typed.':'Usual range '+D(min)+' to '+D(max);};
   mark(val);
-  r.addEventListener('input',()=>{let v=parseFloat(r.value);v=parseFloat((Math.round(v/step)*step).toFixed(6));v=clamp(v,lo,hi);n.value=fmtNum(v);n.classList.remove('invalid');mark(v);val=v;onInput(v);});
-  n.addEventListener('input',()=>{const v=parseFloat(n.value);if(!isFinite(v)||v<hardMin){n.classList.add('invalid');return;}n.classList.remove('invalid');r.value=clamp(v,lo,hi);mark(v);val=v;onInput(v);});
+  r.addEventListener('input',()=>{let v=parseFloat(r.value);v=parseFloat((Math.round(v/step)*step).toFixed(6));v=clamp(v,lo,hi);n.value=D(v);n.classList.remove('invalid');mark(v);val=v;onInput(v);});
+  n.addEventListener('input',()=>{const t=parseFloat(n.value);if(!isFinite(t)){n.classList.add('invalid');return;}const v=k===1?t:parseFloat((t/k).toPrecision(12));if(v<hardMin){n.classList.add('invalid');return;}n.classList.remove('invalid');r.value=clamp(v,lo,hi);mark(v);val=v;onInput(v);});
   /* blur never writes: a bad entry just shows the last good value again */
-  n.addEventListener('blur',()=>{const v=parseFloat(n.value);if(!isFinite(v)||v<hardMin){n.classList.remove('invalid');n.value=fmtNum(val);}});
+  n.addEventListener('blur',()=>{const t=parseFloat(n.value);if(!isFinite(t)||t/k<hardMin){n.classList.remove('invalid');n.value=D(val);}});
   return w;
 }
 function rawSlider(min,max,step,val,onInput){
@@ -1183,6 +1258,10 @@ function texSelect(cur,empty,onChange){
   if(typeof cur==='string'&&!NO_TEX(cur)&&!assetByName(cur,'texture'))opts.push({v:cur,n:cur+'  (not loaded)'});
   return strSelect(opts,NO_TEX(cur)?empty:cur,onChange);
 }
+/* Simple / Advanced view. New visitors start Simple; people who used Studio before start with everything shown. */
+function setAdvanced(on,quiet){document.body.classList.toggle('adv-on',!!on);const t=$('#advToggle');if(t)t.checked=!!on;try{localStorage.setItem('ree_advanced',on?'1':'0');}catch(e){}if(!quiet)T(on?'advanced-on':'advanced-off',true);}
+function initAdvanced(){let v=null,returning=false;try{v=localStorage.getItem('ree_advanced');returning=['ree_qs_collapsed','ree_folder_auto','reeStudio.whatsnew.v1','reeStudio.whatsnew.v2'].some(k=>localStorage.getItem(k)!==null);}catch(e){}
+  const on=v===null?returning:v==='1';if(v===null){try{localStorage.setItem('ree_advanced',on?'1':'0');}catch(e){}}document.body.classList.toggle('adv-on',on);const t=$('#advToggle');if(t){t.checked=on;t.onchange=()=>setAdvanced(t.checked);}}
 function T(name,once){if(!name)return;try{if(window.__track)window.__track(name,once);}catch(e){}}
 function noteBox(text){const d=document.createElement('div');d.className='fset-note';d.textContent=text;return d;}
 /* ===================================================================== */
@@ -1255,8 +1334,8 @@ function renderStack(){
     const el=document.createElement('div');el.className='stack-item'+(m.uid===state.activeModuleId?' active':'')+(depth?' nested':'')+(state.soloUid===m.uid?' solo':'');
     if(depth)el.style.marginLeft=(Math.min(depth,8)*14)+'px';
     const tags=[];const nd=activeDrivers(m).length;if(nd)tags.push(nd+' drv');if(m.customMeshId)tags.push('mesh');if(collectTexRefs(m.config,new Set()).size)tags.push('tex');if(m.children&&m.children.length)tags.push(m.children.length+' inside');if(state.soloUid===m.uid)tags.push('SOLO');
-    const short=String(m.moduleId).split('.').pop();
-    const label=m.name||(TEMPLATES[m.moduleId]||{}).label||short;
+    const short=(TEMPLATES[m.moduleId]||{}).label||String(m.moduleId).split('.').pop();
+    const label=m.name||short;
     el.innerHTML=`<div class="layer-dot ${m.enabled?'':'off'}" data-act="tog" role="button" tabindex="0" title="${m.enabled?'Enabled (click to mute)':'Muted (click to enable)'}" aria-label="${m.enabled?'Mute layer':'Enable layer'}"></div><div class="si-ic">${kindIcon(m)}</div><div class="si-body"><div class="si-name">${escapeHtml(label)}</div><div class="si-type">${escapeHtml(short)}${tags.length?' · '+escapeHtml(tags.join(' · ')):''}</div></div>
       <div class="si-ctrls"><button class="btn sm ghost icon" data-act="menu" title="More: move, duplicate, copy, solo" aria-label="More layer actions" aria-haspopup="menu">${ICON.more}</button><button class="btn sm ghost icon danger" data-act="del" title="Delete layer" aria-label="Delete layer">${ICON.trash}</button></div>`;
     el.addEventListener('click',e=>{const act=e.target.closest('[data-act]');if(act){e.stopPropagation();if(act.dataset.act==='menu'){layerMenu(m.uid,act);return;}moduleAction(act.dataset.act,m.uid);return;}state.activeModuleId=m.uid;if(state.activeTab!=='drivers')state.activeTab='module';renderAll();});
@@ -1300,9 +1379,9 @@ function buildPresetForm(){
   const wrap=document.createElement('div');const p=activePreset();
   if(!p){wrap.innerHTML='<div class="placeholder-note">'+ICON.layers+'<br>Select or create a preset to edit its name, root transform and preview colors.</div>';return wrap;}
   const idAcc=accordion('Identity',ICON.edit);
-  idAcc.add(field('Preset name',(()=>{const i=document.createElement('input');i.type='text';i.value=p.name;i.addEventListener('input',()=>{p.name=i.value;renderPresets();updatePreviewFoot();refreshOutputs();});return i;})()));
+  idAcc.add(field('Preset name',(()=>{const i=document.createElement('input');i.type='text';i.value=p.name;i.addEventListener('input',()=>{p.name=i.value;renderPresets();updatePreviewFoot();refreshOutputs();});return i;})(),'This is the name you pick in the ReeSabers menu in game.','presetName'));
   const rtOpts=[{v:0,n:'Saber (0)'}];if(p.rootType!==0)rtOpts.push({v:p.rootType,n:'Imported value ('+p.rootType+')'});
-  idAcc.add(field('Root type',selectInput(rtOpts,p.rootType,v=>{p.rootType=v;touch();}),'Exports as ModVersion '+(p.modVersion||state.modVersion)+(p.modVersion&&p.modVersion!==state.modVersion?' (kept from the imported file).':'.'),'rootType'));
+  idAcc.add(adv(field('Root type',selectInput(rtOpts,p.rootType,v=>{p.rootType=v;touch();}),'Exports as ModVersion '+(p.modVersion||state.modVersion)+(p.modVersion&&p.modVersion!==state.modVersion?' (kept from the imported file).':'.'),'rootType')));
   wrap.appendChild(idAcc);
 
   const ov=accordion('Overview',ICON.bolt);
@@ -1313,10 +1392,10 @@ function buildPresetForm(){
   ovb.append(exb,cmb);ov.add(ovb);
   wrap.appendChild(ov);
 
-  const tAcc=accordion('Root Transform',ICON.layers,{collapsed:true});
+  const tAcc=adv(accordion('Whole-saber Position, Rotation &amp; Scale',ICON.layers,{collapsed:true}));
   tAcc.add(field('Position (m)',vec3Editor(p.transform.Position,touch),null,'transform'));
-  tAcc.add(field('Rotation (deg)',vec3Editor(p.transform.Rotation,touch,1)));
-  tAcc.add(field('Scale',vec3Editor(p.transform.Scale,touch)));
+  tAcc.add(field('Rotation (degrees)',vec3Editor(p.transform.Rotation,touch,1),null,'rotation'));
+  tAcc.add(field('Scale',vec3Editor(p.transform.Scale,touch),null,'scale'));
   wrap.appendChild(tAcc);
 
   const pv2=accordion('Preview (not exported)',ICON.blade,{magenta:true});
@@ -1324,10 +1403,11 @@ function buildPresetForm(){
   const ht=document.createElement('div');ht.className='hand-toggles';
   ['L','R'].forEach(h=>{const b=document.createElement('div');b.className='hand-btn'+(p.hands[h]?' on-'+h:'');b.textContent=h==='L'?'LEFT':'RIGHT';b.setAttribute('aria-pressed',p.hands[h]?'true':'false');b.addEventListener('click',()=>{p.hands[h]=!p.hands[h];renderInspector();touch();});ht.appendChild(b);});
   pv2.add(field('Preview hands',ht,null,'previewOnly'));
-  pv2.add(field('Left preview color',colorInput(safeColor(p.color.left,'#ff1e3c'),v=>{p.color.left=v;renderPresets();touch();})));
-  pv2.add(field('Right preview color',colorInput(safeColor(p.color.right,'#1e6bff'),v=>{p.color.right=v;renderPresets();touch();})));
+  pv2.add(field('Left preview color',colorInput(safeColor(p.color.left,'#ff1e3c'),v=>{p.color.left=v;renderPresets();touch();}),null,'previewColor'));
+  pv2.add(field('Right preview color',colorInput(safeColor(p.color.right,'#1e6bff'),v=>{p.color.right=v;renderPresets();touch();}),null,'previewColor'));
   pv2.add(buildComboField(p));
   wrap.appendChild(pv2);
+  wrap.appendChild(simpleNote());
   return wrap;
 }
 /* ---- module form ---- */
@@ -1338,9 +1418,9 @@ function buildModuleForm(){
   const resetGroup=tmpl?(subPaths)=>{subPaths.forEach(sp=>{const def=get(tmpl.config,sp);if(def!==undefined)setPath(cfg,sp,clone(def));});renderInspector();touch();toast('Panel reset to safe defaults');}:null;
 
   const cs=accordion('Module',ICON.edit);
-  cs.add(field('Layer name',(()=>{const i=document.createElement('input');i.type='text';i.value=m.name;i.addEventListener('input',()=>{m.name=i.value;cfg.Name=i.value;renderStack();refreshOutputs();});return i;})()));
-  cs.add(field('',toggle(m.enabled,'Layer enabled',v=>{m.enabled=v;cfg.Enabled=v;renderStack();touch();})));
-  const typeNote=document.createElement('div');typeNote.className='fset-note';typeNote.style.marginBottom='0';typeNote.textContent='Type: '+m.moduleId+' (v'+m.version+')';cs.add(typeNote);
+  cs.add(field('Layer name',(()=>{const i=document.createElement('input');i.type='text';i.value=m.name;i.addEventListener('input',()=>{m.name=i.value;cfg.Name=i.value;renderStack();refreshOutputs();});return i;})(),null,'layerName'));
+  cs.add(field('',toggle(m.enabled,'Layer enabled',v=>{m.enabled=v;cfg.Enabled=v;renderStack();touch();},'layerEnabled')));
+  const typeNote=document.createElement('div');typeNote.className='fset-note adv';typeNote.style.marginBottom='0';typeNote.textContent='Type: '+m.moduleId+' (v'+m.version+')';cs.add(typeNote);
   wrap.appendChild(cs);
 
   const B={blade:buildBladeFields,trail:buildTrailFields,vfx:buildSparksFields,joint:buildJointFields,group:buildGroupInfo,clone:buildCloneInfo,legacy:buildLegacyInfo,other:buildOtherInfo}[m.kind]||buildOtherInfo;
@@ -1352,9 +1432,9 @@ function buildModuleForm(){
   if(tf.length||m.kind==='blade'){
     const asAcc=accordion('Textures & Assets',ICON.cube,{magenta:true});
     if(!state.assets.some(a=>a.kind==='texture'))asAcc.add(noteBox('Upload a .png / .jpg in the Assets panel to use it here.'));
-    tf.forEach((f,ix)=>asAcc.add(field(f.label,texSelect(get(cfg,f.path),f.empty,v=>{setPath(cfg,f.path,v);renderStack();touch();}),null,ix===0?'customTexture':null)));
-    if(m.kind==='blade')asAcc.add(field('Preview mesh (not exported)',assetSelect('mesh',m.customMeshId,v=>{m.customMeshId=v;renderStack();touch();}),
-      state.assets.some(a=>a.kind==='mesh')?'Swaps this blade for your model in the 3D preview only.':'Upload a .obj / .glb / .gltf in the Assets panel to preview it here.','customMesh'));
+    tf.forEach((f,ix)=>{const fl=field(f.label,texSelect(get(cfg,f.path),f.empty,v=>{setPath(cfg,f.path,v);renderStack();touch();}),null,ix===0?'customTexture':'textureMaps');asAcc.add(ix===0?fl:adv(fl));});
+    if(m.kind==='blade')asAcc.add(adv(field('Preview model (not exported)',assetSelect('mesh',m.customMeshId,v=>{m.customMeshId=v;renderStack();touch();}),
+      state.assets.some(a=>a.kind==='mesh')?'Swaps this blade for your model in the 3D preview only.':'Upload a .obj / .glb / .gltf in the Assets panel to preview it here.','customMesh')));
     const btns=document.createElement('div');btns.style.cssText='display:flex;gap:8px;flex-wrap:wrap';
     const openAssets=document.createElement('button');openAssets.className='btn sm';openAssets.innerHTML=ICON.cube+' Manage assets';openAssets.onclick=openAssetModal;
     const mk=document.createElement('button');mk.className='btn sm';mk.textContent='Make a texture';mk.onclick=()=>openTextureMaker('make');
@@ -1364,88 +1444,93 @@ function buildModuleForm(){
 
   const co=cfg.ColorOverride;
   if(co&&typeof co==='object'){
-    const ca=accordion('Color Override',ICON.blade,{collapsed:true,magenta:true,reset:resetGroup&&(()=>resetGroup(['ForceColorOverride','ColorOverride']))});
-    ca.add(field('',toggle(!!cfg.ForceColorOverride,'Force color override',v=>{cfg.ForceColorOverride=v;touch();},'forceOverride')));
+    const ca=accordion('Color',ICON.blade,{collapsed:true,magenta:true,reset:resetGroup&&(()=>resetGroup(['ForceColorOverride','ColorOverride']))});
+    ca.add(field('',toggle(!!cfg.ForceColorOverride,'Use a fixed color',v=>{cfg.ForceColorOverride=v;touch();},'forceOverride')));
     ca.add(field('Hue',slider('hue',safeNum(co.hue,0),v=>{co.hue=v;touch();}),null,'hue'));
     ca.add(field('Saturation',slider('sat',safeNum(co.saturation,1),v=>{co.saturation=v;touch();}),null,'saturation'));
     ca.add(field('Value',slider('val',safeNum(co.value,1),v=>{co.value=v;touch();}),null,'value'));
-    ca.add(field('Hue shift / sec',slider('hueShift',safeNum(co.hueShiftPerSecond,0),v=>{co.hueShiftPerSecond=v;refreshOutputs();})));
-    ca.add(field('Fake glow multiplier',slider('fakeGlow',safeNum(co.fakeGlowMultiplier,1),v=>{co.fakeGlowMultiplier=v;touch();})));
+    ca.add(field('Color cycle speed',slider('hueShift',safeNum(co.hueShiftPerSecond,0),v=>{co.hueShiftPerSecond=v;refreshOutputs();}),null,'hueShift'));
+    ca.add(field('Glow boost',slider('fakeGlow',safeNum(co.fakeGlowMultiplier,1),v=>{co.fakeGlowMultiplier=v;touch();}),null,'fakeGlow'));
     ca.add(field('Color source',selectInput(COLOR_SOURCES,co.colorSource,v=>{co.colorSource=v;refreshOutputs();}),null,'colorSource'));
     wrap.appendChild(ca);
   }
   const lt=cfg.LocalTransform;
   if(lt&&typeof lt==='object'&&lt.Position&&lt.Rotation&&lt.Scale){
-    const tAcc=accordion('Local Transform',ICON.layers,{collapsed:true,reset:resetGroup&&(()=>resetGroup(['LocalTransform']))});
+    const tAcc=adv(accordion('Position, Rotation &amp; Scale',ICON.layers,{collapsed:true,reset:resetGroup&&(()=>resetGroup(['LocalTransform']))}));
     tAcc.add(field('Position (m)',vec3Editor(lt.Position,touch),null,'transform'));
-    tAcc.add(field('Rotation (deg)',vec3Editor(lt.Rotation,touch,1)));
-    tAcc.add(field('Scale',vec3Editor(lt.Scale,touch)));
+    tAcc.add(field('Rotation (degrees)',vec3Editor(lt.Rotation,touch,1),null,'rotation'));
+    tAcc.add(field('Scale',vec3Editor(lt.Scale,touch),null,'scale'));
     wrap.appendChild(tAcc);
   }
+  wrap.appendChild(simpleNote());
   return wrap;
 }
-function numField(label,limitKey,cur,setter,helpKey){return field(label,slider(limitKey,cur,v=>{setter(v);touch();}),null,helpKey);}
-function intField(label,cur,setter){return field(label,(()=>{const i=document.createElement('input');i.type='number';i.value=cur;i.addEventListener('input',()=>{const v=parseInt(i.value,10);if(!isFinite(v)){i.classList.add('invalid');return;}i.classList.remove('invalid');setter(v);refreshOutputs();});i.addEventListener('blur',()=>{if(!isFinite(parseInt(i.value,10))){i.value=cur;i.classList.remove('invalid');}});return i;})());}
+function numField(label,limitKey,cur,setter,helpKey,opts){return field(label,slider(limitKey,cur,v=>{setter(v);touch();},opts),null,helpKey);}
+/* Simple / Advanced: anything marked .adv only shows with Advanced on */
+const adv=el=>{el.classList.add('adv');return el;};
+function simpleNote(){const d=document.createElement('div');d.className='simple-note';d.innerHTML='Showing the main settings. <button type="button" class="btn tiny">Show all settings</button>';d.querySelector('button').onclick=()=>setAdvanced(true);return d;}
+function intField(label,cur,setter,helpKey){return field(label,(()=>{const i=document.createElement('input');i.type='number';i.value=cur;i.addEventListener('input',()=>{const v=parseInt(i.value,10);if(!isFinite(v)){i.classList.add('invalid');return;}i.classList.remove('invalid');setter(v);refreshOutputs();});i.addEventListener('blur',()=>{if(!isFinite(parseInt(i.value,10))){i.value=cur;i.classList.remove('invalid');}});return i;})(),null,helpKey);}
 
+const CM={scale:100};
 function buildBladeFields(wrap,cfg,reset){
-  const ms=accordion('Mesh &amp; Shape',ICON.blade,{reset:reset&&(()=>reset(['MeshSettings']))});
-  ms.add(numField('Blade radius','radius',cfg.MeshSettings.radius,v=>cfg.MeshSettings.radius=v,'radius'));
-  ms.add(numField('Z offset from','zOffsetFrom',cfg.MeshSettings.zOffsetFrom,v=>cfg.MeshSettings.zOffsetFrom=v,'zOffset'));
-  ms.add(numField('Z offset to','zOffsetTo',cfg.MeshSettings.zOffsetTo,v=>cfg.MeshSettings.zOffsetTo=v));
-  ms.add(numField('Stretch bias','stretchBias',cfg.MeshSettings.stretchBias,v=>cfg.MeshSettings.stretchBias=v,'stretchBias'));
-  const r=document.createElement('div');r.className='row';r.appendChild(intField('Vertical res',cfg.MeshSettings.verticalResolution,v=>cfg.MeshSettings.verticalResolution=v));r.appendChild(intField('Horizontal res',cfg.MeshSettings.horizontalResolution,v=>cfg.MeshSettings.horizontalResolution=v));ms.add(r);
+  const ms=accordion('Size &amp; Shape',ICON.blade,{reset:reset&&(()=>reset(['MeshSettings']))});
+  ms.add(numField('Thickness (cm)','radius',cfg.MeshSettings.radius,v=>cfg.MeshSettings.radius=v,'radius',CM));
+  ms.add(numField('Starts at (cm along the saber)','zOffsetFrom',cfg.MeshSettings.zOffsetFrom,v=>cfg.MeshSettings.zOffsetFrom=v,'zOffset',CM));
+  ms.add(numField('Ends at (cm along the saber)','zOffsetTo',cfg.MeshSettings.zOffsetTo,v=>cfg.MeshSettings.zOffsetTo=v,'zOffsetTo',CM));
+  ms.add(adv(numField('Stretch bias','stretchBias',cfg.MeshSettings.stretchBias,v=>cfg.MeshSettings.stretchBias=v,'stretchBias')));
+  const r=document.createElement('div');r.className='row adv';r.appendChild(intField('Detail along the blade',cfg.MeshSettings.verticalResolution,v=>cfg.MeshSettings.verticalResolution=v,'resolution'));r.appendChild(intField('Detail around the blade',cfg.MeshSettings.horizontalResolution,v=>cfg.MeshSettings.horizontalResolution=v,'resolution'));ms.add(r);
   wrap.appendChild(ms);
-  const mt=accordion('Material &amp; Shader',ICON.spark,{reset:reset&&(()=>reset(['MaterialSettings.metallic','MaterialSettings.roughness','MaterialSettings.fresnelPower','MaterialSettings.blurFrames','MaterialSettings.blurSensitivity','MaterialSettings.envLightIntensity','MaterialSettings.sceneReflections','MaterialSettings.sceneLights']))});
-  mt.add(numField('Metallic','metallic',cfg.MaterialSettings.metallic,v=>cfg.MaterialSettings.metallic=v,'metallic'));
-  mt.add(numField('Roughness','roughness',cfg.MaterialSettings.roughness,v=>cfg.MaterialSettings.roughness=v,'roughness'));
-  mt.add(numField('Fresnel power','fresnelPower',cfg.MaterialSettings.fresnelPower,v=>cfg.MaterialSettings.fresnelPower=v,'fresnel'));
-  mt.add(numField('Blur frames','blurFrames',cfg.MaterialSettings.blurFrames,v=>cfg.MaterialSettings.blurFrames=v,'blur'));
-  mt.add(numField('Blur sensitivity','blurSensitivity',cfg.MaterialSettings.blurSensitivity,v=>cfg.MaterialSettings.blurSensitivity=v));
-  mt.add(numField('Env light intensity','envLightIntensity',cfg.MaterialSettings.envLightIntensity,v=>cfg.MaterialSettings.envLightIntensity=v));
-  mt.add(field('',toggle(cfg.MaterialSettings.sceneReflections,'Scene reflections',v=>{cfg.MaterialSettings.sceneReflections=v;refreshOutputs();})));
-  mt.add(field('',toggle(cfg.MaterialSettings.sceneLights,'Scene lights',v=>{cfg.MaterialSettings.sceneLights=v;refreshOutputs();})));
+  const mt=accordion('Glow &amp; Surface',ICON.spark,{reset:reset&&(()=>reset(['MaterialSettings.metallic','MaterialSettings.roughness','MaterialSettings.fresnelPower','MaterialSettings.blurFrames','MaterialSettings.blurSensitivity','MaterialSettings.envLightIntensity','MaterialSettings.sceneReflections','MaterialSettings.sceneLights']))});
+  mt.add(numField('Edge glow (Fresnel)','fresnelPower',cfg.MaterialSettings.fresnelPower,v=>cfg.MaterialSettings.fresnelPower=v,'fresnel'));
+  mt.add(numField('Motion blur','blurFrames',cfg.MaterialSettings.blurFrames,v=>cfg.MaterialSettings.blurFrames=v,'blur'));
+  mt.add(adv(numField('Blur sensitivity','blurSensitivity',cfg.MaterialSettings.blurSensitivity,v=>cfg.MaterialSettings.blurSensitivity=v,'blurSensitivity')));
+  mt.add(adv(numField('Metallic','metallic',cfg.MaterialSettings.metallic,v=>cfg.MaterialSettings.metallic=v,'metallic')));
+  mt.add(adv(numField('Roughness','roughness',cfg.MaterialSettings.roughness,v=>cfg.MaterialSettings.roughness=v,'roughness')));
+  mt.add(adv(numField('Environment light','envLightIntensity',cfg.MaterialSettings.envLightIntensity,v=>cfg.MaterialSettings.envLightIntensity=v,'envLight')));
+  mt.add(adv(field('',toggle(cfg.MaterialSettings.sceneReflections,'Scene reflections',v=>{cfg.MaterialSettings.sceneReflections=v;refreshOutputs();},'sceneReflections'))));
+  mt.add(adv(field('',toggle(cfg.MaterialSettings.sceneLights,'Scene lights',v=>{cfg.MaterialSettings.sceneLights=v;refreshOutputs();},'sceneLights'))));
   wrap.appendChild(mt);
 }
 function buildTrailFields(wrap,cfg,reset){
   const ms=accordion('Trail',ICON.trail,{reset:reset&&(()=>reset(['MeshSettings','MaterialSettings.width','MaterialSettings.offset','MaterialSettings.distortionMultiplier','MaterialSettings.trailType']))});
   ms.add(numField('Trail length','trailLength',cfg.MeshSettings.TrailLength,v=>cfg.MeshSettings.TrailLength=v,'trailLength'));
-  ms.add(numField('Width','trailWidth',cfg.MaterialSettings.width,v=>cfg.MaterialSettings.width=v));
-  ms.add(numField('Offset','offset',cfg.MaterialSettings.offset,v=>cfg.MaterialSettings.offset=v));
-  ms.add(numField('Distortion','distortion',cfg.MaterialSettings.distortionMultiplier,v=>cfg.MaterialSettings.distortionMultiplier=v));
-  ms.add(field('Trail type',selectInput([{v:0,n:'Tip (0)'},{v:1,n:'Full blade (1)'}],cfg.MaterialSettings.trailType,v=>{cfg.MaterialSettings.trailType=v;touch();})));
-  ms.add(field('Blending mode',selectInput([{v:0,n:'Additive (0)'},{v:1,n:'Alpha blend (1)'},{v:2,n:'Multiply (2)'}],cfg.MaterialSettings.generalSettings.blendingMode,v=>{cfg.MaterialSettings.generalSettings.blendingMode=v;touch();}),null,'blending'));
+  ms.add(numField('Width','trailWidth',cfg.MaterialSettings.width,v=>cfg.MaterialSettings.width=v,'trailWidth'));
+  ms.add(field('Trail type',selectInput([{v:0,n:'Tip only (0)'},{v:1,n:'Full blade (1)'}],cfg.MaterialSettings.trailType,v=>{cfg.MaterialSettings.trailType=v;touch();}),null,'trailType'));
+  ms.add(field('Blending mode',selectInput([{v:0,n:'Additive glow (0)'},{v:1,n:'Normal (1)'},{v:2,n:'Multiply / darken (2)'}],cfg.MaterialSettings.generalSettings.blendingMode,v=>{cfg.MaterialSettings.generalSettings.blendingMode=v;touch();}),null,'blending'));
+  ms.add(adv(numField('Position on the blade','offset',cfg.MaterialSettings.offset,v=>cfg.MaterialSettings.offset=v,'trailOffset')));
+  ms.add(adv(numField('Distortion','distortion',cfg.MaterialSettings.distortionMultiplier,v=>cfg.MaterialSettings.distortionMultiplier=v,'distortion')));
   wrap.appendChild(ms);
 }
 function buildSparksFields(wrap,cfg,reset){
   const ms=accordion('Particles',ICON.spark,{reset:reset&&(()=>reset(['MeshSettings','MaterialSettings.trailWidth','SpawnSettings']))});
-  ms.add(numField('Particle count','particleCount',cfg.MeshSettings.ParticlesCount,v=>cfg.MeshSettings.ParticlesCount=Math.round(v),'particleCount'));
-  ms.add(numField('Trail width','trailWidth',cfg.MaterialSettings.trailWidth,v=>cfg.MaterialSettings.trailWidth=v));
-  ms.add(numField('Min lifetime','lifetimeMin',cfg.SpawnSettings.MinLifetime,v=>cfg.SpawnSettings.MinLifetime=v));
-  ms.add(numField('Max lifetime','lifetimeMax',cfg.SpawnSettings.MaxLifetime,v=>cfg.SpawnSettings.MaxLifetime=v));
-  ms.add(numField('Blade inertia','bladeInertia',cfg.SpawnSettings.BladeInertiaMultiplier,v=>cfg.SpawnSettings.BladeInertiaMultiplier=v));
+  ms.add(numField('How many sparks','particleCount',cfg.MeshSettings.ParticlesCount,v=>cfg.MeshSettings.ParticlesCount=Math.round(v),'particleCount'));
+  ms.add(numField('Shortest life (s)','lifetimeMin',cfg.SpawnSettings.MinLifetime,v=>cfg.SpawnSettings.MinLifetime=v,'lifetime'));
+  ms.add(numField('Longest life (s)','lifetimeMax',cfg.SpawnSettings.MaxLifetime,v=>cfg.SpawnSettings.MaxLifetime=v,'lifetime'));
+  ms.add(adv(numField('Streak width','trailWidth',cfg.MaterialSettings.trailWidth,v=>cfg.MaterialSettings.trailWidth=v,'sparkWidth')));
+  ms.add(adv(numField('Follow the swing','bladeInertia',cfg.SpawnSettings.BladeInertiaMultiplier,v=>cfg.SpawnSettings.BladeInertiaMultiplier=v,'bladeInertia')));
   wrap.appendChild(ms);
-  const ph=accordion('Physics',ICON.wave,{collapsed:true,reset:reset&&(()=>reset(['PhysicsSettings']))});
-  ph.add(numField('Damping','damping',cfg.PhysicsSettings.DampingCoefficient,v=>cfg.PhysicsSettings.DampingCoefficient=v));
-  ph.add(numField('Turbulence scale','turbScale',cfg.PhysicsSettings.TurbulenceScale,v=>cfg.PhysicsSettings.TurbulenceScale=v,'turbulence'));
-  ph.add(numField('Turbulence power','turbPower',cfg.PhysicsSettings.TurbulencePower,v=>cfg.PhysicsSettings.TurbulencePower=v));
-  ph.add(field('Gravity',vec3Editor(cfg.PhysicsSettings.Gravity,refreshOutputs,0.1)));
-  wrap.appendChild(ph);
-  const tr=accordion('Cut Trigger',ICON.bolt,{magenta:true,reset:reset&&(()=>reset(['TriggerSettings']))});
-  tr.add(field('Trigger type',selectInput([{v:0,n:'Continuous (0)'},{v:1,n:'On cut (1)'},{v:2,n:'On miss (2)'}],cfg.TriggerSettings.type,v=>{cfg.TriggerSettings.type=v;touch();}),null,'triggerType'));
-  tr.add(numField('Percentage','triggerPct',cfg.TriggerSettings.percentage,v=>cfg.TriggerSettings.percentage=v,'cutDirection'));
-  tr.add(numField('Period','triggerPeriod',cfg.TriggerSettings.period,v=>cfg.TriggerSettings.period=v));
-  tr.add(numField('Burst spread','burstSpread',cfg.TriggerSettings.burstSpread,v=>cfg.TriggerSettings.burstSpread=v));
+  const tr=accordion('When sparks appear',ICON.bolt,{magenta:true,reset:reset&&(()=>reset(['TriggerSettings']))});
+  tr.add(field('Trigger',selectInput([{v:0,n:'All the time (0)'},{v:1,n:'When you cut a note (1)'},{v:2,n:'When you miss (2)'}],cfg.TriggerSettings.type,v=>{cfg.TriggerSettings.type=v;touch();}),null,'triggerType'));
+  tr.add(adv(numField('Burst size','triggerPct',cfg.TriggerSettings.percentage,v=>cfg.TriggerSettings.percentage=v,'cutDirection')));
+  tr.add(adv(numField('Burst length','triggerPeriod',cfg.TriggerSettings.period,v=>cfg.TriggerSettings.period=v,'triggerPeriod')));
+  tr.add(adv(numField('Burst spread','burstSpread',cfg.TriggerSettings.burstSpread,v=>cfg.TriggerSettings.burstSpread=v,'burstSpread')));
   wrap.appendChild(tr);
+  const ph=adv(accordion('Physics',ICON.wave,{collapsed:true,reset:reset&&(()=>reset(['PhysicsSettings']))}));
+  ph.add(numField('Slow-down','damping',cfg.PhysicsSettings.DampingCoefficient,v=>cfg.PhysicsSettings.DampingCoefficient=v,'damping'));
+  ph.add(numField('Turbulence size','turbScale',cfg.PhysicsSettings.TurbulenceScale,v=>cfg.PhysicsSettings.TurbulenceScale=v,'turbulence'));
+  ph.add(numField('Turbulence strength','turbPower',cfg.PhysicsSettings.TurbulencePower,v=>cfg.PhysicsSettings.TurbulencePower=v,'turbulence'));
+  ph.add(field('Gravity',vec3Editor(cfg.PhysicsSettings.Gravity,refreshOutputs,0.1),null,'gravity'));
+  wrap.appendChild(ph);
 }
 function buildJointFields(wrap,cfg,reset){
   const js=cfg.JointSettings;if(!js||typeof js!=='object')throw new Error('no JointSettings');
   const a=accordion('Dynamic Joint',ICON.joint,{reset:reset&&(()=>reset(['JointSettings']))});
   a.add(noteBox('Everything inside this joint swings and jiggles as you move, like a dangling charm or a floppy handle. Keep the joint selected and use Add layer to put layers inside it.'));
-  a.add(numField('Spring constant','springConstant',safeNum(js.springConstant,100),v=>js.springConstant=v));
-  a.add(numField('Damping','jointDamping',safeNum(js.damping,1),v=>js.damping=v));
-  a.add(numField('Mass','jointMass',safeNum(js.mass,0.5),v=>js.mass=v));
-  if(js.angularLimit)a.add(field('Angular limit (deg)',vec3Editor(js.angularLimit,refreshOutputs,1)));
-  if(js.linearLimit)a.add(field('Linear limit (m)',vec3Editor(js.linearLimit,refreshOutputs,0.01)));
+  a.add(numField('Stiffness','springConstant',safeNum(js.springConstant,100),v=>js.springConstant=v,'springConstant'));
+  a.add(numField('Settling','jointDamping',safeNum(js.damping,1),v=>js.damping=v,'jointDamping'));
+  a.add(adv(numField('Weight','jointMass',safeNum(js.mass,0.5),v=>js.mass=v,'jointMass')));
+  if(js.angularLimit)a.add(adv(field('Swing limit (degrees)',vec3Editor(js.angularLimit,refreshOutputs,1),null,'angularLimit')));
+  if(js.linearLimit)a.add(adv(field('Slide limit (m)',vec3Editor(js.linearLimit,refreshOutputs,0.01),null,'linearLimit')));
   wrap.appendChild(a);
 }
 function buildGroupInfo(wrap,cfg,reset,m){
@@ -1956,8 +2041,12 @@ function openExportModal(){
     <div class="modal-body">
       <div class="acc"><div class="acc-head" style="cursor:default"><span class="acc-ic">${ICON.bolt}</span><span class="acc-title">Pre-export check</span></div><div class="acc-body">${checkHtml}</div></div>
       <div class="acc"><div class="acc-head" style="cursor:default"><span class="acc-ic">${ICON.blade}</span><span class="acc-title">ReeSaber preset</span></div><div class="acc-body">
-        <div class="fset-note"><b>PC:</b> put it in <code class="k">Beat Saber/UserData/ReeSabers/Presets</code><br><b>Quest:</b> put it in <code class="k">ModData/com.beatgames.beatsaber/Mods/ReeSabers/Presets</code><span data-needs-usb>, or use <b>Push to Quest</b> below to send it over USB</span>.<br><b>.json</b> carries its textures inside, so it's the only file you need on either one. <b>.reesaber</b> is a zip with <code class="k">preset.json</code> plus a <code class="k">textures/</code> folder.</div>
-        <div style="display:flex;gap:8px;flex-wrap:wrap"><button class="btn primary" id="exActive" ${p?'':'disabled'}>${ICON.bolt} Download .json</button><button class="btn" id="exBundle" ${p?'':'disabled'}>${ICON.zip} Download .reesaber</button><button class="btn" id="exAll" ${state.presets.length?'':'disabled'}>${ICON.layers} All ${state.presets.length} as .zip</button><button class="btn" id="exQuest" data-needs-usb ${p?'':'disabled'}>Push to Quest</button></div>
+        <button class="btn primary ex-main" id="exActive" ${p?'':'disabled'}>${ICON.bolt} Download for Beat Saber (.json)</button>
+        <div class="fset-note" style="margin:10px 0 0">Put the file in the Presets folder:<br><b>PC:</b> <code class="k">Beat Saber/UserData/ReeSabers/Presets</code><br><b>Quest:</b> <code class="k">ModData/com.beatgames.beatsaber/Mods/ReeSabers/Presets</code> <a href="#" id="exCopyHelp" style="color:var(--cyan)">How do I copy it to my Quest?</a><span data-needs-usb> Or send it over USB with <button type="button" class="btn tiny" id="exQuest" ${p?'':'disabled'}>Push to Quest</button></span><br>Then start Beat Saber, open the ReeSabers menu and pick “<span class="ex-name"></span>”. If it isn't listed, restart the game.</div>
+        <details class="ex-more" id="exMore"><summary>More download options</summary>
+          <div class="fset-note" style="margin:8px 0">The .json above carries its textures inside, so it's the only file you need. <b>.reesaber</b> is a zip with <code class="k">preset.json</code> plus a <code class="k">textures/</code> folder, handy for sharing textured sabers.</div>
+          <div style="display:flex;gap:8px;flex-wrap:wrap"><button class="btn" id="exBundle" ${p?'':'disabled'}>${ICON.zip} Download .reesaber</button><button class="btn" id="exAll" ${state.presets.length?'':'disabled'}>${ICON.layers} All ${state.presets.length} presets as .zip</button></div>
+        </details>
         <div class="fset-note" style="margin:10px 0 0">Saber visibility (headset, desktop, mirrors) and motion smoothing aren't part of a preset. Set those in the ReeSabers settings in game.</div>
       </div></div>
       <div class="acc"><div class="acc-head" style="cursor:default"><span class="acc-ic">${ICON.link}</span><span class="acc-title">Share</span></div><div class="acc-body">
@@ -1976,6 +2065,9 @@ function openExportModal(){
       </div></div>
     </div>`);
   $('#exX',m).onclick=closeModal;
+  const en=$('.ex-name',m);if(en)en.textContent=p?p.name:'your preset';
+  $('#exCopyHelp',m).onclick=e=>{e.preventDefault();openGuide('copy','export');};
+  $('#exMore',m).addEventListener('toggle',e=>{if(e.target.open)T('export-more-open',true);});
   const gate=fn=>{if(!p)return;if(errs.length){confirmModal('Export with errors?',errs.length+' blocking issue(s) were found. The file may not load correctly in ReeSabers. Export anyway?',()=>fn(),'Export anyway');}else{fn();closeModal();}};
   $('#exActive',m).onclick=()=>gate(()=>{downloadJSON(buildPresetExport(p),slug(p.name)+'.json');toast('Preset exported');T('export-json');});
   $('#exBundle',m).onclick=()=>gate(()=>{downloadBlob(zipStore(buildBundleFiles(p)),slug(p.name)+'.reesaber');toast('.reesaber bundle exported');T('export-reesaber');});
@@ -2133,14 +2225,49 @@ function openDriverTestInfo(){
   const m=openModal(`<div class="modal-head"><h3>Driver test preset</h3><span class="spacer" style="flex:1"></span><button class="btn ghost icon" id="dtX" aria-label="Close">${ICON.x}</button></div><div class="modal-body"><p class="explain-sum"></p><p class="fset-note">ReeSabers stores drivers as numbers and doesn't publish which number is which game value, so Studio's names are guesses. This preset lets you see for yourself. If you work one out, <a href="https://github.com/Spanky3651/ReeSaber-Studio/issues" target="_blank" rel="noopener" style="color:var(--cyan)">open an issue on GitHub</a> so Studio can drop the guess labels.</p></div><div class="modal-foot"><button class="btn primary" id="dtOk">Got it</button></div>`);
   $('.explain-sum',m).textContent=driverTestHelp();$('#dtX',m).onclick=closeModal;$('#dtOk',m).onclick=closeModal;
 }
+/* ---- "New to ReeSabers?" guide ---- */
+const WIKI_START='https://beatleader.wiki/en/reesabers/start',WIKI_INSTALL='https://beatleader.wiki/en/reesabers/support';
+function openGuide(section,src){
+  T('guide-open',true);if(src)T('guide-from-'+src,true);
+  const a=(h,t)=>'<a href="'+h+'" target="_blank" rel="noopener">'+t+'</a>';
+  const m=openModal(`<div class="modal-head"><h3>New to ReeSabers?</h3><span class="spacer" style="flex:1"></span><button class="btn ghost icon" id="guX" aria-label="Close">${ICON.x}</button></div>
+  <div class="modal-body guide">
+    <h4>What it is</h4>
+    <p><b>ReeSabers</b> is a saber mod for Beat Saber, made by Reezonate and released through BeatLeader. A ReeSabers saber is built from layers (blades, trails, sparks) saved in a <b>preset</b> file. Studio makes and edits those preset files. It isn't the mod itself, so you need ReeSabers installed to use them.</p>
+    <h4>Getting ReeSabers</h4>
+    <ul>
+      <li>Downloading it needs an active <b>BeatLeader supporter subscription</b> on Patreon or Boosty, linked to your BeatLeader account. If the subscription ends, you can keep using the version you have.</li>
+      <li>It runs on <b>PC</b> and <b>Quest</b>, on specific game versions. Check the supported versions before you update the game.</li>
+      <li><b>PC:</b> unzip the download and drag its <code class="k">Plugins</code> and <code class="k">UserData</code> folders into your Beat Saber folder. <b>Quest:</b> install the <code class="k">.qmod</code> with your mod manager (for example ModsBeforeFriday). BeatLeader has to be installed either way.</li>
+    </ul>
+    <p>${a(WIKI_INSTALL,'Full install guide on the BeatLeader wiki')} · ${a(WIKI_START,'What ReeSabers can do')}</p>
+    <h4>Not the same as Custom Sabers</h4>
+    <p><code class="k">.saber</code> files belong to a different mod (Custom Sabers / Saber Factory). ReeSabers can't load them and Studio can't convert them, but you can rebuild a look you like with ReeSabers layers.</p>
+    <h4>Using a preset you made here</h4>
+    <ol>
+      <li>Click <b>Export</b>, then <b>Download for Beat Saber (.json)</b>. That one file has everything, textures included.</li>
+      <li>Put it in the Presets folder:<br><b>PC:</b> <code class="k">Beat Saber/UserData/ReeSabers/Presets</code><br><b>Quest:</b> <code class="k">ModData/com.beatgames.beatsaber/Mods/ReeSabers/Presets</code> (see below)</li>
+      <li>Start Beat Saber, open the ReeSabers menu and pick the preset by its name. If it isn't listed, restart the game.</li>
+    </ol>
+    <h4 id="guideCopy">Copying a file to your Quest</h4>
+    <p><b>With File Explorer (Windows):</b> plug the Quest into your PC, put the headset on and allow access to files when it asks. In File Explorer open <b>Quest › Internal shared storage › ModData › com.beatgames.beatsaber › Mods › ReeSabers › Presets</b> and drop the .json in.</p>
+    <p><b>With SideQuest:</b> connect the headset, open SideQuest's file manager (the folder icon), go to the same folder and drag the file in.</p>
+    <p data-needs-usb><b>With Studio:</b> in Chrome or Edge on a computer, the <b>Quest</b> button at the top can open the presets on your headset and push changes back over USB.</p>
+    <p class="fset-note">The Presets folder appears after you've started Beat Saber once with ReeSabers installed.</p>
+  </div>
+  <div class="modal-foot"><button class="btn ghost" id="guGal">Start from a community saber</button><button class="btn primary" id="guOk">Got it</button></div>`);
+  $('#guX',m).onclick=closeModal;$('#guOk',m).onclick=closeModal;$('#guGal',m).onclick=()=>{closeModal();openGalleryModal();T('gallery-browse');};
+  if(section==='copy'){const h=$('#guideCopy',m);if(h&&h.scrollIntoView)setTimeout(()=>h.scrollIntoView({block:'start'}),30);}
+}
 function renderStarterMenu(){
   const menu=$('#newDdMenu');menu.innerHTML='';
+  const g0=document.createElement('div');g0.className='dd-item dd-gallery dd-feature';g0.innerHTML='<b>Start from a community saber</b><span>Open one from the gallery and make it yours</span>';g0.onclick=()=>{$('#newDd').classList.remove('open');openGalleryModal();T('gallery-browse');};menu.appendChild(g0);
+  const sep=document.createElement('div');sep.className='dd-sep';sep.textContent='Templates';menu.appendChild(sep);
   Object.entries(STARTERS).forEach(([k,s])=>{
     const it=document.createElement('div');it.className='dd-item';it.innerHTML=`<b>${s.label}</b><span>${s.desc}</span>`;
     it.onclick=()=>{const p=s.build();state.presets.push(p);$('#newDd').classList.remove('open');selectPreset(p.id);toast(s.label+' created');T('starter-'+k);if(k==='drivers')openDriverTestInfo();};
     menu.appendChild(it);
   });
-  const g=document.createElement('div');g.className='dd-item dd-gallery';g.innerHTML='<b>Browse the gallery…</b><span>Open a community preset</span>';g.onclick=()=>{$('#newDd').classList.remove('open');openGalleryModal();T('gallery-browse');};menu.appendChild(g);
 }
 
 /* ===================================================================== */
@@ -2297,7 +2424,7 @@ function mappingEditor(mp,opts){
   if(opts.range){
     const row=document.createElement('div');row.className='row';
     row.appendChild(field('Value from',numBox(safeNum(mp.valueFrom,0),0.1,v=>{mp.valueFrom=v;fire(true);},'Value from'),null,'valueRange'));
-    row.appendChild(field('Value to',numBox(safeNum(mp.valueTo,1),0.1,v=>{mp.valueTo=v;fire(true);},'Value to')));
+    row.appendChild(field('Value to',numBox(safeNum(mp.valueTo,1),0.1,v=>{mp.valueTo=v;fire(true);},'Value to'),null,'valueRange'));
     wrap.appendChild(row);
   }
   const part=(key,label,make,builder,help)=>{
@@ -2308,7 +2435,7 @@ function mappingEditor(mp,opts){
   };
   part('colorOverValue','Color',()=>COLORCURVE1(clone(WHITE)),c=>gradientEditor(c,{label:'Color',onChange:ch=>{if(ch)T('gradient-edit',true);fire(ch);}}),'gradient');
   part('alphaOverValue','Alpha',()=>CURVE1(1),c=>curveEditor(c,{min:0,max:1,label:'Alpha',def:1,onChange:fire}),'curve');
-  part('scaleOverValue','Scale',()=>CURVE1(1),c=>curveEditor(c,{min:0,max:1.5,label:'Scale',def:1,onChange:fire}),null);
+  part('scaleOverValue','Scale',()=>CURVE1(1),c=>curveEditor(c,{min:0,max:1.5,label:'Scale',def:1,onChange:fire}),'scaleCurve');
   return wrap;
 }
 /* touch() on release, a lighter preview refresh while dragging */
@@ -2321,7 +2448,7 @@ function buildShapeAndMappings(wrap,m){
     if((ms.saberProfile&&typeof ms.saberProfile==='object')||(mk.handleMask&&typeof mk.handleMask==='object')){
       const a=accordion('Blade Shape Curves',ICON.blade,{collapsed:true});
       if(ms.saberProfile&&typeof ms.saberProfile==='object')a.add(field('Blade profile (thickness from base to tip)',curveEditor(ms.saberProfile,{min:0,max:1,label:'Blade profile',def:1,onChange:curveChanged}),'Shapes the blade outline. Time runs from the start of the blade (left) to the tip (right).','curve'));
-      if(mk.handleMask&&typeof mk.handleMask==='object')a.add(field('Handle mask',curveEditor(mk.handleMask,{min:0,max:1,label:'Handle mask',def:0,onChange:curveChanged}),'Masks the blade near the handle.'));
+      if(mk.handleMask&&typeof mk.handleMask==='object')a.add(adv(field('Handle mask',curveEditor(mk.handleMask,{min:0,max:1,label:'Handle mask',def:0,onChange:curveChanged}),'Masks the blade near the handle.','handleMask')));
       wrap.appendChild(a);
     }
   }
@@ -2352,7 +2479,7 @@ function buildDriversForm(){
   if(!m){wrap.innerHTML='<div class="placeholder-note">'+ICON.bolt+'<br>Select a module, then attach drivers to modulate its properties in real-time from gameplay events.</div>';return wrap;}
   if(!driverPathFor(m)){wrap.innerHTML='<div class="placeholder-note">'+ICON.bolt+'<br>This layer type has no drivers. Drivers live on Blade, Trail and Sparks layers.</div>';return wrap;}
   const intro=document.createElement('div');intro.className='fset-note';intro.style.marginBottom='14px';
-  intro.innerHTML=`A driver ${helpIcon('driver')} maps a live game value onto this layer's color, alpha and scale. Drag the <b>Driver value</b> slider under the 3D preview to test it.`;
+  intro.innerHTML=`A driver ${helpIcon('driver')} makes this layer react to the game, changing its color, brightness or size. Drag the <b>Driver</b> slider under the 3D preview to test it. ReeSabers stores the value source as a number and doesn't publish which number is which, so the names are Studio's best guesses.`;
   wrap.appendChild(intro);
   const cal=document.createElement('button');cal.type='button';cal.className='btn sm ghost';cal.style.cssText='margin:-6px 0 12px';cal.textContent='Not sure which number is which? Make a driver test preset';
   cal.onclick=()=>{const p=buildDriverTestPreset();state.presets.push(p);selectPreset(p.id);T('starter-drivers');openDriverTestInfo();};wrap.appendChild(cal);
@@ -2376,11 +2503,11 @@ function buildDriversForm(){
     const opts=DRIVER_SOURCES.map(s=>({v:s.v,n:s.v+' · '+s.name}));if(!DRIVER_SOURCES.some(s=>s.v===vt))opts.push({v:vt,n:vt+' · imported type'});
     const typeBox=numBox(vt,1,v=>{d.valueType=Math.max(0,Math.trunc(v));head.querySelector('.dh-title').textContent=sourceName(d.valueType);renderStack();touch();},'Driver type number');
     src.appendChild(field('Value source',selectInput(opts,vt,v=>{d.valueType=v;renderInspector();renderStack();touch();}),null,'valueSource'));
-    const tf=field('Type #',typeBox);tf.style.maxWidth='96px';src.appendChild(tf);
+    const tf=field('Type #',typeBox,null,'valueSource');tf.style.maxWidth='110px';src.appendChild(tf);
     b.appendChild(src);
     const res=document.createElement('div');res.className='row';
     res.appendChild(field('Rise resist',slider('resistance',safeNum(d.increaseResistance,0),v=>{d.increaseResistance=v;refreshOutputs();}),null,'resistance'));
-    res.appendChild(field('Fall resist',slider('resistance',safeNum(d.decreaseResistance,0),v=>{d.decreaseResistance=v;refreshOutputs();})));
+    res.appendChild(field('Fall resist',slider('resistance',safeNum(d.decreaseResistance,0),v=>{d.decreaseResistance=v;refreshOutputs();}),null,'resistance'));
     b.appendChild(res);
     if(d.mappings&&typeof d.mappings==='object')b.appendChild(mappingEditor(d.mappings,{range:true,onChange:curveChanged}));
     else{const ab=document.createElement('button');ab.className='btn sm';ab.textContent='+ Add response curves';ab.onclick=()=>{d.mappings={colorOverValue:COLORCURVE1(clone(WHITE)),alphaOverValue:CURVE1(1),scaleOverValue:CURVE1(1),valueFrom:0,valueTo:1};renderInspector();touch();};b.appendChild(ab);}
@@ -2882,7 +3009,8 @@ function stepSaber(sb,dt,t,dv){
     e.geo.attributes.position.array.set(P);e.geo.attributes.position.needsUpdate=true;
   });
 }
-function updatePreviewFoot(){const p=activePreset();$('#pvPreset').textContent=p?p.name:'-';$('#pvMods').textContent=p?allModules(p).filter(m=>m.enabled).length:0;}
+function updateDriverRow(){const r=$('#pvDriverRow');if(!r)return;const p=activePreset();r.hidden=!(p&&allModules(p).some(m=>m.enabled&&activeDrivers(m).length));}
+function updatePreviewFoot(){updateDriverRow();const p=activePreset();$('#pvPreset').textContent=p?p.name:'-';$('#pvMods').textContent=p?allModules(p).filter(m=>m.enabled).length:0;}
 
 /* ===================================================================== */
 /*  CAPTURE: transparent PNG + showcase GIF                               */
@@ -3442,7 +3570,7 @@ function buildComboField(p){
     const n=document.createElement('span');n.textContent=q.name;l.append(cb,n);box.appendChild(l);});
   wrap.appendChild(field('Show together with',box,'ReeSabers can combine presets on one saber. Tick the ones to stack on top of this one in the preview.','combine'));
   const opts=[{v:'',n:'This preset'}].concat(others.map(q=>({v:q.id,n:q.name})));
-  wrap.appendChild(field('Left hand shows',strSelect(opts,p.preview.leftId||'',v=>{p.preview.leftId=v;if(v&&!p.hands.L)p.hands.L=true;T('preview-left-preset',true);renderInspector();touch();}),'Preview a different preset in the left hand, the way you can assign one per hand in game.'));
+  wrap.appendChild(field('Left hand shows',strSelect(opts,p.preview.leftId||'',v=>{p.preview.leftId=v;if(v&&!p.hands.L)p.hands.L=true;T('preview-left-preset',true);renderInspector();touch();}),'Preview a different preset in the left hand, the way you can assign one per hand in game.','combine'));
   return wrap;
 }
 
@@ -3675,7 +3803,7 @@ function wirePreviewBar(){
 }
 function setExpanded(on){
   document.body.classList.toggle('pv-full',on);const ex=$('#btnExpand');
-  if(ex){ex.setAttribute('aria-pressed',on?'true':'false');const sp=ex.querySelector('span');if(sp)sp.textContent=on?'Exit':'Expand';}
+  if(ex){ex.setAttribute('aria-pressed',on?'true':'false');ex.title=on?'Exit the expanded preview (Esc)':'Expand the preview (Esc to exit)';}
   if(on){selectRightTab('preview');T('preview-expand',true);}
   setTimeout(()=>{resizeThree();frameCamera(false);},40);
 }
@@ -3715,12 +3843,15 @@ const HAS_THREE=(typeof THREE!=='undefined');
 
 $('#btnNewPreset').onclick=e=>{const dd=$('#newDd');closeAddMenu();dd.classList.toggle('open');e.stopPropagation();};
 $('#btnAddLayer').onclick=e=>{const dd=$('#addDd');$('#newDd').classList.remove('open');const o=dd.classList.toggle('open');$('#btnAddLayer').setAttribute('aria-expanded',o?'true':'false');if(o)T('add-menu-open',true);e.stopPropagation();};
-document.addEventListener('click',e=>{if(!e.target.closest('#newDd'))$('#newDd').classList.remove('open');if(!e.target.closest('#addDd'))closeAddMenu();});
+$('#btnViewMenu').onclick=e=>{const dd=$('#pvViewDd');const o=dd.classList.toggle('open');$('#btnViewMenu').setAttribute('aria-expanded',o?'true':'false');if(o)T('view-menu-open',true);e.stopPropagation();};
+document.addEventListener('click',e=>{if(!e.target.closest('#newDd'))$('#newDd').classList.remove('open');if(!e.target.closest('#addDd'))closeAddMenu();if(!e.target.closest('#pvViewDd')){$('#pvViewDd').classList.remove('open');$('#btnViewMenu').setAttribute('aria-expanded','false');}});
 $('#btnExport').onclick=openExportModal;
 $('#btnImport').onclick=openImportModal;
 $('#btnQuest').onclick=openQuestModal;
 if(!window.QUEST_USB){const wc=$('#whatsnewTitle')&&$('#whatsnewTitle').parentElement.querySelector('.wn-chip');if(wc)wc.textContent=wc.textContent.replace(/\d+/,n=>String(n-$$('.wn-item[data-needs-usb]').length));}
 $('#btnAssets').onclick=openAssetModal;
+$('#btnGuide').onclick=()=>openGuide('','header');
+$('#qsNew').onclick=e=>{e.preventDefault();e.stopPropagation();openGuide('','quickstart');};
 $('#qsHead').onclick=()=>{const c=$('#quickstart').classList.toggle('collapsed');T(c?'quickstart-close':'quickstart-open',true);try{localStorage.setItem('ree_qs_collapsed',c?'1':'0');}catch(e){}};
 $$('#inspTabs .insp-tab').forEach(tb=>tb.onclick=()=>{state.activeTab=tb.dataset.tab;renderInspector();});
 $$('#rcTabs .rc-tab').forEach(tb=>tb.onclick=()=>{selectRightTab(tb.dataset.rc);T('tab-'+tb.dataset.rc,true);});
@@ -3774,6 +3905,7 @@ function seed(){
   driversOf(p.modules.find(m=>m.kind==='trail'),true).push(makeDriver({valueType:1,valueFrom:0,valueTo:1,increaseResistance:0.1,decreaseResistance:0.2,alpha0:0.2,alpha1:1,scale0:0.8,scale1:1.2,color:'#1e6bff',interp:1}));
   state.presets.push(p);state.activePresetId=p.id;
 }
+initAdvanced();
 renderStarterMenu();
 seed();
 renderPalette();
@@ -3790,10 +3922,10 @@ restoreAutosave().then(async had=>{histReset();updateHistButtons();await openSha
 /* ===================================================================== */
 /*  WHAT'S NEW (shown once to returning visitors)                         */
 /* ===================================================================== */
-const WHATSNEW_KEY='reeStudio.whatsnew.v2';
+const WHATSNEW_KEY='reeStudio.whatsnew.v3';
 function maybeWhatsNew(hadAutosave){
   let seen=null,returning=!!hadAutosave;
-  try{seen=localStorage.getItem(WHATSNEW_KEY);if(localStorage.getItem('ree_qs_collapsed')!==null||localStorage.getItem('ree_folder_auto')!==null||localStorage.getItem('reeStudio.whatsnew.v1')!==null)returning=true;}catch(e){return;}
+  try{seen=localStorage.getItem(WHATSNEW_KEY);if(localStorage.getItem('ree_qs_collapsed')!==null||localStorage.getItem('ree_folder_auto')!==null||localStorage.getItem('reeStudio.whatsnew.v1')!==null||localStorage.getItem('reeStudio.whatsnew.v2')!==null)returning=true;}catch(e){return;}
   if(seen)return;
   /* first-time visitors get the Quick Start instead; remember so they only see future updates */
   if(!returning){try{localStorage.setItem(WHATSNEW_KEY,'1');}catch(e){}return;}
@@ -3950,7 +4082,7 @@ function routeDroppedFiles(files){
      Dashboard: https://reesaberstudio.goatcounter.com/  (log in there to view stats).
      Counts page views automatically; the app also sends custom feature events under app/
      via window.goatcounter.count(). Repeat-heavy actions are counted once per visit (*).
-       Header:   export, import, assets, new-preset, quest-open*
+       Header:   export, import, assets, new-preset, guide-open*, guide-from-<header|quickstart|export>*, quest-open*
        Building: starter-<name> (incl. starter-drivers), module-<type>, snippet-<name>, add-menu-open*,
                  layer-duplicate*, layer-copy*, layer-paste*, layer-drag*, layer-solo*, layer-move-in*,
                  layer-move-out*, curve-edit*, gradient-edit*, driver-add, driver-delete*, undo*, redo*,
@@ -3968,6 +4100,7 @@ function routeDroppedFiles(files){
        Quest:    quest-open*, quest-connect, quest-auth-wait, quest-no-answer, quest-cancel, quest-load, quest-push, quest-diag*,
                  quest-picker-cancel, quest-error-<not-approved|no-answer|busy|blocked|connect|no-folder*|load|push>
        Sharing:  share-link, share-open, gallery-browse, gallery-open, gallery-submit-link, open-src
+       Views:    advanced-on*, advanced-off*, view-menu-open*, export-more-open*
        Other:    quickstart-open*, quickstart-close*, whatsnew-shown, whatsnew-close
 ============================================================================ -->
 <script data-goatcounter="https://reesaberstudio.goatcounter.com/count"
