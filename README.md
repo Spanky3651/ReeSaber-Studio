@@ -46,6 +46,8 @@ The ReeSabers in-game Preset Editor only runs on PC, so Studio is also the way t
 
 Nothing to install. Open the [live app](https://spanky3651.github.io/ReeSaber-Studio/), or download [`index.html`](index.html) and open it in a modern browser (Chrome, Edge, Firefox). An internet connection is only needed for the 3D preview (Three.js loads from a CDN); editing, import, export, validation and Quest over USB work offline.
 
+**Install it like an app.** In Chrome or Edge, choose **Install app** from the menu (on iPhone, **Add to Home Screen** in Safari). It gets its own icon and opens in its own window. On a computer, ReeSaber Studio links you click (share links and gallery links) open in that window, and you can double-click a `.json` or `.reesaber` preset to open it in Studio (Chrome asks the first time; it also shows up under **Open with** for those files). Links and files go to the window that's already open, so you never end up with two Studios autosaving over each other.
+
 ---
 
 ## How to use it
@@ -126,6 +128,8 @@ Curve interpolation types are also numbers. The preview draws 0 as linear, 1 as 
 ```
 ReeSaber-Studio/
 ├── index.html        # the whole app (served by GitHub Pages)
+├── manifest.webmanifest   # makes it installable as an app (one window, opens .json / .reesaber files)
+├── icons/            # app icons
 ├── gallery/          # community presets: index.json, preset files and thumbnails
 ├── .github/ISSUE_TEMPLATE/
 │   └── gallery-submission.yml   # the "submit a preset" form
