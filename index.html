@@ -270,7 +270,8 @@
   .rc-tab.active{color:var(--cyan);border-bottom-color:var(--cyan)}
   .rc-tab .dotwarn{width:7px;height:7px;border-radius:50%;background:var(--amber);box-shadow:0 0 6px var(--amber)}
   .rc-tab .doterr{width:7px;height:7px;border-radius:50%;background:var(--red);box-shadow:0 0 6px var(--red)}
-  .rc-pane{flex:1;min-height:0;display:none;flex-direction:column}
+  .rc-pane{flex:1;min-height:0;display:none;flex-direction:column;position:relative}
+  .pv-pick-tip{position:absolute;z-index:5;pointer-events:none;padding:5px 9px;border-radius:7px;background:rgba(4,6,10,.92);border:1px solid var(--line-2);color:var(--txt);font-size:12px;font-weight:600;white-space:nowrap;box-shadow:0 4px 14px rgba(0,0,0,.5)}
   .rc-pane.active{display:flex}
   .preview-ctrls{display:flex;gap:6px;padding:8px 12px;border-bottom:1px solid var(--line);flex-wrap:wrap;align-items:center}
   .mini-toggle{font-size:11px;font-weight:600;padding:4px 9px;border-radius:6px;border:1px solid var(--line-2);background:var(--panel-2);color:var(--txt-dim);cursor:pointer}
@@ -888,6 +889,7 @@ body.blocks-on .quickstart{background:linear-gradient(90deg,rgba(12,22,34,.82),r
                 <div class="mini-toggle on" data-pv="spin">Auto-spin</div>
                 <div class="mini-toggle on" data-pv="trail">Trail</div>
                 <div class="mini-toggle on" data-pv="glow">Glow</div>
+                <div class="mini-toggle on" data-pv="bloom" title="Soft light bleed around bright parts, like the in-game glow. Not used on Bright room. Heavier on phones, so it starts off there.">Bloom</div>
                 <div class="mini-toggle on" data-pv="hilt" title="Show a stock handle (turn off if your preset builds its own)">Hilt</div>
                 <div class="mini-toggle on" data-pv="driveScore" title="Pulse driver values automatically">Sim driver</div>
                 <div class="mini-toggle" data-pv="note" title="Show a note block beside the saber for scale (approximate size)">Note</div>
@@ -911,7 +913,7 @@ body.blocks-on .quickstart{background:linear-gradient(90deg,rgba(12,22,34,.82),r
         <div class="preview-foot">
           <span><b>Preset:</b> <span id="pvPreset">-</span></span>
           <span><b>Modules:</b> <span id="pvMods">0</span></span>
-          <span><b>Drag</b> orbit · <b>scroll</b> zoom</span>
+          <span><b>Drag</b> orbit · <b>scroll</b> zoom · <b>click</b> a part to edit it</span>
         </div>
       </div>
       <!-- json pane -->
@@ -940,7 +942,7 @@ body.blocks-on .quickstart{background:linear-gradient(90deg,rgba(12,22,34,.82),r
     </a>
   </div>
   <div class="nf-strip">
-    <div class="nf-sl"><span class="nf-map">Runs in your browser</span><span class="nf-dot">&middot;</span><span class="nf-upd" id="footUpdated" data-updated="2026-11-03T16:00Z">Updated recently</span></div>
+    <div class="nf-sl"><span class="nf-map">Runs in your browser</span><span class="nf-dot">&middot;</span><span class="nf-upd" id="footUpdated" data-updated="2026-11-06T00:57Z">Updated recently</span></div>
     <div class="nf-sr"><div class="foot-count" id="footCount" hidden></div><span class="nf-btns"><a class="src-badge nf-btn nf-src" data-gc="github-click" href="https://github.com/Spanky3651/ReeSaber-Studio" target="_blank" rel="noopener" title="Source code on GitHub"><svg viewBox="0 0 24 24" width="15" height="15" fill="#fff"><path d="M12 .5C5.73.5.5 5.73.5 12a11.5 11.5 0 0 0 7.86 10.92c.575.106.785-.25.785-.556 0-.274-.01-1-.015-1.965-3.196.695-3.87-1.54-3.87-1.54-.523-1.33-1.277-1.684-1.277-1.684-1.044-.714.08-.699.08-.699 1.155.081 1.763 1.186 1.763 1.186 1.026 1.758 2.693 1.25 3.35.955.104-.744.402-1.25.73-1.538-2.552-.29-5.235-1.276-5.235-5.68 0-1.255.448-2.28 1.183-3.084-.119-.29-.513-1.46.112-3.043 0 0 .965-.309 3.163 1.178a10.98 10.98 0 0 1 2.88-.387c.977.004 1.96.132 2.88.387 2.196-1.487 3.16-1.178 3.16-1.178.626 1.583.232 2.753.114 3.043.737.804 1.182 1.829 1.182 3.084 0 4.415-2.687 5.386-5.247 5.67.413.355.78 1.056.78 2.13 0 1.538-.014 2.778-.014 3.157 0 .308.207.667.79.554A11.5 11.5 0 0 0 23.5 12C23.5 5.73 18.27.5 12 .5Z"/></svg>Source</a> <a class="kofi-support nf-btn nf-kofi" data-gc="kofi-click" href="https://ko-fi.com/msploit21?utm_source=reesaber-studio&amp;utm_medium=support-button" target="_blank" rel="noopener" title="Support MSploit on Ko-fi"><span class="kofi-heart">❤️</span>Support me</a></span><span class="nf-vr"></span><button type="button" class="fxsw" id="blocksSw" role="switch" aria-checked="false"><span class="fxsw-track"><span class="fxsw-knob"><svg viewBox="0 0 20 20" aria-hidden="true"><rect width="20" height="20" rx="5" class="k-body"/><path d="M3.3 3.3h13.4v1.9L10 8.3 3.3 5.2z" class="k-arrow"/></svg></span></span><span>Falling blocks</span></button></div>
   </div>
 </footer>
@@ -982,9 +984,22 @@ body.blocks-on .quickstart{background:linear-gradient(90deg,rgba(12,22,34,.82),r
 <div class="drop-overlay" id="dropOverlay" aria-hidden="true"><div><b>Drop to import</b><span>.reesaber · .json preset or project · .zip · textures and models</span></div></div>
 <div class="toast" id="toast"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg><span id="toastMsg"></span></div>
 
-<script src="https://cdn.jsdelivr.net/npm/three@0.128.0/build/three.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/loaders/OBJLoader.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/loaders/GLTFLoader.js"></script>
+<!-- Three.js r180 for the 3D preview. Current releases only ship as ES modules, so a module script loads it from the CDN
+     and hands it to the page as window.THREE, then fires "three-ready" (it runs after the main script, see startThree).
+     Color management is off so colors pass straight through, the same as the r128 build the preview was tuned on. -->
+<script type="importmap">{"imports":{"three":"https://cdn.jsdelivr.net/npm/three@0.180.0/build/three.module.min.js","three/addons/":"https://cdn.jsdelivr.net/npm/three@0.180.0/examples/jsm/"}}</script>
+<script type="module">
+import * as T3 from 'three';
+import {OBJLoader} from 'three/addons/loaders/OBJLoader.js';
+import {GLTFLoader} from 'three/addons/loaders/GLTFLoader.js';
+import {EffectComposer} from 'three/addons/postprocessing/EffectComposer.js';
+import {RenderPass} from 'three/addons/postprocessing/RenderPass.js';
+import {UnrealBloomPass} from 'three/addons/postprocessing/UnrealBloomPass.js';
+import {OutputPass} from 'three/addons/postprocessing/OutputPass.js';
+T3.ColorManagement.enabled=false;
+window.THREE=Object.assign({},T3,{OBJLoader,GLTFLoader,EffectComposer,RenderPass,UnrealBloomPass,OutputPass});
+window.dispatchEvent(new Event('three-ready'));
+</script>
 <!-- ADB over WebUSB for Quest over USB: ya-webadb / Tango by Simon Chan (MIT License, github.com/yume-chan/ya-webadb).
      Built into the page as one bundle (adb 2.6.4, adb-daemon-webusb 2.3.2, adb-credential-web 2.1.0), the same one
      HSV Config Generator uses. Loading the pieces separately from a CDN mixed versions and the headset never connected.
@@ -1179,7 +1194,7 @@ const state={
   assets:[], // {id,name,kind,ext,dataURL,size, _obj, _tex}
   global:{visibility:{headset:true,desktop:true,mirror:true},motionSmoothing:{enabled:false,amount:0.5},menuPointer:true}
 };
-const pv={spin:true,swing:false,trail:true,glow:true,hilt:true,both:false,driveScore:true,note:false,compare:false,backdrop:'dark',scheme:'preset',view:'orbit',scrub:0.5};
+const pv={spin:true,swing:false,trail:true,glow:true,bloom:!(window.matchMedia&&matchMedia('(pointer:coarse)').matches&&matchMedia('(max-width:1100px)').matches),hilt:true,both:false,driveScore:true,note:false,compare:false,backdrop:'dark',scheme:'preset',view:'orbit',scrub:0.5};
 
 function newModule(moduleId){const t=TEMPLATES[moduleId];return{uid:uid(),moduleId,version:t.version,name:t.config.Name,enabled:true,kind:t.kind,config:clone(t.config),customMeshId:'',children:[]};}
 function nextPresetName(){const names=new Set(state.presets.map(p=>p.name));let n=1;while(names.has('Preset '+n))n++;return 'Preset '+n;}
@@ -2817,24 +2832,31 @@ function renderSnippets(){
 /*  Layers are built in ReeSabers space (blade runs along +z, metres) under*/
 /*  a root rotated so +z points up the screen.                            */
 /* ===================================================================== */
-let renderer,scene,camera,animReq,clock,gridHelper;
+let renderer,scene,camera,animReq,clock,gridHelper,composer;
 let orbit={az:0.6,el:0.2,dist:3.4,drag:false,px:0,py:0,tx:0,ty:0.45,tz:0};
 let noteObj=null,lastFrameKey='';
 let sabers=[];let simTime=0;
 const CAPTURE={active:false};
 const SCHEMES={preset:{n:'Preset colors'},redblue:{n:'Red / Blue',L:'#ff1e3c',R:'#1e6bff'},pinkcyan:{n:'Pink / Cyan',L:'#ff3fb4',R:'#21e6ff'},orangepurple:{n:'Orange / Purple',L:'#ff8a1e',R:'#8a3dff'},greengold:{n:'Green / Gold',L:'#2bdc5a',R:'#ffc23d'},mono:{n:'White / Grey',L:'#ffffff',R:'#8a8f98'},dark:{n:'Dark colors (stress test)',L:'#3a1414',R:'#14213a'}};
 const BACKDROPS={dark:{n:'Dark arena',bg:null,fog:0x000000,grid:[0x0a2530,0x08141a]},bright:{n:'Bright room',bg:0xc9d1dc,fog:0xc9d1dc,grid:[0x7f8b9e,0xa4aebd]},neon:{n:'Neon stage',bg:0x12041f,fog:0x12041f,grid:[0x6a1fa0,0x2e0d4a]}};
+/* Renderers pass colors straight through (no sRGB conversion), matching the r128 look the preview was tuned on. */
+function newRenderer(o){const r=new THREE.WebGLRenderer(o);r.outputColorSpace=THREE.LinearSRGBColorSpace;return r;}
 function initThree(){
   const canvas=$('#glcanvas');
-  renderer=new THREE.WebGLRenderer({canvas,antialias:true,alpha:true});renderer.setPixelRatio(Math.min(devicePixelRatio,2));
+  renderer=newRenderer({canvas,antialias:true,alpha:true});renderer.setPixelRatio(Math.min(devicePixelRatio,2));
   scene=new THREE.Scene();
   camera=new THREE.PerspectiveCamera(50,1,0.1,100);clock=new THREE.Clock();
-  scene.add(new THREE.AmbientLight(0x445566,0.7));
-  const key=new THREE.PointLight(0x88ccff,0.9,25);key.position.set(3,4,3);scene.add(key);
+  /* r155+ lights are physical: intensities are scaled by PI and the key light's falloff (about 0.77 at the saber) baked in,
+     so lit parts (hilts, solid grips, models, the note) look the same as before */
+  scene.add(new THREE.AmbientLight(0x445566,0.7*Math.PI));
+  const key=new THREE.PointLight(0x88ccff,0.9*0.77*Math.PI,25,0);key.position.set(3,4,3);scene.add(key);
   applyBackdrop();
-  canvas.addEventListener('pointerdown',e=>{orbit.drag=true;orbit.px=e.clientX;orbit.py=e.clientY;try{canvas.setPointerCapture(e.pointerId);}catch(_){}});
-  canvas.addEventListener('pointermove',e=>{if(!orbit.drag)return;orbit.az+=(e.clientX-orbit.px)*0.008;orbit.el=clamp(orbit.el+(e.clientY-orbit.py)*0.008,-1.2,1.2);orbit.px=e.clientX;orbit.py=e.clientY;});
-  canvas.addEventListener('pointerup',()=>orbit.drag=false);
+  composer=makeComposer(renderer,camera);
+  canvas.addEventListener('pointerdown',e=>{orbit.drag=true;orbit.px=e.clientX;orbit.py=e.clientY;PICK.down=e.button===0?{x:e.clientX,y:e.clientY,t:e.timeStamp}:null;setHover(null);try{canvas.setPointerCapture(e.pointerId);}catch(_){}});
+  canvas.addEventListener('pointermove',e=>{if(!orbit.drag){if(e.pointerType==='mouse')queueHover(e.clientX,e.clientY);return;}orbit.az+=(e.clientX-orbit.px)*0.008;orbit.el=clamp(orbit.el+(e.clientY-orbit.py)*0.008,-1.2,1.2);orbit.px=e.clientX;orbit.py=e.clientY;});
+  canvas.addEventListener('pointerup',e=>{orbit.drag=false;const d=PICK.down;PICK.down=null;
+    if(d&&Math.hypot(e.clientX-d.x,e.clientY-d.y)<6&&e.timeStamp-d.t<800)pickLayer(e.clientX,e.clientY,e.pointerType);});
+  canvas.addEventListener('pointerleave',()=>setHover(null));
   canvas.addEventListener('wheel',e=>{e.preventDefault();orbit.dist=clamp(orbit.dist*(1+e.deltaY*0.0012),0.5,12);},{passive:false});
   canvas.addEventListener('dblclick',()=>{frameCamera(true);});
   resizeThree();window.addEventListener('resize',resizeThree);rebuildScene();animate();
@@ -2845,7 +2867,82 @@ function applyBackdrop(){
   if(gridHelper){scene.remove(gridHelper);gridHelper.geometry.dispose();gridHelper.material.dispose();}
   gridHelper=new THREE.GridHelper(10,20,b.grid[0],b.grid[1]);gridHelper.position.y=-1.4;scene.add(gridHelper);
 }
-function resizeThree(){const c=$('#glcanvas');if(!c||!renderer)return;const w=c.clientWidth,h=c.clientHeight;if(!w||!h)return;renderer.setSize(w,h,false);camera.aspect=w/h;camera.updateProjectionMatrix();}
+/* ---- bloom: the soft light bleed around bright blades and trails, like the game's glow (View → Bloom) ---- */
+/* Not on Bright room: glow added over a light grey room washes everything out to white. */
+const BLOOM={dark:{strength:0.85,radius:0.45,threshold:0.32},neon:{strength:0.85,radius:0.45,threshold:0.38}};
+function makeComposer(r,cam){
+  if(!THREE.EffectComposer||!THREE.UnrealBloomPass)return null;
+  try{const sz=r.getSize(new THREE.Vector2());
+    const rt=new THREE.WebGLRenderTarget(Math.max(sz.x,1),Math.max(sz.y,1),{type:THREE.HalfFloatType});
+    const c=new THREE.EffectComposer(r,rt);const rp=new THREE.RenderPass(scene,cam);c.addPass(rp);
+    const b=new THREE.UnrealBloomPass(new THREE.Vector2(Math.max(sz.x,1),Math.max(sz.y,1)),0.85,0.45,0.32);c.addPass(b);c.addPass(new THREE.OutputPass());
+    /* add the bloom's light but keep the scene's own alpha, so the see-through backdrop (falling blocks, transparent PNGs) still works */
+    const bm=b.blendMaterial;bm.blending=THREE.CustomBlending;bm.blendEquation=THREE.AddEquation;bm.blendSrc=THREE.SrcAlphaFactor;bm.blendDst=THREE.OneFactor;bm.blendSrcAlpha=THREE.ZeroFactor;bm.blendDstAlpha=THREE.OneFactor;
+    c.renderPass=rp;c.bloomPass=b;return c;}catch(e){console.warn('bloom unavailable',e);return null;}
+}
+function bloomOn(){return !!pv.bloom&&!!BLOOM[pv.backdrop];}
+/* draw one frame: through the bloom composer when Bloom is on, straight to the canvas otherwise */
+function drawScene(r,cam,comp){
+  if(comp&&bloomOn()){const k=BLOOM[pv.backdrop];comp.bloomPass.strength=k.strength;comp.bloomPass.radius=k.radius;comp.bloomPass.threshold=k.threshold;
+    comp.renderPass.camera=cam;comp.render();}
+  else r.render(scene,cam);
+}
+
+/* ---- click a part of the saber to edit its layer ---- */
+const PICK={down:null,hover:null,helper:null,flash:0,ray:null,qx:0,qy:0,queued:false,tip:null};
+function pickTargets(){const out=[];sabers.forEach(sb=>{out.push(sb.group);(sb.world||[]).forEach(o=>out.push(o));});return out;}
+function shown(o){for(let x=o;x;x=x.parent){if(!x.visible)return false;}return true;}
+function uidOf(o){for(let x=o;x;x=x.parent){if(x.userData&&x.userData.uid)return x.userData.uid;}return null;}
+/* the layer under a screen point, nearest first; only layers of the preset being edited count */
+function layerAt(cx,cy){
+  if(!renderer||!camera||!sabers.length)return null;const p=activePreset();if(!p)return null;
+  const rc=renderer.domElement.getBoundingClientRect();if(!rc.width||!rc.height)return null;
+  if(!PICK.ray){PICK.ray=new THREE.Raycaster();PICK.ray.params.Points.threshold=0.025;}
+  const ndc=new THREE.Vector2(((cx-rc.left)/rc.width)*2-1,-((cy-rc.top)/rc.height)*2+1);
+  PICK.ray.setFromCamera(ndc,camera);
+  const hits=PICK.ray.intersectObjects(pickTargets(),true);
+  for(const h of hits){if(!shown(h.object))continue;if(h.object.isPoints&&h.object.geometry.attributes.position.getY(h.index)<-900)continue;
+    const uid=uidOf(h.object);if(!uid)continue;const f=findModule(p,uid);if(f)return {uid,m:f.m,sb:sabers.find(sb=>sb.world.indexOf(h.object)>=0||(()=>{for(let x=h.object;x;x=x.parent)if(x===sb.group)return true;return false;})())};}
+  return null;
+}
+/* world-space box around a layer's own parts in one saber (a group or joint with no parts of its own gets everything inside it) */
+function layerBox(uid,only){
+  const box=new THREE.Box3(),tmp=new THREE.Box3(),all=new THREE.Box3(),v=new THREE.Vector3();
+  sabers.forEach(sb=>{if(only&&sb!==only)return;sb.group.updateMatrixWorld(true);
+    sb.group.traverse(o=>{if(!o.isMesh||!o.geometry||!shown(o))return;const u=uidOf(o);if(!u)return;
+      if(!o.geometry.boundingBox)o.geometry.computeBoundingBox();tmp.copy(o.geometry.boundingBox).applyMatrix4(o.matrixWorld);
+      if(u===uid)box.union(tmp);
+      for(let x=o;x;x=x.parent){if(x.userData&&x.userData.uid===uid){all.union(tmp);break;}}});
+    (sb.world||[]).forEach(o=>{if(o.userData.uid!==uid||!shown(o)||!o.isPoints)return;const a=o.geometry.attributes.position;
+      for(let i=0;i<a.count;i++){if(a.getY(i)<-900)continue;v.fromBufferAttribute(a,i);box.expandByPoint(v);}});});
+  return box.isEmpty()?all:box;
+}
+function updatePickHelper(){
+  const hov=!!PICK.hover,uid=PICK.hover||(PICK.flash>performance.now()?PICK.flashUid:null);
+  if(!uid){if(PICK.helper)PICK.helper.visible=false;return;}
+  const sb=hov?PICK.hoverSb:PICK.flashSb;const box=layerBox(uid,sabers.indexOf(sb)>=0?sb:null);if(box.isEmpty()){if(PICK.helper)PICK.helper.visible=false;return;}
+  box.expandByScalar(0.015);
+  if(!PICK.helper){PICK.helper=new THREE.Box3Helper(new THREE.Box3(),0x2f7dd8);PICK.helper.material.depthTest=false;PICK.helper.material.transparent=true;PICK.helper.material.opacity=0.85;PICK.helper.renderOrder=999;PICK.helper.userData.noFrame=true;scene.add(PICK.helper);}
+  PICK.helper.box.copy(box);PICK.helper.visible=true;
+}
+function setHover(hit){
+  PICK.hover=hit?hit.uid:null;PICK.hoverSb=hit?hit.sb:null;const cv=renderer&&renderer.domElement;if(cv)cv.style.cursor=hit?'pointer':'';
+  let tip=PICK.tip;
+  if(!hit){if(tip)tip.hidden=true;return;}
+  if(!tip){tip=PICK.tip=document.createElement('div');tip.className='pv-pick-tip';cv.parentElement.appendChild(tip);}
+  tip.textContent=(hit.m.name||(TEMPLATES[hit.m.moduleId]&&TEMPLATES[hit.m.moduleId].label)||'Layer')+' · click to edit';tip.hidden=false;
+  const pr=cv.parentElement.getBoundingClientRect();
+  tip.style.left=Math.min(PICK.qx-pr.left+14,pr.width-tip.offsetWidth-8)+'px';tip.style.top=(PICK.qy-pr.top+16)+'px';
+}
+function queueHover(x,y){PICK.qx=x;PICK.qy=y;if(PICK.queued)return;PICK.queued=true;requestAnimationFrame(()=>{PICK.queued=false;if(orbit.drag||CAPTURE.active)return;setHover(layerAt(PICK.qx,PICK.qy));});}
+function pickLayer(x,y,ptype){
+  const hit=layerAt(x,y);if(!hit)return;
+  setHover(null);PICK.flashUid=hit.uid;PICK.flashSb=hit.sb;PICK.flash=performance.now()+900;
+  state.activeModuleId=hit.uid;if(state.activeTab!=='drivers')state.activeTab='module';renderAll();T('preview-pick',true);
+  if(ptype!=='mouse'&&window.__setMobileView&&window.matchMedia('(max-width:1100px)').matches)window.__setMobileView('editor');
+  setTimeout(()=>{const a=document.querySelector('#stackList .stack-item.active');if(a&&a.scrollIntoView)a.scrollIntoView({block:'nearest'});},30);
+}
+function resizeThree(){const c=$('#glcanvas');if(!c||!renderer)return;const w=c.clientWidth,h=c.clientHeight;if(!w||!h)return;renderer.setSize(w,h,false);if(composer){composer.setPixelRatio(renderer.getPixelRatio());composer.setSize(w,h);}camera.aspect=w/h;camera.updateProjectionMatrix();}
 function disposeObj(o){o.traverse(x=>{if(x.geometry&&!x.userData.sharedGeo)x.geometry.dispose();const mats=Array.isArray(x.material)?x.material:(x.material?[x.material]:[]);mats.forEach(mt=>mt.dispose());});}
 function disposeSabers(){
   sabers.forEach(sb=>{scene.remove(sb.group);disposeObj(sb.group);(sb.world||[]).forEach(o=>{scene.remove(o);disposeObj(o);});});
@@ -2931,7 +3028,7 @@ function rebuildScene(){
         const solid=new THREE.Mesh(gg,new THREE.MeshStandardMaterial({color:col.clone().multiplyScalar(1.6),vertexColors:true,metalness:clamp(ms2,0,1),roughness:clamp(ro,0.05,1)}));g.add(solid);return solid;
       }
       const glow=mk(ptsGlow,pv.glow?0.55:0.35);g.add(glow);
-      if(pv.glow){const g2=mk(ptsGlow,0.14,1.9);g.add(g2);}
+      if(pv.glow&&!(bloomOn()&&composer)){const g2=mk(ptsGlow,0.14,1.9);g.add(g2);}   /* Bloom does this softly, so the wide shell only draws without it */
       const texA=assetByIdOrName(get(cfg,'TexturesSettings.mainTextureId'));
       const cg=new THREE.LatheGeometry(ptsCore,12);cg.rotateX(Math.PI/2);
       const coreCol=col.clone().lerp(new THREE.Color(1,1,1),0.55*lum);
@@ -2983,7 +3080,8 @@ function rebuildScene(){
       if(lt){if(lt.Position)g.position.set(safeNum(lt.Position.x,0),safeNum(lt.Position.y,0),safeNum(lt.Position.z,0));
         if(lt.Rotation)g.rotation.set(THREE.MathUtils.degToRad(safeNum(lt.Rotation.x,0)),THREE.MathUtils.degToRad(safeNum(lt.Rotation.y,0)),THREE.MathUtils.degToRad(safeNum(lt.Rotation.z,0)));
         if(lt.Scale)g.scale.set(safeNum(lt.Scale.x,1),safeNum(lt.Scale.y,1),safeNum(lt.Scale.z,1));}
-      parent.add(g);
+      parent.add(g);if(!forceShow)g.userData.uid=m.uid;   /* parts drawn for a Clone belong to the Clone layer */
+      const w0=sb.world.length;
       const kind=m.kind||kindOf(m.moduleId);
       if(inSolo){
         const meshA=m.customMeshId?assetById(m.customMeshId):null;
@@ -2995,6 +3093,7 @@ function rebuildScene(){
         else if(kind==='trail'&&pv.trail){sb.rec.push({m,mesh:drawTrail(cfg,g,nodeColor(cfg,baseColor,false)),type:'trail'});}
         else if(kind==='vfx'){const v=drawVfx(cfg,g,nodeColor(cfg,baseColor),m);sb.rec.push({m,mesh:v.mesh,type:'vfx'});}
         else if(kind==='clone'){const tgt=resolveCloneTarget(q,cfg.Reference);if(tgt&&tgt!==m)drawNode(tgt,g,depth+6,true,q);}
+        if(!forceShow)for(let i=w0;i<sb.world.length;i++)sb.world[i].userData.uid=m.uid;   /* sparks and swing ribbons live in world space */
         if(kind==='joint'&&cfg.JointSettings)sb.joints.push({g,bx:g.rotation.x,by:g.rotation.y,js:cfg.JointSettings,ax:0,ay:0,vx:0,vy:0});
       }
       (m.children||[]).forEach(c=>drawNode(c,g,depth+1,forceShow,q));
@@ -3040,7 +3139,7 @@ function animate(){
   animReq=requestAnimationFrame(animate);if(CAPTURE.active)return;
   const dt=Math.min(clock?clock.getDelta():0.016,0.05);
   const cv=renderer.domElement;if(document.hidden||!cv.clientWidth||!cv.offsetParent)return;
-  stepPreview(dt);renderer.render(scene,camera);
+  stepPreview(dt);updatePickHelper();drawScene(renderer,camera,composer);
 }
 function driveValue(t){return pv.driveScore?(0.5+0.5*Math.sin(t*2)):clamp(pv.scrub,0,1);}
 const SWING={A:1.05,w:Math.PI*2/1.05};
@@ -3124,17 +3223,20 @@ function updatePreviewFoot(){updateDriverRow();const p=activePreset();$('#pvPres
 /*  CAPTURE: transparent PNG + showcase GIF                               */
 /* ===================================================================== */
 function withCaptureRenderer(w,h,transparent,fn){
-  const r=new THREE.WebGLRenderer({antialias:true,alpha:true,preserveDrawingBuffer:true});r.setPixelRatio(1);r.setSize(w,h,false);
+  const r=newRenderer({antialias:true,alpha:true,preserveDrawingBuffer:true});r.setPixelRatio(1);r.setSize(w,h,false);
   const cam=camera.clone();cam.aspect=w/h;cam.updateProjectionMatrix();
-  const bg=scene.background,gv=gridHelper?gridHelper.visible:true;if(transparent){scene.background=null;if(gridHelper)gridHelper.visible=false;r.setClearColor(0x000000,0);}
+  const bg=scene.background,gv=gridHelper?gridHelper.visible:true,hv=PICK.helper?PICK.helper.visible:false;if(PICK.helper)PICK.helper.visible=false;
+  if(transparent){scene.background=null;if(gridHelper)gridHelper.visible=false;r.setClearColor(0x000000,0);}
   else if(!scene.background){r.setClearColor(0x000000,1);}
-  try{return fn(r,cam);}finally{scene.background=bg;if(gridHelper)gridHelper.visible=gv;}
+  try{return fn(r,cam);}finally{scene.background=bg;if(gridHelper)gridHelper.visible=gv;if(PICK.helper)PICK.helper.visible=hv;}
 }
-function disposeCaptureRenderer(r){try{r.dispose();r.forceContextLoss();}catch(e){}}
+/* a capture frame with the same bloom the preview shows */
+function captureDraw(r,cam){if(bloomOn()&&composer){if(!r._comp)r._comp=makeComposer(r,cam);drawScene(r,cam,r._comp);}else r.render(scene,cam);}
+function disposeCaptureRenderer(r){try{if(r._comp){r._comp.renderTarget1.dispose();r._comp.renderTarget2.dispose();r._comp.bloomPass.dispose();}r.dispose();r.forceContextLoss();}catch(e){}}
 function exportPNG(scale,transparent){
   if(!renderer){toast('The 3D preview is not available','err');return null;}
   const c=renderer.domElement;const w=Math.round((c.clientWidth||480)*scale),h=Math.round((c.clientHeight||480)*scale);
-  let url=null;const r=withCaptureRenderer(w,h,transparent,(r,cam)=>{cam.position.copy(camera.position);cam.quaternion.copy(camera.quaternion);r.render(scene,cam);url=r.domElement.toDataURL('image/png');return r;});
+  let url=null;const r=withCaptureRenderer(w,h,transparent,(r,cam)=>{cam.position.copy(camera.position);cam.quaternion.copy(camera.quaternion);captureDraw(r,cam);url=r.domElement.toDataURL('image/png');return r;});
   disposeCaptureRenderer(r);
   const p=activePreset();const a=document.createElement('a');a.href=url;a.download=slug(p?p.name:'saber')+'-preview.png';document.body.appendChild(a);a.click();a.remove();
   toast('PNG saved');T('export-png');return url;
@@ -3145,7 +3247,7 @@ function exportThumb(){
   const w=480,h=360;let url=null;
   const save={az:orbit.az,el:orbit.el,dist:orbit.dist,tx:orbit.tx,ty:orbit.ty,tz:orbit.tz,aspect:camera.aspect};
   try{camera.aspect=w/h;camera.updateProjectionMatrix();frameCamera(false);orbit.dist*=0.92;stepPreview(0);
-    const r=withCaptureRenderer(w,h,false,(r,cam)=>{cam.position.copy(camera.position);cam.quaternion.copy(camera.quaternion);r.render(scene,cam);url=r.domElement.toDataURL('image/png');return r;});disposeCaptureRenderer(r);}
+    const r=withCaptureRenderer(w,h,false,(r,cam)=>{cam.position.copy(camera.position);cam.quaternion.copy(camera.quaternion);captureDraw(r,cam);url=r.domElement.toDataURL('image/png');return r;});disposeCaptureRenderer(r);}
   finally{Object.assign(orbit,{az:save.az,el:save.el,dist:save.dist,tx:save.tx,ty:save.ty,tz:save.tz});camera.aspect=save.aspect;camera.updateProjectionMatrix();}
   const p=activePreset();const a=document.createElement('a');a.href=url;a.download=slug(p?p.name:'saber')+'.png';document.body.appendChild(a);a.click();a.remove();
   toast('Gallery thumbnail saved (480×360)');T('export-thumb');return url;
@@ -3166,7 +3268,7 @@ async function recordGIF(o){
     for(let i=0;i<n;i++){
       if(o.motion==='spin')orbit.az=save.az+Math.PI*2*i/n;
       stepPreview(1/o.fps);cam.position.copy(camera.position);cam.quaternion.copy(camera.quaternion);
-      r.render(scene,cam);ctx.fillStyle='#000';ctx.fillRect(0,0,w,h);ctx.drawImage(r.domElement,0,0);frames.push(ctx.getImageData(0,0,w,h).data);
+      captureDraw(r,cam);ctx.fillStyle='#000';ctx.fillRect(0,0,w,h);ctx.drawImage(r.domElement,0,0);frames.push(ctx.getImageData(0,0,w,h).data);
       if(i%5===0){toast('Recording GIF… '+Math.round(i/n*100)+'%');await wait0();}
     }
   } finally {
@@ -3898,7 +4000,7 @@ function openQuestModal(){
 /* ===================================================================== */
 function wirePreviewBar(){
   const bd=$('#pvBackdrop'),sc=$('#pvScheme'),sr=$('#pvScrub');
-  if(bd){Object.entries(BACKDROPS).forEach(([k,b])=>{const o=document.createElement('option');o.value=k;o.textContent=b.n;bd.appendChild(o);});bd.value=pv.backdrop;bd.onchange=()=>{pv.backdrop=bd.value;applyBackdrop();T('backdrop-'+bd.value,true);};}
+  if(bd){Object.entries(BACKDROPS).forEach(([k,b])=>{const o=document.createElement('option');o.value=k;o.textContent=b.n;bd.appendChild(o);});bd.value=pv.backdrop;bd.onchange=()=>{pv.backdrop=bd.value;applyBackdrop();rebuildScene();T('backdrop-'+bd.value,true);};}
   if(sc){Object.entries(SCHEMES).forEach(([k,s])=>{const o=document.createElement('option');o.value=k;o.textContent=s.n;sc.appendChild(o);});sc.value=pv.scheme;sc.onchange=()=>{pv.scheme=sc.value;rebuildScene();T('scheme-'+sc.value,true);};}
   if(sr){sr.value=pv.scrub;sr.oninput=()=>{T('driver-scrub',true);pv.scrub=parseFloat(sr.value)||0;if(pv.driveScore){pv.driveScore=false;syncPreviewToggles();}};}
   const cap=$('#btnCapture');if(cap)cap.onclick=openCaptureModal;
@@ -3947,7 +4049,6 @@ document.addEventListener('keydown',e=>{
 function renderAll(){renderPresets();renderStack();renderInspector();rebuildScene();refreshOutputs();}
 
 function touch(){rebuildScene();refreshOutputs();}
-const HAS_THREE=(typeof THREE!=='undefined');
 
 $('#btnNewPreset').onclick=e=>{const dd=$('#newDd');closeAddMenu();dd.classList.toggle('open');e.stopPropagation();};
 $('#btnAddLayer').onclick=e=>{const dd=$('#addDd');$('#newDd').classList.remove('open');const o=dd.classList.toggle('open');$('#btnAddLayer').setAttribute('aria-expanded',o?'true':'false');if(o)T('add-menu-open',true);e.stopPropagation();};
@@ -4018,13 +4119,20 @@ renderStarterMenu();
 seed();
 renderPalette();
 renderSnippets();
-wirePreviewBar();
+wirePreviewBar();syncPreviewToggles();
 renderAll();
 updateAssetCount();
-if(HAS_THREE){initThree();}
-else{
-  const c=$('#glcanvas');if(c){const parent=c.parentElement;c.remove();const note=document.createElement('div');note.className='placeholder-note';note.style.cssText='flex:1;display:flex;align-items:center;justify-content:center;flex-direction:column';note.innerHTML='3D preview needs Three.js (loaded from CDN).<br>Connect to the internet and reload to enable the live preview.<br><br>All editing, assets, validation, import and export work offline.';parent.insertBefore(note,parent.querySelector('.preview-foot'));}
+/* Three.js arrives from a module script that runs after this one (see the importmap above this script). Assets restored before it
+   arrived get their meshes and textures parsed now. If it never comes (offline, CDN blocked, no WebGL 2), say so. */
+let threeGone=false;
+function threeMissing(why){if(threeGone||scene)return;threeGone=true;const c=$('#glcanvas');if(c){const parent=c.parentElement;c.remove();const note=document.createElement('div');note.className='placeholder-note';note.style.cssText='flex:1;display:flex;align-items:center;justify-content:center;flex-direction:column';note.innerHTML=(why==='webgl'?'3D preview needs WebGL 2, which this browser or device does not have.':'3D preview needs Three.js (loaded from CDN).<br>Connect to the internet and reload to enable the live preview.')+'<br><br>All editing, assets, validation, import and export work offline.';parent.insertBefore(note,parent.querySelector('.preview-foot'));}}
+function startThree(){
+  if(scene||threeGone||!window.THREE||!THREE.WebGLRenderer)return;
+  state.assets.forEach(a=>{if((a.kind==='mesh'&&!a._obj)||(a.kind==='texture'&&!a._tex))cacheAsset(a);});
+  try{initThree();}catch(e){console.warn('3D preview failed',e);scene=null;renderer=null;threeMissing('webgl');}
 }
+if(window.THREE&&THREE.WebGLRenderer)startThree();
+else{addEventListener('three-ready',startThree,{once:true});setTimeout(()=>{if(!scene)threeMissing();},20000);}
 folderLoadHandle();
 restoreAutosave().then(async had=>{histReset();updateHistButtons();await openSharedFromHash();const srcOpen=openFromSrcParam();if(!srcOpen)maybeWhatsNew(had);});
 /* ===================================================================== */
@@ -4196,7 +4304,7 @@ function routeDroppedFiles(files){
                  layer-move-out*, curve-edit*, gradient-edit*, driver-add, driver-delete*, undo*, redo*,
                  history-open*, checkpoint-save, checkpoint-restore, explain, validate-jump*
        Compare:  compare-open, compare-pin, compare-revert, compare-preview*
-       Preview:  preview-<toggle>-on/off*, backdrop-<name>*, scheme-<name>*, driver-scrub*, view-<name>*,
+       Preview:  preview-<toggle>-on/off* (Bloom included), preview-pick* (clicked a part to edit it), backdrop-<name>*, scheme-<name>*, driver-scrub*, view-<name>*,
                  preview-frame*, preview-expand*, preview-resize*, preview-combine*, preview-left-preset*,
                  perf-target-<pc|quest>*, capture-open*, export-png, export-thumb, export-gif,
                  tab-<preview|json|valid>*

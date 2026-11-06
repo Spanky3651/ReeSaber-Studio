@@ -27,7 +27,7 @@ The ReeSabers in-game Preset Editor only runs on PC, so Studio is also the way t
 - **Snippets.** Drop-in mini builds: hilt, guard ring, dangling charm on a dynamic joint, double-ended staff (a clone that stays linked when you reorder), and outline glow.
 - **Undo, redo and checkpoints.** Ctrl+Z / Ctrl+Shift+Z for the last 60 changes, plus named checkpoints saved with your work.
 - **Textures.** Upload `.png` / `.jpg` / `.webp` files and pick them in a layer's texture slots (main, glow, normal and other maps on blades; texture and opacity on trails). They are embedded on export. Oversized or odd-sized textures are flagged and can be shrunk or resized to a power of two in one click. A built-in maker generates trail textures (fades, streaks, noise, stripes, glow core) and a sprite-sheet builder packs animation frames and fills in the animation layout.
-- **Live 3D preview.** A Three.js viewport renders the whole layer tree with the real blade silhouette from its profile curve, gradients, textures, clones and nested joints. **Swing test** slashes the sabers so trails streak, sparks burst on cuts and dynamic joints jiggle. Drag its edge to resize it, expand it to fill the screen and fit the saber in view. The View menu holds the backdrop, colors, camera views and a note block for scale. Switch backdrops (dark, bright, neon) and color schemes, scrub driver values by hand, and solo a layer. Preview hands, colors and the optional preview model only affect the viewport.
+- **Live 3D preview.** A Three.js viewport renders the whole layer tree with the real blade silhouette from its profile curve, gradients, textures, clones and nested joints, with bloom for a soft in-game style glow (off at first on phones). **Click any part of the saber** to open its layer in the editor; hover shows which layer it is. **Swing test** slashes the sabers so trails streak, sparks burst on cuts and dynamic joints jiggle. Drag its edge to resize it, expand it to fill the screen and fit the saber in view. The View menu holds the backdrop, colors, camera views and a note block for scale. Switch backdrops (dark, bright, neon) and color schemes, scrub driver values by hand, and solo a layer. Preview hands, colors and the optional preview model only affect the viewport.
 - **Combined presets.** ReeSabers can stack several presets on one saber. Preview them together (say a hilt preset plus a blade preset), or show a different preset in each hand.
 - **Compare versions.** Imported presets remember the original file, and you can pin any version. See a list of every change, view the saved version and your edit side by side, or revert.
 - **Showcase capture.** Save a transparent PNG, a 480×360 gallery thumbnail, or a looping GIF (360° spin or swing) for Discord or Reddit.
@@ -52,7 +52,7 @@ Nothing to install. Open the [live app](https://spanky3651.github.io/ReeSaber-St
 
 1. **Pick a starter.** Use **New Preset ▾** to open a community saber from the gallery, pick a template, or start blank.
 2. **Stack layers.** Use **Add layer** and pick a module or snippet. To nest, select a Group or Dynamic Joint in the stack first; new layers then go inside it. Click a layer's dot to mute it.
-3. **Tune it.** Select a layer and open its panels to change its size, glow and color. Every setting has a **?** card. Turn on **Advanced** next to the editor tabs for the technical settings.
+3. **Tune it.** Select a layer (or click it in the preview) and open its panels to change its size, glow and color. Every setting has a **?** card. Turn on **Advanced** next to the editor tabs for the technical settings.
 4. **Add drivers.** On the **Drivers** tab, make a layer react to gameplay, for example a trail that brightens as you swing faster. Drag the **Driver** slider under the preview to test it, and turn on **Swing test** to see trails, sparks and jiggle in motion.
 5. **Add textures (optional).** Open **Assets**, drop in a `.png` / `.jpg`, then pick it in the layer's **Textures & Assets** panel.
 6. **Check and export.** When the **Validate** tab is green, use **Export → Download for Beat Saber (.json)**. That one file has its textures inside. Under **More download options** you'll also find:
@@ -139,7 +139,7 @@ ReeSaber-Studio/
 ## Tech
 
 - Vanilla JavaScript, HTML and CSS in one file. No framework, no bundler.
-- [Three.js](https://threejs.org/) r128 from a CDN for the preview, plus its OBJ/GLTF loaders.
+- [Three.js](https://threejs.org/) r180 from a CDN for the preview (loaded as ES modules), plus its OBJ/GLTF loaders and bloom post-processing. Needs a browser with WebGL 2.
 - [ya-webadb](https://github.com/yume-chan/ya-webadb) (adb 2.6.4, adb-daemon-webusb 2.3.2, adb-credential-web 2.1.0), built into the page as one matched release, for Quest over USB.
 - Privacy-friendly page counts with [GoatCounter](https://www.goatcounter.com/) (no cookies).
 
