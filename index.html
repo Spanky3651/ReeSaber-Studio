@@ -255,6 +255,20 @@
   .hand-btn.on-R{border-color:var(--cyan);background:rgba(30,107,255,.1);color:var(--cyan);box-shadow:0 0 10px rgba(30,107,255,.2)}
 
   /* drivers */
+  .rcp-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin:0 0 8px}
+  .rcp-card{display:flex;flex-direction:column;gap:3px;text-align:left;border:1px solid var(--line-2);border-radius:10px;background:#08080c;padding:9px 11px;color:var(--txt);cursor:pointer;font:inherit;transition:.15s}
+  .rcp-card:hover,.rcp-card:focus-visible{border-color:var(--cyan-dim);background:rgba(30,107,255,.06)}
+  .rcp-card b{font-size:12.5px;font-weight:700}.rcp-card span{font-size:11.5px;color:var(--txt-dim);line-height:1.4}
+  .rcp-note{font-size:11px;color:var(--txt-mut);line-height:1.5;margin:0 0 16px}
+  .pv-run{font-size:11px;font-weight:600;padding:4px 9px;border-radius:6px;border:1px solid var(--line-2);background:var(--panel-2);color:var(--txt-dim);cursor:pointer;white-space:nowrap;font-family:inherit;display:inline-flex;align-items:center;gap:5px}
+  .pv-run svg{width:11px;height:11px}
+  .pv-run.on{border-color:var(--cyan-dim);color:var(--cyan);background:rgba(30,107,255,.08)}
+  .pv-runcap{display:none;flex:1;min-width:120px;align-items:center;gap:8px;font-size:11px;color:var(--txt-dim);font-weight:600}
+  .pv-runcap .rc-bar{flex:1;height:4px;border-radius:3px;background:var(--line-2);overflow:hidden;min-width:40px}
+  .pv-runcap .rc-bar i{display:block;height:100%;width:0;background:var(--cyan)}
+  .pv-runcap .rc-txt{white-space:nowrap}.pv-runcap .rc-txt.miss{color:#ff4d6d}
+  #pvDriverRow.running .pv-scrub{display:none}#pvDriverRow.running .pv-runcap{display:flex}
+  @media(max-width:520px){.rcp-grid{grid-template-columns:1fr}}
   .driver-card{border:1px solid var(--line-2);border-radius:10px;background:#08080c;margin-bottom:12px;overflow:hidden}
   .driver-head{display:flex;align-items:center;gap:9px;padding:10px 12px;background:#0d0d14;border-bottom:1px solid var(--line)}
   .driver-head .dh-badge{font-size:10px;font-weight:700;padding:2px 7px;border-radius:5px;background:rgba(217,75,255,.15);color:var(--violet);border:1px solid rgba(217,75,255,.3);text-transform:uppercase;letter-spacing:.5px}
@@ -529,7 +543,7 @@ body.adv-on .simple-note{display:none}
 .adv-sw input:checked + .track::after{transform:translateX(13px);background:var(--cyan)}
 .adv-sw input:checked ~ .adv-l{color:var(--cyan)}
 .adv-sw input:focus-visible + .track{outline:2px solid var(--cyan);outline-offset:2px}
-@media(max-width:1100px){.adv-sw{min-height:36px;padding:0 4px}.pv-main .mini-toggle,.pv-main .btn{min-height:34px}.pv-main .pv-icon{min-width:36px;justify-content:center}.qs-new{min-height:34px;display:inline-flex;align-items:center}}
+@media(max-width:1100px){.pv-run{min-height:34px;padding:0 11px}.adv-sw{min-height:36px;padding:0 4px}.pv-main .mini-toggle,.pv-main .btn{min-height:34px}.pv-main .pv-icon{min-width:36px;justify-content:center}.qs-new{min-height:34px;display:inline-flex;align-items:center}}
 @media(max-width:700px){.insp-tabs{flex-wrap:wrap}.insp-tools{width:100%;justify-content:flex-end;border-top:1px solid var(--line);padding:2px 0}}
 @media(max-width:420px){.adv-sw .adv-l{font-size:10.5px}}
 .curve-ed,.grad-ed{border:1px solid var(--line);border-radius:9px;background:#040406;padding:6px;margin-top:2px}
@@ -913,6 +927,8 @@ body.blocks-on .quickstart{background:linear-gradient(90deg,rgba(12,22,34,.82),r
           <button type="button" class="btn tiny pv-ib pv-icon" id="btnCapture" title="Capture: save a PNG or record a GIF" aria-label="Capture a PNG or GIF"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"/><circle cx="12" cy="13" r="4"/></svg><span class="pv-lbl">Capture</span></button>
         </div>
         <div class="preview-ctrls pv-row2" id="pvDriverRow" hidden>
+          <button type="button" class="pv-run" id="pvRun" aria-pressed="false" title="Play a 30 second pretend song: swings speed up in the chorus, you miss twice and your score climbs. Each driver reacts to its own value."><svg viewBox="0 0 24 24" fill="currentColor"><path d="M7 4.5v15l12-7.5z"/></svg><span>Test run</span></button>
+          <span class="pv-runcap" id="pvRunCap" aria-live="polite"><span class="rc-bar"><i></i></span><span class="rc-txt">0:00</span></span>
           <label class="pv-scrub" title="Driver value (moving it turns off Sim driver)"><span>Driver</span><input type="range" id="pvScrub" min="0" max="1" step="0.01" value="0.5" aria-label="Driver value"></label>
         </div>
         <div class="solo-banner" id="compareBanner" hidden>Comparing: <b>left = saved version</b>, right = current<button type="button" class="btn tiny" id="compareExit">Stop comparing</button></div>
@@ -950,7 +966,7 @@ body.blocks-on .quickstart{background:linear-gradient(90deg,rgba(12,22,34,.82),r
     </a>
   </div>
   <div class="nf-strip">
-    <div class="nf-sl"><span class="nf-map">Runs in your browser</span><span class="nf-dot">&middot;</span><span class="nf-upd" id="footUpdated" data-updated="2026-11-06T13:48Z">Updated recently</span></div>
+    <div class="nf-sl"><span class="nf-map">Runs in your browser</span><span class="nf-dot">&middot;</span><span class="nf-upd" id="footUpdated" data-updated="2026-11-06T19:37Z">Updated recently</span></div>
     <div class="nf-sr"><div class="foot-count" id="footCount" hidden></div><span class="nf-btns"><a class="src-badge nf-btn nf-src" data-gc="github-click" href="https://github.com/Spanky3651/ReeSaber-Studio" target="_blank" rel="noopener" title="Source code on GitHub"><svg viewBox="0 0 24 24" width="15" height="15" fill="#fff"><path d="M12 .5C5.73.5.5 5.73.5 12a11.5 11.5 0 0 0 7.86 10.92c.575.106.785-.25.785-.556 0-.274-.01-1-.015-1.965-3.196.695-3.87-1.54-3.87-1.54-.523-1.33-1.277-1.684-1.277-1.684-1.044-.714.08-.699.08-.699 1.155.081 1.763 1.186 1.763 1.186 1.026 1.758 2.693 1.25 3.35.955.104-.744.402-1.25.73-1.538-2.552-.29-5.235-1.276-5.235-5.68 0-1.255.448-2.28 1.183-3.084-.119-.29-.513-1.46.112-3.043 0 0 .965-.309 3.163 1.178a10.98 10.98 0 0 1 2.88-.387c.977.004 1.96.132 2.88.387 2.196-1.487 3.16-1.178 3.16-1.178.626 1.583.232 2.753.114 3.043.737.804 1.182 1.829 1.182 3.084 0 4.415-2.687 5.386-5.247 5.67.413.355.78 1.056.78 2.13 0 1.538-.014 2.778-.014 3.157 0 .308.207.667.79.554A11.5 11.5 0 0 0 23.5 12C23.5 5.73 18.27.5 12 .5Z"/></svg>Source</a> <a class="kofi-support nf-btn nf-kofi" data-gc="kofi-click" href="https://ko-fi.com/msploit21?utm_source=reesaber-studio&amp;utm_medium=support-button" target="_blank" rel="noopener" title="Support MSploit on Ko-fi"><span class="kofi-heart">❤️</span>Support me</a></span><span class="nf-vr"></span><button type="button" class="fxsw" id="blocksSw" role="switch" aria-checked="false"><span class="fxsw-track"><span class="fxsw-knob"><svg viewBox="0 0 20 20" aria-hidden="true"><rect width="20" height="20" rx="5" class="k-body"/><path d="M3.3 3.3h13.4v1.9L10 8.3 3.3 5.2z" class="k-arrow"/></svg></span></span><span>Falling blocks</span></button></div>
   </div>
 </footer>
@@ -2605,18 +2621,45 @@ function buildShapeAndMappings(wrap,m){
 function driversOf(m,create){const dp=driverPathFor(m);if(!dp)return null;let a=get(m.config,dp);if(!Array.isArray(a)){if(!create)return [];a=[];setPath(m.config,dp,a);}return a;}
 function activeDrivers(m){const a=driversOf(m);return a?a.filter(d=>d&&typeof d==='object'&&Math.trunc(safeNum(d.valueType,0))!==0):[];}
 function makeDriver(s){return driverToReeSaber(Object.assign({valueType:1,valueFrom:0,valueTo:1,increaseResistance:0,decreaseResistance:0,alpha0:0,alpha1:1,scale0:1,scale1:1,color:'#ffffff',interp:0},s||{}));}
+/* ---- ready-made drivers (Studio's own recipes): one click adds a tuned driver to the selected layer ---- */
+/* Brightness and size only, never a color tint: a tint multiplies the saber color, so gold on a blue saber goes dark. */
+const DRIVER_RECIPES=[
+  {k:'swing-glow',n:'Brighter when you swing fast',d:'Glows harder on fast swings, then eases back.',src:4,fall:0.45,alpha:[0.35,1],scale:[1,1.12],interp:1},
+  {k:'swing-grow',n:'Grows with your swing',d:'Gets bigger the faster you move.',src:2,fall:0.5,scale:[0.9,1.3],interp:1},
+  {k:'miss-dim',n:'Dims on a miss',d:'Drops low right after a miss, then comes back.',src:8,alpha:[0.15,1],scale:[0.85,1],interp:1},
+  {k:'score-shine',n:'Shines as your score climbs',d:'Brighter and a little bigger when you play well.',src:1,rise:0.6,fall:0.6,alpha:[0.55,1],scale:[1,1.1],interp:1},
+  {k:'pulse',n:'Slow pulse',d:'Breathes brighter and dimmer on a loop.',src:9,alphaPts:[[0,0.45],[0.5,1],[1,0.45]],interp:1},
+  {k:'hand-high',n:'Brighter with your hands up',d:'Glows more when you reach high.',src:6,rise:0.3,fall:0.3,alpha:[0.5,1],interp:1}
+];
+function recipeDriver(r){
+  const ip=r.interp||0,pts=(a,def)=>({interpolationType:ip,controlPoints:(a||[[0,def],[1,def]]).map(x=>({time:x[0],value:x[1]}))});
+  const two=a=>a?[[0,a[0]],[1,a[1]]]:null;
+  return {valueType:r.src,increaseResistance:r.rise||0,decreaseResistance:r.fall||0,mappings:{
+    colorOverValue:{interpolationType:ip,controlPoints:[{time:0,value:{r:1,g:1,b:1,a:1}}]},
+    alphaOverValue:pts(r.alphaPts||two(r.alpha),1),scaleOverValue:pts(two(r.scale),1),valueFrom:0,valueTo:1}};
+}
+function addRecipe(m,r){
+  driversOf(m,true).push(recipeDriver(r));T('driver-recipe-'+r.k);
+  renderStack();renderInspector();touch();toast('Added “'+r.n+'”. Press Test run under the preview to see it react.');
+}
 function buildDriversForm(){
   const wrap=document.createElement('div');const m=activeModule();
   if(!m){wrap.innerHTML='<div class="placeholder-note">'+ICON.bolt+'<br>Select a module, then attach drivers to modulate its properties in real-time from gameplay events.</div>';return wrap;}
   if(!driverPathFor(m)){wrap.innerHTML='<div class="placeholder-note">'+ICON.bolt+'<br>This layer type has no drivers. Drivers live on Blade, Trail and Sparks layers.</div>';return wrap;}
   const intro=document.createElement('div');intro.className='fset-note';intro.style.marginBottom='14px';
-  intro.innerHTML=`A driver ${helpIcon('driver')} makes this layer react to the game, changing its color, brightness or size. Drag the <b>Driver</b> slider under the 3D preview to test it. ReeSabers stores the value source as a number and doesn't publish which number is which, so the names are Studio's best guesses.`;
+  intro.innerHTML=`A driver ${helpIcon('driver')} makes this layer react to the game, changing its color, brightness or size. Drag the <b>Driver</b> slider under the 3D preview to test it, or press <b>Test run</b> to watch it react to a pretend song. ReeSabers stores the value source as a number and doesn't publish which number is which, so the names are Studio's best guesses.`;
   wrap.appendChild(intro);
   const cal=document.createElement('button');cal.type='button';cal.className='btn sm ghost';cal.style.cssText='margin:-6px 0 12px';cal.textContent='Not sure which number is which? Make a driver test preset';
   cal.onclick=()=>{const p=buildDriverTestPreset();state.presets.push(p);selectPreset(p.id);T('starter-drivers');openDriverTestInfo();};wrap.appendChild(cal);
   const addBtn=document.createElement('button');addBtn.className='btn primary';addBtn.style.cssText='width:100%;justify-content:center;margin-bottom:16px';addBtn.innerHTML=ICON.plus+' Add driver';
   addBtn.addEventListener('click',()=>{T('driver-add');driversOf(m,true).push(makeDriver({valueType:1}));renderStack();renderInspector();touch();});
   wrap.appendChild(addBtn);
+  const rl=document.createElement('div');rl.className='section-label';rl.textContent='Or add a ready-made driver';wrap.appendChild(rl);
+  const grid=document.createElement('div');grid.className='rcp-grid';
+  DRIVER_RECIPES.forEach(r=>{const b=document.createElement('button');b.type='button';b.className='rcp-card';b.innerHTML='<b></b><span></span>';b.querySelector('b').textContent=r.n;b.querySelector('span').textContent=r.d;
+    b.title='Adds a '+sourceName(r.src)+' driver (type '+r.src+') you can tweak below';b.onclick=()=>addRecipe(m,r);grid.appendChild(b);});
+  wrap.appendChild(grid);
+  const rn=document.createElement('div');rn.className='rcp-note';rn.textContent='These use the same best-guess driver numbers as above. Each one stays fully editable once it is added.';wrap.appendChild(rn);
   const list=driversOf(m)||[];
   if(!list.length){wrap.appendChild(Object.assign(document.createElement('div'),{className:'empty',innerHTML:ICON.bolt+'<div>No drivers on this module.</div>'}));return wrap;}
   list.forEach((d,i)=>{
@@ -2843,7 +2886,52 @@ function renderSnippets(){
 let renderer,scene,camera,animReq,clock,gridHelper,composer;
 let orbit={az:0.6,el:0.2,dist:3.4,drag:false,px:0,py:0,tx:0,ty:0.45,tz:0};
 let noteObj=null,lastFrameKey='';
-let sabers=[];let simTime=0;
+let sabers=[];let simTime=0,swingTime=0;
+/* ---- Test run: a 30 second pretend song so each driver reacts to its own value (swing speed, score, misses...) ---- */
+const RUN={on:false,t:0,len:30,misses:[8,20.5],saved:null,ui:0};
+const RUN_PARTS=[[0,'Intro',0.55],[3,'Verse',0.8],[12,'Chorus: fast swings',1.3],[22,'Outro',0.65]];
+function runPart(t){let p=RUN_PARTS[0];RUN_PARTS.forEach(x=>{if(t>=x[0])p=x;});return p;}
+function runLastMiss(t){let m=null;RUN.misses.forEach(x=>{if(t>=x)m=x;});return m;}
+/* climbs toward about 95%, drops after each miss and recovers */
+function runScore(t){let s=0.55+0.4*(1-Math.exp(-t/6));RUN.misses.forEach(x=>{if(t>=x)s-=0.18*Math.exp(-(t-x)/4);});return clamp(s,0,1);}
+function startRun(){
+  if(RUN.on){stopRun(false);return;}
+  RUN.on=true;RUN.t=0;RUN.saved={swing:pv.swing};pv.swing=true;syncPreviewToggles();rebuildScene();T('driver-run');updateRunUi();
+}
+function stopRun(done){
+  if(!RUN.on)return;RUN.on=false;const sv=RUN.saved;RUN.saved=null;
+  if(sv&&pv.swing!==sv.swing){pv.swing=sv.swing;syncPreviewToggles();rebuildScene();}
+  updateRunUi();if(done)T('driver-run-done',true);
+}
+function updateRunUi(){
+  const row=$('#pvDriverRow'),b=$('#pvRun');if(!row||!b)return;
+  row.classList.toggle('running',RUN.on);b.classList.toggle('on',RUN.on);b.setAttribute('aria-pressed',RUN.on?'true':'false');
+  b.querySelector('span').textContent=RUN.on?'Stop':'Test run';
+  const svg=b.querySelector('svg');if(svg)svg.innerHTML=RUN.on?'<rect x="6" y="6" width="12" height="12" rx="1.5"/>':'<path d="M7 4.5v15l12-7.5z"/>';
+  if(RUN.on)updateRunCap(true);
+}
+function updateRunCap(force){
+  const now=performance.now();if(!force&&now-RUN.ui<200)return;RUN.ui=now;
+  const cap=$('#pvRunCap');if(!cap)return;const t=RUN.t,m=runLastMiss(t),miss=m!=null&&t-m<1.2;
+  const sec=Math.floor(t);cap.querySelector('i').style.width=(clamp(t/RUN.len,0,1)*100).toFixed(1)+'%';
+  const tx=cap.querySelector('.rc-txt');tx.textContent=Math.floor(sec/60)+':'+String(sec%60).padStart(2,'0')+' · '+(miss?'Miss!':runPart(t)[1])+' · score '+Math.round(runScore(t)*100)+'%';
+  tx.classList.toggle('miss',miss);
+}
+/* the value a driver sees: during a Test run each source gets its own pretend game value, otherwise the slider / Sim driver value */
+function driverInput(d,sb,dv){
+  if(!RUN.on)return dv;
+  switch(Math.trunc(safeNum(d.valueType,0))){
+    case 1:return runScore(RUN.t);
+    case 2:case 4:return clamp(sb.speed||0,0,1);
+    case 3:return sb.cutDir||0;
+    case 5:return clamp(sb.handX==null?0.5:sb.handX,0,1);
+    case 6:return clamp(sb.handY==null?0.5:sb.handY,0,1);
+    case 7:return 0.5;
+    case 8:{const m=runLastMiss(RUN.t);return m==null?1:clamp((RUN.t-m)/2,0,1);}
+    case 9:return (RUN.t%2)/2;
+    default:return dv;
+  }
+}
 const CAPTURE={active:false};
 const SCHEMES={preset:{n:'Preset colors'},redblue:{n:'Red / Blue',L:'#ff1e3c',R:'#1e6bff'},pinkcyan:{n:'Pink / Cyan',L:'#ff3fb4',R:'#21e6ff'},orangepurple:{n:'Orange / Purple',L:'#ff8a1e',R:'#8a3dff'},greengold:{n:'Green / Gold',L:'#2bdc5a',R:'#ffc23d'},mono:{n:'White / Grey',L:'#ffffff',R:'#8a8f98'},dark:{n:'Dark colors (stress test)',L:'#3a1414',R:'#14213a'}};
 const BACKDROPS={dark:{n:'Dark arena',bg:null,fog:0x000000,grid:[0x0a2530,0x08141a]},bright:{n:'Bright room',bg:0xc9d1dc,fog:0xc9d1dc,grid:[0x7f8b9e,0xa4aebd]},neon:{n:'Neon stage',bg:0x12041f,fog:0x12041f,grid:[0x6a1fa0,0x2e0d4a]}};
@@ -3153,6 +3241,8 @@ function driveValue(t){return pv.driveScore?(0.5+0.5*Math.sin(t*2)):clamp(pv.scr
 const SWING={A:1.05,w:Math.PI*2/1.05};
 function stepPreview(dt){
   simTime+=dt;const t=simTime;
+  if(RUN.on&&!CAPTURE.active){RUN.t+=dt;if(RUN.t>=RUN.len){stopRun(true);}else updateRunCap();}
+  swingTime+=dt*(RUN.on?runPart(RUN.t)[2]:1);   /* a Test run swings slower in the intro and faster in the chorus */
   if(pv.spin)orbit.az+=dt*0.35;
   camera.position.set(orbit.tx+Math.cos(orbit.az)*Math.cos(orbit.el)*orbit.dist,orbit.ty+Math.sin(orbit.el)*orbit.dist+0.05,orbit.tz+Math.sin(orbit.az)*Math.cos(orbit.el)*orbit.dist);camera.lookAt(orbit.tx,orbit.ty,orbit.tz);
   const dv=driveValue(t);
@@ -3161,14 +3251,23 @@ function stepPreview(dt){
 function stepSaber(sb,dt,t,dv){
   /* hand motion */
   let ax=0,az=0,cut=false;
-  if(pv.swing){const s=Math.sin(SWING.w*t+sb.phase);ax=-SWING.A*s;az=0.32*Math.sin(SWING.w*0.5*t+sb.phase);if(sb.prevSin*s<0)cut=true;sb.prevSin=s;}
+  const st=swingTime;
+  if(pv.swing){const s=Math.sin(SWING.w*st+sb.phase);ax=-SWING.A*s;az=0.32*Math.sin(SWING.w*0.5*st+sb.phase);if(sb.prevSin*s<0)cut=true;sb.prevSin=s;}
   sb.group.rotation.x=ax;sb.group.rotation.z=az;
   const vx=dt>0?(ax-sb.prevAng.x)/dt:0,vz=dt>0?(az-sb.prevAng.z)/dt:0;const accx=dt>0?(vx-sb.prevVel.x)/dt:0,accz=dt>0?(vz-sb.prevVel.z)/dt:0;
   sb.prevAng={x:ax,z:az};sb.prevVel={x:vx,z:vz};
-  /* drivers: color, alpha and scale from the real mapping curves */
+  /* what a Test run feeds the drivers: swing speed (fastest chorus swing is about 1), cut direction, hand height and side */
+  sb.speed=Math.hypot(vx,vz)/8.2;if(cut)sb.cutDir=sb.cutDir?0:1;sb.handY=(1-ax/SWING.A)/2;sb.handX=(az/0.32+1)/2;
+  /* drivers: color, alpha and scale from the real mapping curves; several drivers on one layer stack (multiply) */
   sb.rec.forEach(r=>{
-    const d=r.m&&activeDrivers(r.m)[0];if(!d)return;const mp=d.mappings||{};
-    const a=clamp(evalCurve(mp.alphaOverValue,dv,1),0,2),sc=evalCurve(mp.scaleOverValue,dv,1),gc=mp.colorOverValue?evalGradient(mp.colorOverValue,dv):null;
+    const ds=r.m?activeDrivers(r.m):[];if(!ds.length)return;
+    let a=1,sc=1,gc=null;r.dvs=r.dvs||[];
+    ds.forEach((d,i)=>{const mp=d.mappings||{};let v=driverInput(d,sb,dv);
+      if(RUN.on&&r.dvs[i]!=null){const pr=r.dvs[i],res=clamp(safeNum(v>pr?d.increaseResistance:d.decreaseResistance,0),0,0.995);v=pr+(v-pr)*(1-Math.pow(res,dt*8));}   /* Rise / Fall resist ease the value */
+      r.dvs[i]=v;
+      a*=clamp(evalCurve(mp.alphaOverValue,v,1),0,2);sc*=evalCurve(mp.scaleOverValue,v,1);
+      if(mp.colorOverValue){const g=evalGradient(mp.colorOverValue,v);gc=gc?{r:gc.r*g.r,g:gc.g*g.g,b:gc.b*g.b}:g;}});
+    a=clamp(a,0,2);
     r.mesh.traverse(o=>{const mats=Array.isArray(o.material)?o.material:(o.material?[o.material]:[]);mats.forEach(mt=>{
       if(mt.userData.baseOpacity==null){mt.userData.baseOpacity=mt.opacity;mt.userData.baseColor=mt.color.clone();}
       mt.transparent=true;mt.opacity=clamp(mt.userData.baseOpacity*a,0,1);
@@ -3224,7 +3323,7 @@ function stepSaber(sb,dt,t,dv){
     e.geo.attributes.position.array.set(P);e.geo.attributes.position.needsUpdate=true;
   });
 }
-function updateDriverRow(){const r=$('#pvDriverRow');if(!r)return;const p=activePreset();r.hidden=!(p&&allModules(p).some(m=>m.enabled&&activeDrivers(m).length));}
+function updateDriverRow(){const r=$('#pvDriverRow');if(!r)return;const p=activePreset();r.hidden=!(p&&allModules(p).some(m=>m.enabled&&activeDrivers(m).length));if(r.hidden&&RUN.on)stopRun(false);}
 function updatePreviewFoot(){updateDriverRow();const p=activePreset();$('#pvPreset').textContent=p?p.name:'-';$('#pvMods').textContent=p?allModules(p).filter(m=>m.enabled).length:0;}
 
 /* ===================================================================== */
@@ -4010,6 +4109,7 @@ function wirePreviewBar(){
   const bd=$('#pvBackdrop'),sc=$('#pvScheme'),sr=$('#pvScrub');
   if(bd){Object.entries(BACKDROPS).forEach(([k,b])=>{const o=document.createElement('option');o.value=k;o.textContent=b.n;bd.appendChild(o);});bd.value=pv.backdrop;bd.onchange=()=>{pv.backdrop=bd.value;applyBackdrop();rebuildScene();T('backdrop-'+bd.value,true);};}
   if(sc){Object.entries(SCHEMES).forEach(([k,s])=>{const o=document.createElement('option');o.value=k;o.textContent=s.n;sc.appendChild(o);});sc.value=pv.scheme;sc.onchange=()=>{pv.scheme=sc.value;rebuildScene();T('scheme-'+sc.value,true);};}
+  const rb=$('#pvRun');if(rb)rb.onclick=startRun;
   if(sr){sr.value=pv.scrub;sr.oninput=()=>{T('driver-scrub',true);pv.scrub=parseFloat(sr.value)||0;if(pv.driveScore){pv.driveScore=false;syncPreviewToggles();}};}
   const cap=$('#btnCapture');if(cap)cap.onclick=openCaptureModal;
   const vw=$('#pvView');if(vw){Object.entries(VIEWS).forEach(([k,v])=>{const o=document.createElement('option');o.value=k;o.textContent=v.n;vw.appendChild(o);});vw.value=pv.view;vw.onchange=()=>setCameraView(vw.value);}
@@ -4334,10 +4434,10 @@ function routeDroppedFiles(files){
        Header:   export, import, assets, new-preset, clear-logo (triple tap on the logo), clear-key (Ctrl+Shift+X), guide-open*, guide-from-<header|quickstart|export>*, quest-open*
        Building: starter-<name> (incl. starter-drivers), module-<type>, snippet-<name>, add-menu-open*,
                  layer-duplicate*, layer-copy*, layer-paste*, layer-drag*, layer-solo*, layer-move-in*,
-                 layer-move-out*, curve-edit*, gradient-edit*, driver-add, driver-delete*, undo*, redo*,
+                 layer-move-out*, curve-edit*, gradient-edit*, driver-add, driver-recipe-<swing-glow|swing-grow|miss-dim|score-shine|pulse|hand-high>, driver-delete*, undo*, redo*,
                  history-open*, checkpoint-save, checkpoint-restore, explain, validate-jump*
        Compare:  compare-open, compare-pin, compare-revert, compare-preview*
-       Preview:  preview-<toggle>-on/off* (Bloom included), preview-pick* (clicked a part to edit it), backdrop-<name>*, scheme-<name>*, driver-scrub*, view-<name>*,
+       Preview:  preview-<toggle>-on/off* (Bloom included), preview-pick* (clicked a part to edit it), backdrop-<name>*, scheme-<name>*, driver-scrub*, driver-run (Test run started), driver-run-done* (played to the end), view-<name>*,
                  preview-frame*, preview-expand*, preview-resize*, preview-combine*, preview-left-preset*,
                  perf-target-<pc|quest>*, capture-open*, export-png, export-thumb, export-gif,
                  tab-<preview|json|valid>*

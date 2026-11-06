@@ -22,6 +22,8 @@ The ReeSabers in-game Preset Editor only runs on PC, so Studio is also the way t
 - **Layer tree.** Use **Add layer** for Blade (`blur-saber`), Trail (`simple-trail`), Sparks (`sparks-vfx`), Group (`empty`) and Dynamic Joint (`dynamic-joint`) layers. Select a Group or Dynamic Joint first to nest layers inside it. Reorder (drag, the ⋯ menu, or Alt+Up / Alt+Down), mute and delete at any depth.
 - **Curve and gradient editors.** Drag points to shape the blade profile, handle mask and every mapping curve, and edit color gradients along the blade or trail. Double-click adds a point, Delete removes one.
 - **Drivers.** Bind a live game value to a layer's color, alpha and scale using the same curve and gradient editors. Drivers are edited as the real ReeSabers objects, so nothing is simplified away.
+- **Ready-made drivers.** One click adds a tuned driver to the selected layer: brighter when you swing fast, grows with your swing, dims on a miss, shines as your score climbs, a slow pulse, or brighter with your hands up. Each one stays fully editable.
+- **Test run.** A 30 second pretend song under the preview: swings speed up in the chorus, you miss twice and your score climbs, and every driver reacts to its own value (with its rise and fall smoothing), so you can see how a preset will behave before you load it in game.
 - **Driver test preset.** One glowing band per driver number (1 to 9). Load it in game, play a song, and see which band reacts to what.
 - **Layer tools.** Duplicate, copy and paste layers (also between presets), drag and drop them into or out of groups, and solo a layer in the preview.
 - **Snippets.** Drop-in mini builds: hilt, guard ring, dangling charm on a dynamic joint, double-ended staff (a clone that stays linked when you reorder), and outline glow.
@@ -53,7 +55,7 @@ Nothing to install. Open the [live app](https://spanky3651.github.io/ReeSaber-St
 1. **Pick a starter.** Use **New Preset ▾** to open a community saber from the gallery, pick a template, or start blank.
 2. **Stack layers.** Use **Add layer** and pick a module or snippet. To nest, select a Group or Dynamic Joint in the stack first; new layers then go inside it. Click a layer's dot to mute it.
 3. **Tune it.** Select a layer (or click it in the preview) and open its panels to change its size, glow and color. Every setting has a **?** card. Turn on **Advanced** next to the editor tabs for the technical settings.
-4. **Add drivers.** On the **Drivers** tab, make a layer react to gameplay, for example a trail that brightens as you swing faster. Drag the **Driver** slider under the preview to test it, and turn on **Swing test** to see trails, sparks and jiggle in motion.
+4. **Add drivers.** On the **Drivers** tab, make a layer react to gameplay, for example a trail that brightens as you swing faster. Pick a ready-made driver or build your own, then press **Test run** under the preview to watch it react to a pretend song (or drag the **Driver** slider by hand). Turn on **Swing test** to see trails, sparks and jiggle in motion.
 5. **Add textures (optional).** Open **Assets**, drop in a `.png` / `.jpg`, then pick it in the layer's **Textures & Assets** panel.
 6. **Check and export.** When the **Validate** tab is green, use **Export → Download for Beat Saber (.json)**. That one file has its textures inside. Under **More download options** you'll also find:
    - **Download .reesaber**: a zip with `preset.json` plus a `textures/` folder.
