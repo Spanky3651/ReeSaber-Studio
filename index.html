@@ -770,7 +770,8 @@ html:not(.no-quest-usb) [data-no-usb]{display:none!important;}
   .nf-map,.nf-dot,.nf-vr{display:none;}
   .foot-count{grid-area:cnt;justify-content:center;}
 }
-@media(max-width:370px){.nf .nf-chip{font-size:11.5px;padding-left:2px;padding-right:2px;}}
+@media(max-width:720px){.nf .fxsw{white-space:nowrap;}}
+@media(max-width:370px){.nf .nf-chip{font-size:11.5px;padding-left:2px;padding-right:2px;}.nf .nf-credit .c3{letter-spacing:-.3px;}}
 #blocksBg{position:fixed;top:0;left:0;width:100%;height:100%;z-index:-1;pointer-events:none;display:block;opacity:.75;}
 .fxsw{display:inline-flex;align-items:center;gap:11px;font:700 14px system-ui,'Segoe UI',Arial,sans-serif;color:#cfd8e6;background:transparent;border:0;padding:4px;cursor:pointer;text-transform:none;letter-spacing:.2px;box-shadow:none;}
 .fxsw:hover{background:transparent;box-shadow:none;}
@@ -976,7 +977,7 @@ body.blocks-on .quickstart{background:linear-gradient(90deg,rgba(12,22,34,.82),r
     </a><a class="kofi-support nf-kofi" data-gc="kofi-click" href="https://ko-fi.com/msploit21?utm_source=reesaber-studio&amp;utm_medium=support-button" target="_blank" rel="noopener" title="Support MSploit on Ko-fi"><span class="kofi-heart">❤️</span>Support me</a></div>
   </div>
   <div class="nf-strip">
-    <div class="nf-sl"><span class="nf-map">Runs in your browser</span><span class="nf-dot">&middot;</span><span class="nf-upd" id="footUpdated" data-updated="2026-11-11T12:39Z">Updated recently</span></div>
+    <div class="nf-sl"><span class="nf-map">Runs in your browser</span><span class="nf-dot">&middot;</span><span class="nf-upd" id="footUpdated" data-updated="2026-11-11T12:46Z">Updated recently</span></div>
     <div class="nf-sr"><div class="foot-count" id="footCount" hidden></div><button type="button" class="fxsw" id="blocksSw" role="switch" aria-checked="false" aria-label="Falling blocks" title="Falling blocks background"><span class="fxsw-track"><span class="fxsw-knob"><svg viewBox="0 0 20 20" aria-hidden="true"><rect width="20" height="20" rx="5" class="k-body"/><path d="M3.3 3.3h13.4v1.9L10 8.3 3.3 5.2z" class="k-arrow"/></svg></span></span><span>Falling blocks</span></button></div>
   </div>
 </footer>
