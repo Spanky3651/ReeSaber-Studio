@@ -18,8 +18,10 @@ The ReeSabers in-game Preset Editor only runs on PC, so Studio is also the way t
 
 - **Quest over USB.** In Chrome or Edge on a computer, connect a Quest (Developer Mode on) and Studio lists the presets in its ReeSabers folder. Open one, edit it, and push it back. Every push shows what changes compared with the copy on the headset first. Built on [ya-webadb](https://github.com/yume-chan/ya-webadb), the same approach as the HSV Config Generator.
 - **Beginner friendly.** A Guide for players new to ReeSabers, a Simple view that shows the settings that change the look most (flip on **Advanced** for everything), plain setting names with units like Thickness (cm), and a ? help card on every setting.
-- **Presets.** Create, duplicate, rename and delete presets, start from a community saber in the gallery, or start from a template (Basic Neon, Reactive Velocity, Layered Trail, Driver test).
-- **Layer tree.** Use **Add layer** for Blade (`blur-saber`), Trail (`simple-trail`), Sparks (`sparks-vfx`), Group (`empty`) and Dynamic Joint (`dynamic-joint`) layers. Select a Group or Dynamic Joint first to nest layers inside it. Reorder (drag, the ⋯ menu, or Alt+Up / Alt+Down), mute and delete at any depth.
+- **Presets.** Create, duplicate, rename and delete presets, start from a community saber in the gallery, or start from a template (Basic Neon, Reactive Velocity, Layered Trail, Driver test, Clean Notes, Neon Outline Notes, Spiky Bomb).
+- **Notes and bombs (ReeSabers 0.4).** Set a preset's type to Notes or Bomb to restyle the blocks you cut and the bombs you dodge. A notes preset has a layer list for each note part (Body, Arrow, Dot, Chain head, Chain link, Chain tail), picked from the chips above the layers. The preview shows the note or bomb itself, both colors with Both hands, and Swing test flies it at you.
+- **Model layers.** The Model layer (`custom-model`) shows a `.glb` with color, metal, roughness, opacity and an outline (inflate) option. Make a rounded cube, cube, sphere, spiky ball, arrow, dot or chain link in one click, or upload your own `.glb`. Group layers can spin what's inside them.
+- **Layer tree.** Use **Add layer** for Blade (`blur-saber`), Trail (`simple-trail`), Sparks (`sparks-vfx`), Group (`empty`), Dynamic Joint (`dynamic-joint`) and Model (`custom-model`) layers. Select a Group or Dynamic Joint first to nest layers inside it. Reorder (drag, the ⋯ menu, or Alt+Up / Alt+Down), mute and delete at any depth.
 - **Curve and gradient editors.** Drag points to shape the blade profile, handle mask and every mapping curve, and edit color gradients along the blade or trail. Double-click adds a point, Delete removes one.
 - **Drivers.** Bind a live game value to a layer's color, alpha and scale using the same curve and gradient editors. Drivers are edited as the real ReeSabers objects, so nothing is simplified away.
 - **Ready-made drivers.** One click adds a tuned driver to the selected layer: brighter when you swing fast, grows with your swing, dims on a miss, shines as your score climbs, a slow pulse, or brighter with your hands up. Each one stays fully editable.
@@ -35,7 +37,7 @@ The ReeSabers in-game Preset Editor only runs on PC, so Studio is also the way t
 - **Showcase capture.** Save a transparent PNG, a 480×360 gallery thumbnail, or a looping GIF (360° spin or swing) for Discord or Reddit.
 - **Performance estimate and explain.** A Light / Medium / Heavy estimate for PC or Quest from mesh detail, particles and texture memory, and a plain-English breakdown of any preset's layers.
 - **Validation.** Live JSON inspector, usual ranges on every slider with per-panel Reset, and checks for empty presets, missing textures, unknown module types, out-of-range values and texture sizes, plus a pre-export check. Click a warning to jump to its layer. Unusual values that came from an imported file are kept and listed as notes, never changed for you.
-- **Lossless import.** Open a ReeSabers `.json` or `.reesaber` bundle and export it again without changing anything you did not edit (driver curves, texture names, unknown fields and `ModVersion` are all kept).
+- **Lossless import.** Open a ReeSabers `.json` or `.reesaber` bundle, including ReeSabers 0.4 files with several roots and models, and export it again without changing anything you did not edit (driver curves, texture and model names, unknown fields and `ModVersion` are all kept).
 - **Autosave.** Your work is saved in the browser (IndexedDB) and restored on your next visit. You can also download a full Studio project file.
 - **Drop files anywhere.** Drop a `.reesaber`, a preset or project `.json`, a `.zip` of presets, or textures and preview models onto the page. Custom Sabers `.saber` files are recognised and explained (they are Unity asset bundles for a different mod and can't be converted).
 - **Save to your Presets folder.** In Chrome and Edge, link `UserData/ReeSabers/Presets` once and save straight into it, optionally keeping the active preset synced while you edit.
@@ -116,6 +118,19 @@ Studio reads and writes the real ReeSabers preset structure:
 ```
 
 Textures are referenced from a layer's config by file name (for example `TexturesSettings.mainTextureId` on blades and `generalSettings.customTextureId` on trails). Imported presets keep their own `ModVersion`; new presets use `0.3.18`.
+
+### ReeSabers 0.4 layout
+
+Notes, bombs and any preset with a Model layer use the 0.4 layout, saved as a `.reesaber` zip:
+
+```text
+preset.json          { "ModVersion": "0.4.0", "Version": 2, "RootSettings": { "Type": 7, "Description": "" },
+                       "LocalTransform": {}, "Roots": [ { "Type": 7, "Modules": [] }, { "Type": 8, "Modules": [] } ] }
+textures/…           images referenced by *TextureId
+geometry/…           .glb models referenced by MeshSettings.modelId (a path inside geometry/)
+```
+
+`RootSettings.Type` is the preset type: 0 saber, 7 notes, 12 bomb. A notes preset has one root per note part: 7 body, 8 arrow, 9 dot, 10 chain head, 11 chain link, 13 chain tail. Parts with no layers are left out. Classic saber presets without models still export as `Version 1` `.json`, so they keep working on ReeSabers 0.3.
 
 Drivers are stored by number (`valueType`). ReeSabers doesn't publish which number is which game value, so Studio's names (Score, Velocity and so on) are marked as guesses, and any number can be typed in directly. Imported numbers are never changed. The **Driver test preset** is there to settle it: if you confirm what a number does, please [open an issue](https://github.com/Spanky3651/ReeSaber-Studio/issues).
 

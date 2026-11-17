@@ -192,6 +192,17 @@
   .stack-empty{border:1px dashed var(--line-2);border-radius:10px;padding:14px 12px;text-align:center}
   .stack-empty .se-t{font-size:13px;color:var(--txt-dim);margin-bottom:10px}
   .stack-empty .palette{margin-bottom:0;text-align:left}
+  .part-bar{margin:0 0 10px}
+  .part-bar .part-lab{font-size:11px;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:var(--txt-mut);margin:0 0 6px}
+  .part-row{display:flex;flex-wrap:wrap;gap:6px}
+  .part-chip{font:inherit;font-size:12px;font-weight:600;padding:5px 10px;border-radius:7px;border:1px solid var(--line-2);background:var(--panel-2);color:var(--txt-dim);cursor:pointer;display:inline-flex;align-items:center;gap:6px}
+  .part-chip span{font-size:10.5px;color:var(--txt-mut);font-weight:700}
+  .part-chip:hover{border-color:var(--cyan-dim);color:var(--txt)}
+  .part-chip.on{border-color:var(--cyan);color:#fff;background:rgba(30,107,255,.14)}
+  .part-chip.on span{color:#9fc0ff}
+  .part-bar .part-hint{font-size:12px;color:var(--txt-dim);margin:6px 0 0;line-height:1.45}
+  .shape-row{display:flex;flex-wrap:wrap;gap:6px;justify-content:center}
+  .chip.kind{background:rgba(30,107,255,.12);color:#9fc0ff;border:1px solid var(--cyan-dim)}
   .pal-target{font-size:11.5px;color:var(--txt-mut);margin:0 0 12px;display:flex;align-items:center;gap:8px;flex-wrap:wrap;line-height:1.45}
   .pal-target:empty{display:none}
   :focus-visible{outline:2px solid var(--cyan);outline-offset:2px}
@@ -882,6 +893,7 @@ body.blocks-on .quickstart{background:linear-gradient(90deg,rgba(12,22,34,.82),r
           </div>
         </div>
         <div class="pal-target" id="paletteTarget"></div>
+        <div id="partBar" class="part-bar" hidden></div>
         <div id="pasteBar" class="paste-bar"></div>
         <div id="stackList"></div>
       </div>
@@ -978,7 +990,7 @@ body.blocks-on .quickstart{background:linear-gradient(90deg,rgba(12,22,34,.82),r
     </a><a class="kofi-support nf-kofi" data-gc="kofi-click" href="https://ko-fi.com/msploit21?utm_source=reesaber-studio&amp;utm_medium=support-button" target="_blank" rel="noopener" title="Support MSploit on Ko-fi"><span class="kofi-heart">❤️</span>Support me</a></div>
   </div>
   <div class="nf-strip">
-    <div class="nf-sl"><span class="nf-map">Runs in your browser</span><span class="nf-dot">&middot;</span><span class="nf-upd" id="footUpdated" data-updated="2026-11-11T12:57Z">Updated recently</span></div>
+    <div class="nf-sl"><span class="nf-map">Runs in your browser</span><span class="nf-dot">&middot;</span><span class="nf-upd" id="footUpdated" data-updated="2026-11-17T13:26Z">Updated recently</span></div>
     <div class="nf-sr"><div class="foot-count" id="footCount" hidden></div><button type="button" class="fxsw" id="blocksSw" role="switch" aria-checked="false" aria-label="Falling blocks" title="Falling blocks background"><span class="fxsw-track"><span class="fxsw-knob"><svg viewBox="0 0 20 20" aria-hidden="true"><rect width="20" height="20" rx="5" class="k-body"/><path d="M3.3 3.3h13.4v1.9L10 8.3 3.3 5.2z" class="k-arrow"/></svg></span></span><span>Falling blocks</span></button></div>
   </div>
 </footer>
@@ -1086,7 +1098,8 @@ const LIMITS = {
   triggerPct:[0,1,0.01,0.7], triggerPeriod:[0,1,0.01,0.05], burstSpread:[0,2,0.05,0.8],
   hue:[0,1,0.001,0], sat:[0,1,0.01,1], val:[0,1,0.01,1], hueShift:[-2,2,0.01,0], fakeGlow:[0,5,0.05,1], glow:[0,1,0.01,0.5],
   driverRange:[-100,100,0.1,1], resistance:[0,5,0.01,0], alpha:[0,1,0.01,1], driverScale:[0,3,0.01,1],
-  smoothing:[0,1,0.01,0.5], springConstant:[0,1000,1,100], jointMass:[0.01,10,0.01,0.5], jointDamping:[0,10,0.05,1]
+  smoothing:[0,1,0.01,0.5], springConstant:[0,1000,1,100], jointMass:[0.01,10,0.01,0.5], jointDamping:[0,10,0.05,1],
+  modelScale:[0.1,3,0.01,1], inflate:[0,30,0.5,0], opacity:[0,1,0.01,1], reflection:[0,3,0.05,1]
 };
 
 /* ===================================================================== */
@@ -1132,6 +1145,14 @@ const TEMPLATES={
     SpawnSettings:{MinLifetime:0.1,MaxLifetime:0.5,SpawningPeriod:0.0,MinBladeOffset:0.98,MaxBladeOffset:1.02,MinParticleMass:0.2,MaxParticleMass:0.7,RandomSpawnVelocity:0.0,BladeInertiaMultiplier:0.5,SizeVariation:{x:0,y:0},SpawnDriver:{valueType:0,increaseResistance:0,decreaseResistance:0,multiplierOverValue:CURVE1(1),valueFrom:0,valueTo:1}},
     PhysicsSettings:{DampingCoefficient:1.5,TurbulenceScale:4.0,TurbulenceTimeScale:0.3,TurbulencePower:0.0,Gravity:{x:0,y:0,z:0}}}},
   'reezonate.empty':{label:'Group',icon:'layers',version:1,kind:'group',config:baseTail('Group')},
+  /* ReeSabers 0.4: a 3D model (.glb) with a lit material. Notes and bombs are built from these. */
+  'reezonate.custom-model':{label:'Model',icon:'cube',version:1,kind:'model',
+    config:Object.assign({MeshSettings:{modelId:'',scale:1.0,inflate:0.0,flipNormals:false,mirrorX:false,mirrorY:false,mirrorZ:false}},baseTail('Model'),{
+      MaterialSettings:{color:{r:1,g:1,b:1,a:0},reflectionColor:clone(WHITE),envLightColor:clone(WHITE),opacity:1.0,fresnelPower:5.0,metallic:0.0,roughness:0.5,envLightIntensity:1.0,reflectionIntensity:1.0,normalMapIntensity:1.0,
+        sceneReflections:false,sceneLights:false,renderQueue:2990,cullMode:0,depthWrite:true,opaque:true,
+        maskSettings:{driversMaskResolution:32,driversSampleMode:0,viewingAngleMappings:mappingBlock(),surfaceAngleMappings:mappingBlock(),drivers:[0,1,2,3].map(()=>({valueType:0,increaseResistance:0,decreaseResistance:0,mappings:mappingBlock()}))}},
+      TexturesSettings:{mainTextureId:'None',normalMapTextureId:'None',glowMapTextureId:'None',colorMapTextureId:'None',metallicMapTextureId:'None',roughnessMapTextureId:'None',opacityTextureId:'None',envMapTextureId:'None',
+        animationLayout:{totalFrames:1,framesPerRow:1,framesPerColumn:1,frameDuration:1.0},tilingLayout:{x:1,y:1,z:0,w:0},uvScroll:{x:0,y:0},opacityTilingLayout:{x:1,y:1,z:0,w:0},opacityUvScroll:{x:0,y:0},mappingType:0}})},
   'reezonate.dynamic-joint':{label:'Dynamic Joint',icon:'joint',version:1,kind:'joint',
     config:Object.assign({JointSettings:{linearLimit:{x:0,y:0,z:0},angularLimit:{x:35,y:35,z:35},springConstant:100,mass:0.5,damping:1}},baseTail('Dynamic Joint'))},
   'reezonate.clone':{label:'Clone',icon:'copy',version:1,kind:'clone',palette:false,
@@ -1178,7 +1199,17 @@ const HELP={
   stretchBias:{t:'Stretch Bias',b:'Moves mesh detail toward the tip or the base of the blade as it stretches during fast swings. Most presets leave it alone.',g:''},
   customMesh:{t:'Preview Mesh',b:'Shows your own 3D model (.obj / .glb / .gltf) in place of this blade in the 3D preview.',g:'Preview only. Studio does not write custom models into presets, so the model is <em>not</em> in the exported file.'},
   customTexture:{t:'Texture Slot',b:'Pick an uploaded image (.png / .jpg). Its file name is written into the preset, and the image itself is embedded in BinaryAssets (.json) or the textures/ folder (.reesaber).',g:''},
-  rootType:{t:'Root Type',b:'What this preset attaches to. Saber (0) is the standard type and the only one Studio creates; other values are kept as-is from imported files.',g:''},
+  rootType:{t:'Preset Type',b:'What this preset changes in game. Saber is the classic ReeSabers preset. Notes and Bomb came with ReeSabers 0.4 and restyle the blocks you cut and the bombs you dodge. Other numbers from imported files are kept as they are.',g:'Notes and bombs save as <em>.reesaber</em> files and need ReeSabers 0.4 or newer.'},
+  notePart:{t:'Note Parts',b:'A notes preset has a separate layer list for each part of a note. Body is the block itself. Arrow shows on notes with a cut direction and Dot on dot notes. Chain head, link and tail style the pieces of a chain. Parts you leave empty are left out of the file.',g:'Each part sits at the center of the note, so move a layer forward to put it on the front face.'},
+  modelFile:{t:'Model File',b:'The 3D model (.glb) this layer shows. It is saved inside the .reesaber file in a geometry folder. Pick a shape to have Studio make a simple one for you, or upload your own .glb in Assets.',g:'A Beat Saber note is about 0.45 m across.'},
+  modelScale:{t:'Size',b:'Scales the model. 1 keeps the size it was made at.',g:''},
+  inflate:{t:'Outline (Inflate)',b:'Pushes the surface outward by this many millimetres. Use it on a copy of the model with Show set to back faces to draw an outline around it.',g:'5 to 10 mm gives a clean <em>outline</em>.'},
+  cullMode:{t:'Show',b:'Which sides of the surface are drawn. Both sides is normal. Back faces only, on an inflated copy, makes an outline. Front faces only hides the inside.',g:''},
+  modelColor:{t:'Color',b:'The base color of the model. In the preview it is tinted by the note color, the way the game colors notes.',g:'Keep it white so notes follow your color scheme.'},
+  opacity:{t:'Opacity',b:'How see-through the model is. 1 is solid.',g:''},
+  reflection:{t:'Reflections',b:'How strongly the reflection map shows on the surface. Needs a reflection map texture, metallic surfaces show it most.',g:''},
+  rotationSpeed:{t:'Spin',b:'Spins everything inside this group, in degrees per second around each axis. Added in ReeSabers 0.4.',g:'A slow spin like 15, 30, 0 makes a bomb <em>tumble</em>.'},
+  description:{t:'Description',b:'A note saved with the preset. ReeSabers 0.4 shows it with the preset.',g:''},
   valueSource:{t:'Value Source',b:'Which live game value drives this layer. ReeSabers saves it as a number. The mod does not publish which number means what, so the names here are best guesses; the number itself is what matters and imported numbers are never changed.',g:'If a preset you like reacts the way you want, copy its type number.'},
   curve:{t:'Curve Editor',b:'Drag points to reshape the curve, double-click empty space to add a point, and select a point then press Delete to remove it. Arrow keys nudge the selected point.',g:'Left is the start of the range, right is the end.'},
   gradient:{t:'Gradient Editor',b:'Click the color bar to add a stop, drag the markers below it to move them, and use the box to pick a color. Alpha above 1 acts as extra glow.',g:'White keeps the saber color unchanged; any other color tints it.'},
@@ -1234,7 +1265,8 @@ const pv={spin:true,swing:false,trail:true,glow:true,bloom:!(window.matchMedia&&
 
 function newModule(moduleId){const t=TEMPLATES[moduleId];return{uid:uid(),moduleId,version:t.version,name:t.config.Name,enabled:true,kind:t.kind,config:clone(t.config),customMeshId:'',children:[]};}
 function nextPresetName(){const names=new Set(state.presets.map(p=>p.name));let n=1;while(names.has('Preset '+n))n++;return 'Preset '+n;}
-function newPreset(name){return{id:uid(),name:name||nextPresetName(),modVersion:state.modVersion,hands:{L:true,R:true},color:{left:'#ff1e3c',right:'#1e6bff'},transform:{Position:{x:0,y:0,z:0},Rotation:{x:0,y:0,z:0},Scale:{x:1,y:1,z:1}},rootType:0,modules:[],extraTextures:[],rawGeometry:[],preview:{combine:[],leftId:''}};}
+function newPreset(name){return{id:uid(),name:name||nextPresetName(),modVersion:state.modVersion,hands:{L:true,R:true},color:{left:'#ff1e3c',right:'#1e6bff'},transform:{Position:{x:0,y:0,z:0},Rotation:{x:0,y:0,z:0},Scale:{x:1,y:1,z:1}},rootType:0,modules:[],extraTextures:[],rawGeometry:[],preview:{combine:[],leftId:''},
+  formatVersion:1,part:0,parts:{},geoFiles:{},description:''};}
 function activePreset(){return state.presets.find(p=>p.id===state.activePresetId);}
 /* ---- module tree helpers (layers can nest inside Groups / Dynamic Joints) ---- */
 function walkModules(list,fn,parent,depth){depth=depth||0;(list||[]).forEach((m,i)=>{fn(m,parent||null,depth,list,i);walkModules(m.children,fn,m,depth+1);});}
@@ -1245,12 +1277,134 @@ function reUid(list){(list||[]).forEach(m=>{m.uid=uid();reUid(m.children);});}
 function isContainer(m){return !!m&&(m.kind==='group'||m.kind==='joint');}
 function assetById(id){return state.assets.find(a=>a.id===id);}
 function assetByName(n,kind){return state.assets.find(a=>a.name===n&&(!kind||a.kind===kind))||null;}
+/* ---- ReeSabers 0.4: notes and bombs are presets too, and one preset can hold several roots ----
+   The preset's own type is RootSettings.Type (0 saber, 7 notes, 12 bomb). A notes preset has one root per
+   note part (Roots[].Type 7 body, 8 arrow, 9 dot, 10 chain head, 11 chain link, 13 chain tail). Studio edits
+   one root at a time: p.modules is the part being edited and the others wait in p.parts. */
+const ROOT_SABER=0,ROOT_NOTES=7,ROOT_BOMB=12;
+const NOTE_PARTS=[{t:7,n:'Body',d:'The block itself, used by every note'},{t:8,n:'Arrow',d:'Shown on notes with a cut direction'},{t:9,n:'Dot',d:'Shown on dot notes (any direction)'},{t:10,n:'Chain head',d:'The first piece of a chain'},{t:11,n:'Chain link',d:'The small pieces of a chain'},{t:13,n:'Chain tail',d:'The last piece of a chain'}];
+function rootLabel(t){return t===ROOT_SABER?'Saber':t===ROOT_NOTES?'Notes':t===ROOT_BOMB?'Bomb':'Type '+t;}
+function partLabel(t){const x=NOTE_PARTS.find(n=>n.t===t);return x?x.n:rootLabel(t);}
+function isNotes(p){return !!p&&p.rootType===ROOT_NOTES;}
+function isBomb(p){return !!p&&p.rootType===ROOT_BOMB;}
+function isObjectPreset(p){return isNotes(p)||isBomb(p);}
+function curPart(p){return p&&p.part!=null&&isFinite(p.part)?p.part:(p?p.rootType:0);}
+function rootModules(p,t){if(!p)return [];if(curPart(p)===t)return p.modules;const l=(p.parts||{})[t];return Array.isArray(l)?l:[];}
+function presetRoots(p){
+  if(!p)return [];const out=[{type:curPart(p),modules:p.modules}];const ps=p.parts||{};
+  Object.keys(ps).forEach(k=>{const t=parseInt(k,10);if(isFinite(t)&&t!==curPart(p)&&Array.isArray(ps[k]))out.push({type:t,modules:ps[k]});});
+  const ord=t=>{if(t===p.rootType)return -1;const i=NOTE_PARTS.findIndex(n=>n.t===t);return i>=0?i:100+t;};
+  return out.sort((a,b)=>ord(a.type)-ord(b.type));
+}
+function walkAllModules(p,fn){presetRoots(p).forEach(r=>walkModules(r.modules,fn));}
+function everyModule(p){const out=[];walkAllModules(p,m=>out.push(m));return out;}
+function findAnyModule(p,id){const f=findModule(p,id);if(f)return {f,part:curPart(p)};let r=null;presetRoots(p).forEach(rt=>{if(r||rt.type===curPart(p))return;const g=findModule({modules:rt.modules},id);if(g)r={f:g,part:rt.type};});return r;}
+function hasModelLayers(p){return everyModule(p).some(m=>m.kind==='model');}
+/* ReeSabers 0.4 file layout (Version 2, Roots, models in geometry/) for notes, bombs, models and anything imported that way */
+function isV2(p){return !!p&&(p.formatVersion===2||isObjectPreset(p)||hasModelLayers(p)||presetRoots(p).length>1);}
+function cmpVer(a,b){const A=String(a||'0').split('.').map(x=>parseInt(x,10)||0),B=String(b||'0').split('.').map(x=>parseInt(x,10)||0);for(let i=0;i<Math.max(A.length,B.length);i++){const d=(A[i]||0)-(B[i]||0);if(d)return d<0?-1:1;}return 0;}
+function exportModVersion(p){const v=p.modVersion||state.modVersion;return isV2(p)&&cmpVer(v,'0.4.0')<0?'0.4.0':v;}
+function switchPart(p,t){
+  if(!p||curPart(p)===t)return;p.parts=p.parts||{};const old=curPart(p);
+  if(p.modules.length)p.parts[old]=p.modules;else delete p.parts[old];
+  p.modules=Array.isArray(p.parts[t])?p.parts[t]:[];delete p.parts[t];p.part=t;
+  state.activeModuleId=null;state.soloUid=null;if(state.activeTab==='module'||state.activeTab==='drivers')state.activeTab='preset';
+  T('note-part-'+t,true);renderAll();
+}
+function setRootType(p,v){
+  v=Math.trunc(safeNum(v,0));if(!p||v===p.rootType)return;
+  const others=presetRoots(p).filter(r=>r.type!==p.rootType&&r.modules.length);
+  const go=()=>{
+    if(curPart(p)!==p.rootType){p.parts=p.parts||{};if(p.modules.length)p.parts[curPart(p)]=p.modules;p.modules=Array.isArray(p.parts[p.rootType])?p.parts[p.rootType]:[];delete p.parts[p.rootType];}
+    if(v!==ROOT_NOTES)p.parts={};
+    p.rootType=v;p.part=v;if(v!==ROOT_SABER)p.formatVersion=2;
+    state.activeModuleId=null;state.soloUid=null;lastFrameKey='';renderAll();T('root-type-'+v);toast('This preset is now a '+rootLabel(v).toLowerCase()+' preset');
+  };
+  if(v!==ROOT_NOTES&&others.length)confirmModal('Change the preset type?','The '+others.map(r=>partLabel(r.type)).join(', ')+' part'+(others.length>1?'s':'')+' only exist on notes, so '+(others.length>1?'they':'it')+' will be removed. The '+partLabel(p.rootType)+' layers stay.',go,'Change type');
+  else go();
+}
+/* ---- custom models: MeshSettings.modelId is a path inside the .reesaber geometry/ folder ---- */
+function modelIdOf(m){return safeStr(get(m.config,'MeshSettings.modelId'),'');}
+function modelAsset(p,id){if(!id)return null;const g=p&&p.geoFiles&&p.geoFiles[id];return (g&&assetByName(g,'mesh'))||assetByName(id,'mesh')||assetByName(String(id).split('/').pop(),'mesh')||null;}
+function safeGeoPath(id){id=String(id||'').replace(/\\/g,'/').replace(/^\/+/,'');if(!id||id.length>160||id.split('/').some(s=>!s||s==='.'||s==='..'))return null;return id;}
+/* ---- simple shapes Studio can make as .glb models (for starters and the Model layer's shape picker) ---- */
+const NOTE_SIZE=0.42;
+function glbFromGeometry(geo,name){
+  geo=geo.index?geo.toNonIndexed():geo;if(!geo.attributes.normal)geo.computeVertexNormals();
+  const pos=new Float32Array(geo.attributes.position.array),nor=new Float32Array(geo.attributes.normal.array),n=pos.length/3;
+  const idx=n<65536?new Uint16Array(n):new Uint32Array(n);for(let i=0;i<n;i++)idx[i]=i;
+  const mn=[Infinity,Infinity,Infinity],mx=[-Infinity,-Infinity,-Infinity];
+  for(let i=0;i<n;i++)for(let k=0;k<3;k++){const v=pos[i*3+k];if(v<mn[k])mn[k]=v;if(v>mx[k])mx[k]=v;}
+  const pad4=x=>(x+3)&~3,ib=pad4(idx.byteLength),binLen=pos.byteLength+nor.byteLength+ib;
+  const json={asset:{version:'2.0',generator:'ReeSaber Studio'},scene:0,scenes:[{nodes:[0]}],nodes:[{mesh:0,name}],materials:[{name:'White',doubleSided:true}],
+    meshes:[{name,primitives:[{attributes:{POSITION:0,NORMAL:1},indices:2,material:0}]}],
+    accessors:[{bufferView:0,componentType:5126,count:n,max:mx,min:mn,type:'VEC3'},{bufferView:1,componentType:5126,count:n,type:'VEC3'},{bufferView:2,componentType:n<65536?5123:5125,count:n,type:'SCALAR'}],
+    bufferViews:[{buffer:0,byteLength:pos.byteLength,byteOffset:0,target:34962},{buffer:0,byteLength:nor.byteLength,byteOffset:pos.byteLength,target:34962},{buffer:0,byteLength:idx.byteLength,byteOffset:pos.byteLength+nor.byteLength,target:34963}],
+    buffers:[{byteLength:binLen}]};
+  let jb=new TextEncoder().encode(JSON.stringify(json));const jl=pad4(jb.length);
+  const out=new Uint8Array(12+8+jl+8+binLen),dv=new DataView(out.buffer);
+  dv.setUint32(0,0x46546C67,true);dv.setUint32(4,2,true);dv.setUint32(8,out.length,true);
+  dv.setUint32(12,jl,true);dv.setUint32(16,0x4E4F534A,true);out.fill(0x20,20,20+jl);out.set(jb,20);
+  let o=20+jl;dv.setUint32(o,binLen,true);dv.setUint32(o+4,0x004E4942,true);o+=8;
+  out.set(new Uint8Array(pos.buffer),o);o+=pos.byteLength;out.set(new Uint8Array(nor.buffer),o);o+=nor.byteLength;out.set(new Uint8Array(idx.buffer),o);
+  return out;
+}
+function mergeGeos(list){
+  const parts=list.map(g=>{g=g.index?g.toNonIndexed():g;if(!g.attributes.normal)g.computeVertexNormals();return g;});
+  const n=parts.reduce((s,g)=>s+g.attributes.position.count,0),P=new Float32Array(n*3),N=new Float32Array(n*3);let o=0;
+  parts.forEach(g=>{P.set(g.attributes.position.array,o*3);N.set(g.attributes.normal.array,o*3);o+=g.attributes.position.count;});
+  const out=new THREE.BufferGeometry();out.setAttribute('position',new THREE.BufferAttribute(P,3));out.setAttribute('normal',new THREE.BufferAttribute(N,3));return out;
+}
+/* a box with rounded edges: every vertex is pulled onto a rounded surface, normals point out of it */
+function roundedBoxGeo(w,h,d,r,seg){
+  const g=new THREE.BoxGeometry(w,h,d,seg||8,seg||8,seg||8),p=g.attributes.position,nrm=g.attributes.normal;
+  const hx=w/2-r,hy=h/2-r,hz=d/2-r,v=new THREE.Vector3(),c=new THREE.Vector3();
+  for(let i=0;i<p.count;i++){v.fromBufferAttribute(p,i);c.set(clamp(v.x,-hx,hx),clamp(v.y,-hy,hy),clamp(v.z,-hz,hz));
+    const dd=v.clone().sub(c);if(dd.lengthSq()<1e-12)dd.fromBufferAttribute(nrm,i);dd.normalize();p.setXYZ(i,c.x+dd.x*r,c.y+dd.y*r,c.z+dd.z*r);nrm.setXYZ(i,dd.x,dd.y,dd.z);}
+  return g;
+}
+/* flat pieces sit on both the front (-Z, toward the player) and the back face, so they show whichever way the model is read in */
+function onBothFaces(g,z){const a=g.clone();a.translate(0,0,-z);const b=g.clone();b.rotateY(Math.PI);b.translate(0,0,z);return mergeGeos([a,b]);}
+function arrowGeo(){const S=NOTE_SIZE,sh=new THREE.Shape();sh.moveTo(-S*0.3,S*0.1);sh.lineTo(S*0.3,S*0.1);sh.lineTo(0,-S*0.16);sh.lineTo(-S*0.3,S*0.1);
+  const g=new THREE.ExtrudeGeometry(sh,{depth:0.01,bevelEnabled:false});g.translate(0,0,-0.005);return onBothFaces(g,S/2+0.006);}
+function dotGeo(r){const g=new THREE.CylinderGeometry(r||0.07,r||0.07,0.01,28);g.rotateX(Math.PI/2);return onBothFaces(g,NOTE_SIZE/2+0.006);}
+function spikyGeo(){const g=new THREE.IcosahedronGeometry(0.17,1).toNonIndexed(),p=g.attributes.position,ico=new THREE.IcosahedronGeometry(0.17,0).toNonIndexed().attributes.position,tips=[],v=new THREE.Vector3(),q=new THREE.Vector3();
+  for(let i=0;i<ico.count;i++){v.fromBufferAttribute(ico,i);if(!tips.some(t=>t.distanceTo(v)<1e-4))tips.push(v.clone());}
+  for(let i=0;i<p.count;i++){v.fromBufferAttribute(p,i);if(tips.some(t=>t.distanceTo(v)<1e-4)){q.copy(v).multiplyScalar(1.45);p.setXYZ(i,q.x,q.y,q.z);}}
+  g.computeVertexNormals();return g;}
+const SHAPES={
+  roundcube:{n:'Rounded cube',file:'note-body.glb',geo:()=>roundedBoxGeo(NOTE_SIZE,NOTE_SIZE,NOTE_SIZE,0.06,8)},
+  cube:{n:'Cube',file:'cube.glb',geo:()=>new THREE.BoxGeometry(NOTE_SIZE,NOTE_SIZE,NOTE_SIZE)},
+  sphere:{n:'Sphere',file:'sphere.glb',geo:()=>new THREE.SphereGeometry(0.2,32,20)},
+  spiky:{n:'Spiky ball',file:'spiky-ball.glb',geo:spikyGeo},
+  arrow:{n:'Arrow',file:'note-arrow.glb',geo:arrowGeo},
+  dot:{n:'Dot',file:'note-dot.glb',geo:()=>dotGeo(0.07)},
+  link:{n:'Chain link',file:'chain-link.glb',geo:()=>roundedBoxGeo(NOTE_SIZE,0.11,NOTE_SIZE,0.035,6)},
+  linkdot:{n:'Small dot',file:'chain-dot.glb',geo:()=>{const g=new THREE.CylinderGeometry(0.04,0.04,0.01,24);g.rotateX(Math.PI/2);return onBothFaces(g,NOTE_SIZE/2+0.006);}}
+};
+/* make a shape's .glb (once; identical files are reused) and return its asset name, or '' if the 3D engine isn't ready */
+function shapeModel(key){
+  const s=SHAPES[key];if(!s||!window.THREE||!THREE.BufferGeometry)return '';
+  const bytes=glbFromGeometry(s.geo(),s.n);const du='data:model/gltf-binary;base64,'+bytesToB64(bytes);
+  const map=importAssetList([{name:s.file,kind:'mesh',ext:'glb',dataURL:du,size:bytes.length}]);updateAssetCount();
+  return map[s.file]||s.file;
+}
+function modelLayer(name,key,opts){
+  opts=opts||{};const m=newModule('reezonate.custom-model');m.name=name;m.config.Name=name;
+  m.config.MeshSettings.modelId=shapeModel(key);const mt=m.config.MaterialSettings;
+  if(opts.color){mt.color.r=opts.color[0];mt.color.g=opts.color[1];mt.color.b=opts.color[2];}
+  ['metallic','roughness','opacity','fresnelPower'].forEach(k=>{if(opts[k]!=null)mt[k]=opts[k];});
+  if(opts.outline){m.config.MeshSettings.inflate=opts.outline;mt.cullMode=1;mt.depthWrite=false;mt.renderQueue=2989;}
+  if(opts.white){m.config.ForceColorOverride=true;Object.assign(m.config.ColorOverride,{hue:0,saturation:0,value:1});}
+  if(opts.z)m.config.LocalTransform.Position.z=opts.z;
+  return m;
+}
 /* ---- texture references live in the config as file names (real ReeSabers schema) ---- */
 const NO_TEX=v=>!v||v==='None';
-const TEX_LABELS={mainTextureId:'Main texture',glowMapTextureId:'Glow map',normalMapTextureId:'Normal map',colorMapTextureId:'Color map',metallicMapTextureId:'Metallic map',roughnessMapTextureId:'Roughness map',opacityTextureId:'Opacity map'};
+const TEX_LABELS={mainTextureId:'Main texture',glowMapTextureId:'Glow map',normalMapTextureId:'Normal map',colorMapTextureId:'Color map',metallicMapTextureId:'Metallic map',roughnessMapTextureId:'Roughness map',opacityTextureId:'Opacity map',envMapTextureId:'Reflection map'};
 function texFieldsOf(m){
   const c=m.config||{},out=[];
-  if(m.kind==='blade'&&c.TexturesSettings&&typeof c.TexturesSettings==='object'){Object.keys(TEX_LABELS).forEach(k=>{if(k in c.TexturesSettings||k==='mainTextureId')out.push({path:'TexturesSettings.'+k,label:TEX_LABELS[k],empty:'None'});});}
+  if((m.kind==='blade'||m.kind==='model')&&c.TexturesSettings&&typeof c.TexturesSettings==='object'){Object.keys(TEX_LABELS).forEach(k=>{if(k in c.TexturesSettings||k==='mainTextureId')out.push({path:'TexturesSettings.'+k,label:TEX_LABELS[k],empty:'None'});});}
   const gs=get(c,'MaterialSettings.generalSettings');
   if(gs&&typeof gs==='object'&&(m.kind==='trail'||m.kind==='vfx')){out.push({path:'MaterialSettings.generalSettings.customTextureId',label:'Texture',empty:''});out.push({path:'MaterialSettings.generalSettings.opacityTextureId',label:'Opacity texture',empty:''});}
   return out;
@@ -1432,10 +1586,10 @@ function renderPresets(){
   if(!state.presets.length){list.innerHTML='<div class="empty">'+ICON.layers+'<div>No presets yet.<br>Create one to begin.</div></div>';return;}
   state.presets.forEach(p=>{
     const card=document.createElement('div');card.className='preset-card'+(p.id===state.activePresetId?' active':'');
-    const n=allModules(p).length;
+    const n=everyModule(p).length;
     const issues=validatePreset(p).filter(v=>v.level==='err').length;
     card.innerHTML=`<div class="pc-top"><div class="pc-name">${escapeHtml(p.name)}</div><div class="pc-swatches"><div class="swatch"></div><div class="swatch"></div></div></div>
-      <div class="pc-meta"><span class="chip mods">${n} layer${n!==1?'s':''}</span><span class="chip mods">v${escapeHtml(p.modVersion||state.modVersion)}</span>${issues?`<span class="chip warn">${issues} issue${issues>1?'s':''}</span>`:''}</div>
+      <div class="pc-meta">${isObjectPreset(p)?`<span class="chip kind">${rootLabel(p.rootType)}</span>`:''}<span class="chip mods">${n} layer${n!==1?'s':''}</span><span class="chip mods">v${escapeHtml(exportModVersion(p))}</span>${issues?`<span class="chip warn">${issues} issue${issues>1?'s':''}</span>`:''}</div>
       <div class="pc-actions"><button class="btn sm ghost icon" data-act="dup" title="Duplicate" aria-label="Duplicate preset">${ICON.copy}</button><button class="btn sm ghost icon" data-act="ren" title="Rename" aria-label="Rename preset">${ICON.edit}</button><button class="btn sm ghost icon danger" data-act="del" title="Delete" aria-label="Delete preset">${ICON.trash}</button></div>`;
     const sw=card.querySelectorAll('.swatch');sw[0].style.background=safeColor(p.color.left,'#888888');sw[1].style.background=safeColor(p.color.right,'#888888');
     card.addEventListener('click',e=>{const act=e.target.closest('[data-act]');if(act){e.stopPropagation();presetAction(act.dataset.act,p.id);return;}selectPreset(p.id);});
@@ -1444,7 +1598,7 @@ function renderPresets(){
 }
 function presetAction(act,id){
   const p=state.presets.find(x=>x.id===id);
-  if(act==='dup'){const c=clone(p);c.id=uid();c.name=p.name+' Copy';reUid(c.modules);state.presets.splice(state.presets.indexOf(p)+1,0,c);selectPreset(c.id);toast('Preset duplicated');}
+  if(act==='dup'){const c=clone(p);c.id=uid();c.name=p.name+' Copy';presetRoots(c).forEach(r=>reUid(r.modules));state.presets.splice(state.presets.indexOf(p)+1,0,c);selectPreset(c.id);toast('Preset duplicated');}
   else if(act==='ren'){promptText('Rename preset',p.name,v=>{p.name=v;renderAll();});}
   else if(act==='del'){confirmModal('Delete preset?','“'+escapeHtml(p.name)+'” and its '+allModules(p).length+' layer(s) will be removed.',()=>{state.presets.splice(state.presets.indexOf(p),1);if(state.activePresetId===id){state.activePresetId=state.presets[0]?state.presets[0].id:null;state.activeModuleId=null;}renderAll();toast('Preset deleted');});}
 }
@@ -1487,7 +1641,18 @@ function renderStack(){
   $('#moduleCount').textContent=allModules(p).length;
   renderPaletteTarget();
   const pb=$('#pasteBar');if(pb){pb.innerHTML='';if(p&&state.layerClip){const b=document.createElement('button');b.className='btn sm';b.innerHTML=ICON.copy+' ';b.appendChild(document.createTextNode('Paste “'+(state.layerClip.name||'layer')+'”'));b.title='Paste the copied layer (Ctrl+V)';b.onclick=pasteLayer;pb.appendChild(b);}}
+  renderPartBar(p);
   if(!p){list.innerHTML='<div class="empty">Select a preset<br>to build its stack.</div>';return;}
+  if(!p.modules.length&&isObjectPreset(p)){
+    const e=document.createElement('div');e.className='stack-empty';
+    const t=document.createElement('div');t.className='se-t';t.textContent=isNotes(p)?'No layers in the '+partLabel(curPart(p))+' part yet. Start with a shape:':'No layers yet. Start with a shape:';e.appendChild(t);
+    const row=document.createElement('div');row.className='shape-row';
+    (isBomb(p)?['spiky','sphere','roundcube']:curPart(p)===8?['arrow']:curPart(p)===9?['dot']:curPart(p)===11||curPart(p)===13?['link','linkdot']:['roundcube','cube','sphere']).forEach(k=>{
+      const b=document.createElement('button');b.type='button';b.className='btn sm';b.textContent=SHAPES[k].n;b.onclick=()=>addShapeLayer(k);row.appendChild(b);});
+    e.appendChild(row);
+    const more=document.createElement('div');more.className='fset-note';more.style.margin='10px 0 0';more.textContent='Or use Add layer for any module, and pick your own .glb in its Model panel.';e.appendChild(more);
+    list.appendChild(e);return;
+  }
   if(!p.modules.length){const e=document.createElement('div');e.className='stack-empty';e.innerHTML='<div class="se-t">No layers yet. Start with a <b>Blade</b>:</div>';const pal=document.createElement('div');pal.className='palette';paletteInto(pal);e.appendChild(pal);list.appendChild(e);return;}
   const draw=(mods,depth)=>mods.forEach((m,i)=>{
     const el=document.createElement('div');el.className='stack-item'+(m.uid===state.activeModuleId?' active':'')+(depth?' nested':'')+(state.soloUid===m.uid?' solo':'');
@@ -1505,6 +1670,24 @@ function renderStack(){
     if(m.children&&m.children.length)draw(m.children,depth+1);
   });
   draw(p.modules,0);
+}
+/* notes presets: one chip per note part, each with its own layer list */
+function renderPartBar(p){
+  const bar=$('#partBar');if(!bar)return;bar.innerHTML='';bar.hidden=!isNotes(p);if(!isNotes(p))return;
+  const lab=document.createElement('div');lab.className='part-lab';lab.innerHTML='Note part'+helpIcon('notePart');bar.appendChild(lab);
+  const row=document.createElement('div');row.className='part-row';row.setAttribute('role','group');row.setAttribute('aria-label','Note part');
+  NOTE_PARTS.forEach(np=>{const b=document.createElement('button');b.type='button';const on=curPart(p)===np.t;b.className='part-chip'+(on?' on':'');
+    const n=allModules({modules:rootModules(p,np.t)}).length;b.textContent=np.n;if(n){const c=document.createElement('span');c.textContent=n;b.appendChild(c);}
+    b.title=np.d;b.setAttribute('aria-pressed',on?'true':'false');b.onclick=()=>switchPart(p,np.t);row.appendChild(b);});
+  bar.appendChild(row);
+  const h=document.createElement('div');h.className='part-hint';h.textContent=(NOTE_PARTS.find(n=>n.t===curPart(p))||{d:''}).d+'.';bar.appendChild(h);
+}
+/* add a Model layer with a shape Studio makes (used by the empty stack of notes and bombs) */
+function addShapeLayer(key,target){
+  const p=activePreset();if(!p)return;
+  if(!window.THREE||!THREE.BufferGeometry){toast('The 3D engine is still loading. Try again in a moment.','warn');return;}
+  const s=SHAPES[key];const m=modelLayer(s.n,key,{white:key==='arrow'||key==='dot'||key==='linkdot',roughness:0.4});
+  (target&&target.children?target.children:p.modules).push(m);state.activeModuleId=m.uid;state.activeTab='module';renderAll();T('shape-'+key);toast(s.n+' added');
 }
 function moduleAction(act,id){
   const p=activePreset();const f=findModule(p,id);if(!f)return;const L=f.list,i=f.index;
@@ -1539,8 +1722,10 @@ function buildPresetForm(){
   if(!p){wrap.innerHTML='<div class="placeholder-note">'+ICON.layers+'<br>Select or create a preset to edit its name, root transform and preview colors.</div>';return wrap;}
   const idAcc=accordion('Identity',ICON.edit);
   idAcc.add(field('Preset name',(()=>{const i=document.createElement('input');i.type='text';i.value=p.name;i.addEventListener('input',()=>{p.name=i.value;renderPresets();updatePreviewFoot();refreshOutputs();});return i;})(),'This is the name you pick in the ReeSabers menu in game.','presetName'));
-  const rtOpts=[{v:0,n:'Saber (0)'}];if(p.rootType!==0)rtOpts.push({v:p.rootType,n:'Imported value ('+p.rootType+')'});
-  idAcc.add(adv(field('Root type',selectInput(rtOpts,p.rootType,v=>{p.rootType=v;touch();}),'Exports as ModVersion '+(p.modVersion||state.modVersion)+(p.modVersion&&p.modVersion!==state.modVersion?' (kept from the imported file).':'.'),'rootType')));
+  const rtOpts=[{v:ROOT_SABER,n:'Saber'},{v:ROOT_NOTES,n:'Notes (ReeSabers 0.4)'},{v:ROOT_BOMB,n:'Bomb (ReeSabers 0.4)'}];if([ROOT_SABER,ROOT_NOTES,ROOT_BOMB].indexOf(p.rootType)<0)rtOpts.push({v:p.rootType,n:'Imported value ('+p.rootType+')'});
+  const rtField=field('Preset type',selectInput(rtOpts,p.rootType,v=>setRootType(p,v)),'Exports as ModVersion '+exportModVersion(p)+(isV2(p)?' in the 0.4 format (.reesaber).':(p.modVersion&&p.modVersion!==state.modVersion?' (kept from the imported file).':'.')),'rootType');
+  idAcc.add(isObjectPreset(p)?rtField:adv(rtField));
+  if(isV2(p))idAcc.add(adv(field('Description',(()=>{const t=document.createElement('textarea');t.rows=2;t.value=p.description||'';t.addEventListener('input',()=>{p.description=t.value.slice(0,4000);refreshOutputs();});return t;})(),null,'description')));
   wrap.appendChild(idAcc);
 
   const ov=accordion('Overview',ICON.bolt);
@@ -1558,6 +1743,14 @@ function buildPresetForm(){
   wrap.appendChild(tAcc);
 
   const pv2=accordion('Preview (not exported)',ICON.blade,{magenta:true});
+  if(isObjectPreset(p)){
+    pv2.add(noteBox(isNotes(p)?'These only change the 3D preview. In game, notes take their colors from your color scheme or the map. Turn on Both hands above the preview to see a left and a right note, and Swing test to watch them fly in.':'This only changes the 3D preview. Swing test above the preview makes the bomb fly in.'));
+    if(isNotes(p)){
+      pv2.add(field('Left note color',colorInput(safeColor(p.color.left,'#ff1e3c'),v=>{p.color.left=v;renderPresets();touch();}),null,'previewColor'));
+      pv2.add(field('Right note color',colorInput(safeColor(p.color.right,'#1e6bff'),v=>{p.color.right=v;renderPresets();touch();}),null,'previewColor'));
+    }
+    wrap.appendChild(pv2);wrap.appendChild(simpleNote());return wrap;
+  }
   pv2.add(noteBox('These only change the 3D preview. In game, ReeSabers applies the preset to both sabers and takes colors from your color scheme / the map.'));
   const ht=document.createElement('div');ht.className='hand-toggles';
   ['L','R'].forEach(h=>{const b=document.createElement('div');b.className='hand-btn'+(p.hands[h]?' on-'+h:'');b.textContent=h==='L'?'LEFT':'RIGHT';b.setAttribute('aria-pressed',p.hands[h]?'true':'false');b.addEventListener('click',()=>{p.hands[h]=!p.hands[h];renderInspector();touch();});ht.appendChild(b);});
@@ -1582,7 +1775,7 @@ function buildModuleForm(){
   const typeNote=document.createElement('div');typeNote.className='fset-note adv';typeNote.style.marginBottom='0';typeNote.textContent='Type: '+m.moduleId+' (v'+m.version+')';cs.add(typeNote);
   wrap.appendChild(cs);
 
-  const B={blade:buildBladeFields,trail:buildTrailFields,vfx:buildSparksFields,joint:buildJointFields,group:buildGroupInfo,clone:buildCloneInfo,legacy:buildLegacyInfo,other:buildOtherInfo}[m.kind]||buildOtherInfo;
+  const B={blade:buildBladeFields,trail:buildTrailFields,vfx:buildSparksFields,joint:buildJointFields,group:buildGroupInfo,clone:buildCloneInfo,legacy:buildLegacyInfo,model:buildModelFields,other:buildOtherInfo}[m.kind]||buildOtherInfo;
   const holder=document.createElement('div');
   try{B(holder,cfg,resetGroup,m);buildShapeAndMappings(holder,m);while(holder.firstChild)wrap.appendChild(holder.firstChild);}
   catch(e){console.warn('editor fallback',e);wrap.appendChild(noteBox('Some settings on this layer use a layout the editor does not cover yet. They are kept exactly as imported and exported unchanged.'));}
@@ -1695,7 +1888,45 @@ function buildJointFields(wrap,cfg,reset){
 function buildGroupInfo(wrap,cfg,reset,m){
   const a=accordion('Group',ICON.layers);
   a.add(noteBox('A container with no look of its own. Its transform moves everything inside it together. Keep it selected and use Add layer to put layers inside. It holds '+allModules({modules:m.children||[]}).length+' layer(s).'));
+  /* ReeSabers 0.4 groups can spin what's inside them */
+  if(cfg.RotationSpeed&&typeof cfg.RotationSpeed==='object')a.add(field('Spin (degrees per second)',vec3Editor(cfg.RotationSpeed,touch,1),null,'rotationSpeed'));
+  else if(isV2(activePreset())){const b=document.createElement('button');b.type='button';b.className='btn sm';b.textContent='Add a spin';b.onclick=()=>{cfg.RotationSpeed={x:0,y:30,z:0};T('group-spin',true);renderInspector();touch();};a.add(field('Spin',b,'Spins everything inside this group. ReeSabers 0.4 or newer.','rotationSpeed'));}
   wrap.appendChild(a);
+}
+/* ReeSabers 0.4 Model layer: a .glb with a lit material */
+function buildModelFields(wrap,cfg,reset,m){
+  const p=activePreset();const ms=cfg.MeshSettings||(cfg.MeshSettings={});const mt=cfg.MaterialSettings||(cfg.MaterialSettings={});
+  const a=accordion('Model',ICON.cube,{reset:reset&&(()=>reset(['MeshSettings.scale','MeshSettings.inflate','MeshSettings.flipNormals','MeshSettings.mirrorX','MeshSettings.mirrorY','MeshSettings.mirrorZ']))});
+  const id=modelIdOf(m),cur=modelAsset(p,id);
+  const opts=[{v:'',n:'- none -'}].concat(state.assets.filter(x=>x.kind==='mesh').map(x=>({v:x.name,n:x.name})));
+  const curVal=cur?cur.name:id;if(id&&!cur)opts.push({v:id,n:id+'  (not loaded)'});
+  a.add(field('Model file',strSelect(opts,curVal||'',v=>{
+    if(cur&&v===cur.name)return;ms.modelId=v;T('model-pick',true);renderStack();renderInspector();touch();}),
+    id&&cur&&id!==cur.name?'Saved in the file as '+id+'.':null,'modelFile'));
+  const row=document.createElement('div');row.className='shape-row';row.style.justifyContent='flex-start';
+  ['roundcube','cube','sphere','spiky','arrow','dot','link'].forEach(k=>{const b=document.createElement('button');b.type='button';b.className='btn tiny';b.textContent=SHAPES[k].n;
+    b.onclick=()=>{const nm=shapeModel(k);if(!nm){toast('The 3D engine is still loading. Try again in a moment.','warn');return;}ms.modelId=nm;T('shape-'+k);renderStack();renderInspector();touch();toast(SHAPES[k].n+' model made');};row.appendChild(b);});
+  a.add(field('Make a shape',row,'Studio builds a simple .glb and saves it with the preset.'));
+  a.add(numField('Size','modelScale',safeNum(ms.scale,1),v=>ms.scale=v,'modelScale'));
+  a.add(numField('Outline (mm)','inflate',safeNum(ms.inflate,0),v=>ms.inflate=v,'inflate'));
+  const mr=document.createElement('div');mr.className='row adv';
+  [['mirrorX','Mirror X'],['mirrorY','Mirror Y'],['mirrorZ','Mirror Z'],['flipNormals','Flip normals']].forEach(([k,l])=>mr.appendChild(field('',toggle(!!ms[k],l,v=>{ms[k]=v;touch();}))));
+  a.add(mr);
+  if(isV2(p)&&!isObjectPreset(p))a.add(noteBox('Presets with a Model layer save in the ReeSabers 0.4 format (.reesaber) and need ReeSabers 0.4 or newer.'));
+  wrap.appendChild(a);
+  const mat=accordion('Material',ICON.spark,{reset:reset&&(()=>reset(['MaterialSettings.color','MaterialSettings.opacity','MaterialSettings.metallic','MaterialSettings.roughness','MaterialSettings.fresnelPower','MaterialSettings.cullMode','MaterialSettings.reflectionIntensity','MaterialSettings.envLightIntensity']))});
+  const col=mt.color&&typeof mt.color==='object'?mt.color:(mt.color={r:1,g:1,b:1,a:0});
+  mat.add(field('Color',colorInput(rgbToHex({r:clamp(safeNum(col.r,1),0,1),g:clamp(safeNum(col.g,1),0,1),b:clamp(safeNum(col.b,1),0,1)}),v=>{const c=hexToRgb(v);col.r=c.r;col.g=c.g;col.b=c.b;touch();}),null,'modelColor'));
+  mat.add(numField('Opacity','opacity',safeNum(mt.opacity,1),v=>mt.opacity=v,'opacity'));
+  mat.add(numField('Metallic','metallic',safeNum(mt.metallic,0),v=>mt.metallic=v,'metallic'));
+  mat.add(numField('Roughness','roughness',safeNum(mt.roughness,0.5),v=>mt.roughness=v,'roughness'));
+  mat.add(field('Show',selectInput([{v:0,n:'Both sides (0)'},{v:1,n:'Back faces only, for outlines (1)'},{v:2,n:'Front faces only (2)'}],Math.trunc(safeNum(mt.cullMode,0)),v=>{mt.cullMode=v;touch();}),null,'cullMode'));
+  mat.add(adv(numField('Edge glow (Fresnel)','fresnelPower',safeNum(mt.fresnelPower,5),v=>mt.fresnelPower=v,'fresnel')));
+  mat.add(adv(numField('Reflections','reflection',safeNum(mt.reflectionIntensity,1),v=>mt.reflectionIntensity=v,'reflection')));
+  mat.add(adv(numField('Environment light','envLightIntensity',safeNum(mt.envLightIntensity,1),v=>mt.envLightIntensity=v,'envLight')));
+  mat.add(adv(field('',toggle(!!mt.sceneReflections,'Scene reflections',v=>{mt.sceneReflections=v;refreshOutputs();},'sceneReflections'))));
+  mat.add(adv(field('',toggle(!!mt.sceneLights,'Scene lights',v=>{mt.sceneLights=v;refreshOutputs();},'sceneLights'))));
+  wrap.appendChild(mat);
 }
 function buildCloneInfo(wrap,cfg,reset,m){
   const a=accordion('Clone',ICON.copy);const p=activePreset();
@@ -1773,12 +2004,17 @@ function snapshotImp(cfg){const o={};Object.keys(IMP_KEYS).forEach(k=>{const v=g
 function validatePreset(p){
   const out=[];
   if(!p)return out;
-  const all=allModules(p);
-  if(!p.modules.length)out.push({level:'err',t:'No modules',m:'A preset needs at least one module to render anything in-game.'});
-  else if(!all.some(m=>m.enabled))out.push({level:'err',t:'All modules disabled',m:'Every layer is muted, so the saber will be invisible. Enable at least one.'});
-  if(all.length&&!all.some(m=>m.kind==='blade'&&m.enabled))out.push({level:'warn',t:'No visible blade',m:'No enabled Blade layer, so you\'ll only see trails and effects with no core saber.'});
+  const all=allModules(p),every=everyModule(p),objp=isObjectPreset(p),what=objp?rootLabel(p.rootType).toLowerCase():'saber';
+  if(!every.length)out.push({level:'err',t:'No modules',m:objp?'A '+what+' preset needs at least one layer. Add a Model layer to give it a shape.':'A preset needs at least one module to render anything in-game.'});
+  else if(!every.some(m=>m.enabled))out.push({level:'err',t:'All modules disabled',m:'Every layer is muted, so the '+what+' will be invisible. Enable at least one.'});
+  if(!objp&&all.length&&!all.some(m=>m.kind==='blade'&&m.enabled)&&!all.some(m=>m.kind==='model'&&m.enabled))out.push({level:'warn',t:'No visible blade',m:'No enabled Blade layer, so you\'ll only see trails and effects with no core saber.'});
+  if(isNotes(p)&&every.length&&!rootModules(p,ROOT_NOTES).length)out.push({level:'warn',t:'Body part is empty',m:'The Body part is the note block itself. Without it players only see the arrow or dot. Pick Body above the layer list to add layers.'});
+  if(isV2(p)){const off=[];presetRoots(p).forEach(r=>{if(r.type===curPart(p))return;walkModules(r.modules,m=>{if(m.kind==='model'&&(!modelIdOf(m)||!modelAsset(p,modelIdOf(m))))off.push(partLabel(r.type));});});
+    if(off.length)out.push({level:'warn',t:'Model missing in another part',m:'A Model layer in the '+[...new Set(off)].join(', ')+' part has no loaded model, so nothing gets saved for it. Open that part to fix it.'});}
   all.forEach(m=>{
     const nm=layerLabel(p,m),u=m.uid;
+    if(m.kind==='model'){const id=modelIdOf(m);if(!id)out.push({level:'warn',uid:u,t:'No model picked',m:`Model layer “${nm}” has no model yet, so it shows nothing. Pick a shape or a .glb in its Model panel.`});
+      else if(!modelAsset(p,id))out.push({level:'warn',uid:u,t:'Model not loaded',m:`Layer “${nm}” uses “${id}”, which isn't loaded, so it can't be saved into the file. Import the original .reesaber or upload the .glb in Assets.`});}
     if(m.kind==='legacy')out.push({level:'err',uid:u,t:'Not a real ReeSabers module',m:`Layer “${nm}” (${m.moduleId}) was added by an older Studio version. ReeSabers will ignore it or fail to load the preset. Delete it.`});
     else if(m.kind==='other')out.push({level:'warn',uid:u,t:'Unknown module type',m:`Layer “${nm}” uses ${m.moduleId}, which Studio can't edit. It is exported unchanged.`});
     if(m.customMeshId&&!assetById(m.customMeshId))out.push({level:'warn',uid:u,t:'Missing preview mesh',m:`Layer “${nm}” uses a preview mesh that is no longer loaded.`});
@@ -1864,6 +2100,12 @@ function presetTextureNames(p,exportedModules){
 /* opts.bundle → preset.json for a .reesaber zip (textures travel in textures/ instead of BinaryAssets) */
 function buildPresetExport(p,opts){
   opts=opts||{};syncCloneRefs(p);
+  if(isV2(p)){
+    /* ReeSabers 0.4 layout: one root per part, models and textures travel next to preset.json in the .reesaber zip */
+    const roots=presetRoots(p);if(!roots.some(r=>r.type===p.rootType))roots.unshift({type:p.rootType,modules:[]});
+    return {ModVersion:exportModVersion(p),Version:2,RootSettings:{Type:p.rootType,Description:safeStr(p.description,'')},LocalTransform:clone(p.transform),
+      Roots:roots.filter(r=>r.type===p.rootType||r.modules.length).map(r=>({Type:r.type,Modules:r.modules.map(moduleToReeSaber)}))};
+  }
   const modules=p.modules.map(moduleToReeSaber);
   const out={ModVersion:p.modVersion||state.modVersion,Version:1,RootSettings:{Type:p.rootType},LocalTransform:clone(p.transform),Modules:modules};
   const geo=Array.isArray(p.rawGeometry)?clone(p.rawGeometry):[];
@@ -1874,8 +2116,22 @@ function buildPresetExport(p,opts){
 function buildBundleFiles(p){
   const obj=buildPresetExport(p,{bundle:true});
   const files=[{name:'preset.json',data:new TextEncoder().encode(JSON.stringify(obj,null,2))}];
-  presetTextureNames(p,obj.Modules).forEach(n=>{const a=assetByName(n,'texture');files.push({name:'textures/'+n,data:new Uint8Array(dataURLtoArrayBuffer(a.dataURL))});});
+  presetTextureNames(p,exportedModules(obj)).forEach(n=>{const a=assetByName(n,'texture');files.push({name:'textures/'+n,data:new Uint8Array(dataURLtoArrayBuffer(a.dataURL))});});
+  if(isV2(p)){const seen=new Set();walkAllModules(p,m=>{if(m.kind!=='model')return;const id=safeGeoPath(modelIdOf(m));if(!id||seen.has(id))return;const a=modelAsset(p,modelIdOf(m));if(!a)return;seen.add(id);
+    files.push({name:'geometry/'+id,data:new Uint8Array(dataURLtoArrayBuffer(a.dataURL))});});}
   return files;
+}
+function exportedModules(obj){const out=[];(Array.isArray(obj.Modules)?obj.Modules:[]).forEach(m=>out.push(m));(Array.isArray(obj.Roots)?obj.Roots:[]).forEach(r=>((r&&r.Modules)||[]).forEach(m=>out.push(m)));return out;}
+/* the file a preset is saved as: .json for classic sabers, a .reesaber zip for the 0.4 layout */
+function presetFile(p){
+  if(isV2(p))return {name:slug(p.name)+'.reesaber',blob:zipStore(buildBundleFiles(p)),zip:true};
+  return {name:slug(p.name)+'.json',blob:new Blob([JSON.stringify(buildPresetExport(p),null,2)],{type:'application/json'}),zip:false};
+}
+async function presetFileBytes(p){return new Uint8Array(await presetFile(p).blob.arrayBuffer());}
+/* read a preset file's JSON whether it's plain .json or a .reesaber zip */
+async function presetObjFromBytes(u8){
+  if(u8[0]===0x50&&u8[1]===0x4B){const files=await unzip(u8.buffer.slice(u8.byteOffset,u8.byteOffset+u8.byteLength));const k=Object.keys(files).find(n=>/(^|\/)preset\.json$/i.test(n));if(!k)throw new Error('no preset.json');return JSON.parse(new TextDecoder().decode(files[k]));}
+  return JSON.parse(new TextDecoder().decode(u8));
 }
 function buildProjectExport(){return {__reesaberStudio:true,version:4,savedAt:'',modVersion:state.modVersion,global:state.global,checkpoints:state.checkpoints||[],assets:state.assets.map(a=>({id:a.id,name:a.name,kind:a.kind,ext:a.ext,dataURL:a.dataURL,size:a.size})),presets:state.presets};}
 
@@ -1896,6 +2152,7 @@ function kindOf(id){
   const t=TEMPLATES[id];if(t)return t.kind;
   if(LEGACY_IDS.indexOf(id)>=0)return 'legacy';
   if(!id)return 'other';
+  if(/custom-model/i.test(id))return 'model';
   if(/trail/i.test(id))return 'trail';
   if(/spark|particle|vfx/i.test(id))return 'vfx';
   if(/blur-saber|blade/i.test(id))return 'blade';
@@ -1943,10 +2200,14 @@ function asDataURL(data,fmt,kind){
   else if(kind==='mesh')mime=/gltf$/.test(f)?'model/gltf+json':'model/gltf-binary';
   return 'data:'+mime+';base64,'+raw;
 }
-function importReeSaberPreset(obj,name,preMap){
+function importReeSaberPreset(obj,name,preMap,geoMap){
   const p=newPreset(safeStr(name,'')||'Imported Preset');
   p.modVersion=(typeof obj.ModVersion==='string'&&/^[\w.\-]{1,20}$/.test(obj.ModVersion))?obj.ModVersion:state.modVersion;
-  if(obj.RootSettings&&obj.RootSettings.Type!=null)p.rootType=safeNum(obj.RootSettings.Type,0);
+  if(obj.RootSettings&&obj.RootSettings.Type!=null)p.rootType=Math.trunc(safeNum(obj.RootSettings.Type,0));
+  else if(Array.isArray(obj.Roots)&&obj.Roots[0]&&obj.Roots[0].Type!=null)p.rootType=Math.trunc(safeNum(obj.Roots[0].Type,0));
+  p.part=p.rootType;
+  if(obj.RootSettings&&typeof obj.RootSettings.Description==='string')p.description=obj.RootSettings.Description.slice(0,4000);
+  if(geoMap&&typeof geoMap==='object')p.geoFiles=Object.assign({},geoMap);
   if(obj.LocalTransform)p.transform=sanitizeTransform(obj.LocalTransform);
   const ba=(obj.BinaryAssets&&typeof obj.BinaryAssets==='object')?obj.BinaryAssets:{};
   const list=[];
@@ -1960,8 +2221,17 @@ function importReeSaberPreset(obj,name,preMap){
   const map=Object.assign({},preMap||{},importAssetList(list));
   p.extraTextures=list.map(a=>map[a.name]||a.name).filter((n,i,arr)=>arr.indexOf(n)===i&&assetByName(n,'texture'));
   p.rawGeometry=Array.isArray(ba.Geometry)?clone(ba.Geometry):[];
-  p.modules=(Array.isArray(obj.Modules)?obj.Modules:[]).map(mo=>importModule(mo,0)).filter(Boolean);
-  if(Object.keys(map).length)walkModules(p.modules,m=>renameTexRefs(m.config,map));
+  /* models embedded the 0.3 way: load them for the preview (the file keeps its Geometry list unchanged) */
+  p.rawGeometry.forEach(g=>{if(!g||typeof g!=='object')return;const nm=safeStr(g.AssetName,'')||safeStr(g.Name,'');const ext=safeExt(nm.indexOf('.')>0?nm.split('.').pop():'obj');
+    if(!nm||!EXT_KIND[ext]||EXT_KIND[ext]!=='mesh')return;const du=ext==='obj'?(typeof g.Data==='string'&&/^[A-Za-z0-9+\/=\s]*$/.test(g.Data)?'data:text/plain;base64,'+g.Data.replace(/\s+/g,''):null):asDataURL(g.Data,ext,'mesh');
+    if(!du||!DATAURL_RE.test(du))return;const mm=importAssetList([{name:nm,kind:'mesh',ext,dataURL:du,size:(g.Data.length*0.75)|0}]);p.geoFiles[nm]=mm[nm]||nm;});
+  if(Array.isArray(obj.Roots)){
+    p.formatVersion=2;p.modules=[];p.parts={};
+    obj.Roots.forEach(r=>{if(!r||typeof r!=='object')return;const t=Math.trunc(safeNum(r.Type,p.rootType));
+      const mods=(Array.isArray(r.Modules)?r.Modules:[]).map(mo=>importModule(mo,0)).filter(Boolean);
+      if(t===p.rootType)p.modules=p.modules.concat(mods);else p.parts[t]=(p.parts[t]||[]).concat(mods);});
+  } else p.modules=(Array.isArray(obj.Modules)?obj.Modules:[]).map(mo=>importModule(mo,0)).filter(Boolean);
+  if(Object.keys(map).length)walkAllModules(p,m=>renameTexRefs(m.config,map));
   linkCloneTargets(p);
   return p;
 }
@@ -1998,6 +2268,10 @@ function sanitizePreset(p){
   d.extraTextures=Array.isArray(p.extraTextures)?p.extraTextures.filter(x=>typeof x==='string'):[];
   d.rawGeometry=Array.isArray(p.rawGeometry)?p.rawGeometry:[];
   d.modules=(Array.isArray(p.modules)?p.modules:[]).map(m=>sanitizeModule(m,0)).filter(Boolean);
+  d.rootType=Math.trunc(d.rootType);d.formatVersion=p.formatVersion===2?2:1;d.description=safeStr(p.description,'').slice(0,4000);
+  d.part=(p.part!=null&&isFinite(+p.part))?Math.trunc(+p.part):d.rootType;d.parts={};
+  if(p.parts&&typeof p.parts==='object'&&!Array.isArray(p.parts))Object.keys(p.parts).slice(0,24).forEach(k=>{const t=parseInt(k,10);if(!isFinite(t)||t===d.part||!Array.isArray(p.parts[k]))return;d.parts[t]=p.parts[k].map(m=>sanitizeModule(m,0)).filter(Boolean);});
+  d.geoFiles={};if(p.geoFiles&&typeof p.geoFiles==='object')Object.keys(p.geoFiles).slice(0,300).forEach(k=>{if(typeof p.geoFiles[k]==='string')d.geoFiles[k.slice(0,200)]=p.geoFiles[k].slice(0,200);});
   if(p.baseline&&typeof p.baseline==='object'&&typeof p.baseline.json==='string'&&p.baseline.json.length<8e6)d.baseline={label:safeStr(p.baseline.label,'Saved version'),at:safeStr(p.baseline.at,''),json:p.baseline.json};
   if(p.preview&&typeof p.preview==='object'){d.preview={combine:Array.isArray(p.preview.combine)?p.preview.combine.filter(x=>typeof x==='string'&&/^[\w-]{1,40}$/.test(x)).slice(0,8):[],leftId:(typeof p.preview.leftId==='string'&&/^[\w-]{0,40}$/.test(p.preview.leftId))?p.preview.leftId:''};}
   return d;
@@ -2029,8 +2303,9 @@ function loadProject(obj,mode,opts){
   const texMap=Object.assign({},idName,nameMap);
   presets.forEach(p=>{
     if(state.presets.some(x=>x.id===p.id))p.id=uid();
-    if(mode!=='replace')reUid(p.modules);
-    walkModules(p.modules,m=>{
+    if(mode!=='replace')presetRoots(p).forEach(r=>reUid(r.modules));
+    Object.keys(p.geoFiles||{}).forEach(k=>{if(nameMap[p.geoFiles[k]])p.geoFiles[k]=nameMap[p.geoFiles[k]];});
+    walkAllModules(p,m=>{
       if(m.customMeshId){const a=assetById(idMap[m.customMeshId]||m.customMeshId);m.customMeshId=a&&a.kind==='mesh'?a.id:'';}
       if(Object.keys(texMap).length)renameTexRefs(m.config,texMap);
       const ts=get(m.config,'TexturesSettings');
@@ -2066,12 +2341,13 @@ function handleImportData(text,opts){
   if(!obj||typeof obj!=='object'||Array.isArray(obj)){toast('Unrecognized file format','err');return false;}
   try{
     if(obj.__reesaberStudio){if(state.presets.length){askProjectLoad(obj);return 'deferred';}loadProject(obj,'replace');return true;}
-    if('Modules' in obj||obj.RootSettings||obj.ModVersion){
-      if(!Array.isArray(obj.Modules)){toast('This preset has no Modules list, so there is nothing to import','err');return false;}
-      const p=importReeSaberPreset(obj,opts.name,opts.map);
+    if('Modules' in obj||'Roots' in obj||obj.RootSettings||obj.ModVersion){
+      if(!Array.isArray(obj.Modules)&&!Array.isArray(obj.Roots)){toast('This preset has no Modules list, so there is nothing to import','err');return false;}
+      const p=importReeSaberPreset(obj,opts.name,opts.map,opts.geo);
       setBaseline(p,opts.baseLabel||'Imported file');
       state.presets.push(p);state.activePresetId=p.id;state.activeModuleId=null;renderAll();updateAssetCount();
-      const nl=allModules(p).length;T('import-preset');toast('Preset imported ('+nl+' layer'+(nl!==1?'s':'')+')');return true;
+      const nl=everyModule(p).length;T('import-preset');if(isObjectPreset(p))T('import-'+rootLabel(p.rootType).toLowerCase());
+      toast((isObjectPreset(p)?rootLabel(p.rootType)+' preset':'Preset')+' imported ('+nl+' layer'+(nl!==1?'s':'')+')');return true;
     }
   }catch(e){console.warn('import failed',e);toast('Import failed: '+e.message,'err');return false;}
   toast('Unrecognized file format','err');return false;
@@ -2126,7 +2402,7 @@ function addFiles(files,onDone){
 function updateAssetCount(){$('#assetCount').textContent=state.assets.length;}
 function removeAsset(id){
   const a=assetById(id);if(!a)return;
-  state.presets.forEach(p=>{walkModules(p.modules,m=>{if(m.customMeshId===id)m.customMeshId='';if(a.kind==='texture')clearTexRefs(m.config,a.name);});if(a.kind==='texture')p.extraTextures=(p.extraTextures||[]).filter(n=>n!==a.name);});
+  state.presets.forEach(p=>{walkAllModules(p,m=>{if(m.customMeshId===id)m.customMeshId='';if(a.kind==='texture')clearTexRefs(m.config,a.name);});if(a.kind==='texture')p.extraTextures=(p.extraTextures||[]).filter(n=>n!==a.name);});
   state.assets=state.assets.filter(x=>x.id!==id);updateAssetCount();openAssetModal();renderAll();
 }
 function openAssetModal(){
@@ -2155,8 +2431,8 @@ function openAssetModal(){
       let thumb;
       if(a.kind==='texture')thumb=`<div class="at-thumb"></div>`;
       else thumb=`<div class="at-thumb">${a._obj?'<span style="color:var(--green);font-size:11px;font-weight:700">MODEL READY</span>':ICON.cube}</div>`;
-      let used=0;state.presets.forEach(p=>walkModules(p.modules,mm=>{if(mm.customMeshId===a.id||(a.kind==='texture'&&collectTexRefs(mm.config,new Set()).has(a.name)))used++;}));
-      const kindCls=a.kind==='texture'?'texture':'mesh';const kindLbl=a.kind==='texture'?'texture':'model · preview only';
+      let used=0;state.presets.forEach(p=>walkAllModules(p,mm=>{if(mm.customMeshId===a.id||(a.kind==='mesh'&&mm.kind==='model'&&modelAsset(p,modelIdOf(mm))===a)||(a.kind==='texture'&&collectTexRefs(mm.config,new Set()).has(a.name)))used++;}));
+      const kindCls=a.kind==='texture'?'texture':'mesh';const kindLbl=a.kind==='texture'?'texture':'model';
       const dims=a.kind==='texture'&&a._w?' · '+a._w+'×'+a._h:'';
       tile.innerHTML=`<span class="asset-kind ${kindCls}">${kindLbl}</span>${thumb}<div class="at-name" title="${escapeHtml(a.name)}">${escapeHtml(a.name)}</div><div class="at-meta">${escapeHtml(safeExt(a.ext).toUpperCase())}${dims} · ${bytesFmt(a.size)}${used?' · used ×'+used:''}</div><div class="at-actions"></div>`;
       if(a.kind==='texture'&&DATAURL_RE.test(a.dataURL))tile.querySelector('.at-thumb').style.backgroundImage='url("'+a.dataURL+'")';
@@ -2200,10 +2476,10 @@ function openExportModal(){
     <div class="modal-body">
       <div class="acc"><div class="acc-head" style="cursor:default"><span class="acc-ic">${ICON.bolt}</span><span class="acc-title">Pre-export check</span></div><div class="acc-body">${checkHtml}</div></div>
       <div class="acc"><div class="acc-head" style="cursor:default"><span class="acc-ic">${ICON.blade}</span><span class="acc-title">ReeSaber preset</span></div><div class="acc-body">
-        <button class="btn primary ex-main" id="exActive" ${p?'':'disabled'}>${ICON.bolt} Download for Beat Saber (.json)</button>
+        <button class="btn primary ex-main" id="exActive" ${p?'':'disabled'}>${ICON.bolt} Download for Beat Saber (${p&&isV2(p)?'.reesaber':'.json'})</button>${p&&isV2(p)?'<div class="fset-note" style="margin:8px 0 0">'+(isObjectPreset(p)?'This '+rootLabel(p.rootType).toLowerCase()+' preset':'This preset has 3D models, so it')+' uses the ReeSabers 0.4 format: one <b>.reesaber</b> file with its models and textures inside. It needs ReeSabers 0.4 or newer.</div>':''}
         <div class="fset-note" style="margin:10px 0 0">Put the file in the Presets folder:<br><b>PC:</b> <code class="k">Beat Saber/UserData/ReeSabers/Presets</code><br><b>Quest:</b> <code class="k">ModData/com.beatgames.beatsaber/Mods/ReeSabers/Presets</code> <a href="#" id="exCopyHelp" style="color:var(--cyan)">How do I copy it to my Quest?</a><span data-needs-usb> Or send it over USB with <button type="button" class="btn tiny" id="exQuest" ${p?'':'disabled'}>Push to Quest</button></span><br>Then start Beat Saber, open the ReeSabers menu and pick “<span class="ex-name"></span>”. If it isn't listed, restart the game.</div>
         <details class="ex-more" id="exMore"><summary>More download options</summary>
-          <div class="fset-note" style="margin:8px 0">The .json above carries its textures inside, so it's the only file you need. <b>.reesaber</b> is a zip with <code class="k">preset.json</code> plus a <code class="k">textures/</code> folder, handy for sharing textured sabers.</div>
+          <div class="fset-note" style="margin:8px 0">${p&&isV2(p)?'The .reesaber above is the only file you need.':'The .json above carries its textures inside, so it\'s the only file you need.'} <b>.reesaber</b> is a zip with <code class="k">preset.json</code> plus a <code class="k">textures/</code> folder, handy for sharing textured sabers.</div>
           <div style="display:flex;gap:8px;flex-wrap:wrap"><button class="btn" id="exBundle" ${p?'':'disabled'}>${ICON.zip} Download .reesaber</button><button class="btn" id="exAll" ${state.presets.length?'':'disabled'}>${ICON.layers} All ${state.presets.length} presets as .zip</button></div>
         </details>
         <div class="fset-note" style="margin:10px 0 0">Saber visibility (headset, desktop, mirrors) and motion smoothing aren't part of a preset. Set those in the ReeSabers settings in game.</div>
@@ -2228,9 +2504,9 @@ function openExportModal(){
   $('#exCopyHelp',m).onclick=e=>{e.preventDefault();openGuide('copy','export');};
   $('#exMore',m).addEventListener('toggle',e=>{if(e.target.open)T('export-more-open',true);});
   const gate=fn=>{if(!p)return;if(errs.length){confirmModal('Export with errors?',errs.length+' blocking issue(s) were found. The file may not load correctly in ReeSabers. Export anyway?',()=>fn(),'Export anyway');}else{fn();closeModal();}};
-  $('#exActive',m).onclick=()=>gate(()=>{downloadJSON(buildPresetExport(p),slug(p.name)+'.json');toast('Preset exported');T('export-json');});
+  $('#exActive',m).onclick=()=>gate(()=>{const f=presetFile(p);downloadBlob(f.blob,f.name);toast('Preset exported');T(f.zip?'export-reesaber-main':'export-json');if(isObjectPreset(p))T('export-'+rootLabel(p.rootType).toLowerCase());});
   $('#exBundle',m).onclick=()=>gate(()=>{downloadBlob(zipStore(buildBundleFiles(p)),slug(p.name)+'.reesaber');toast('.reesaber bundle exported');T('export-reesaber');});
-  $('#exAll',m).onclick=()=>{const used={};const files=state.presets.map(pp=>{let n=slug(pp.name);if(used[n]){used[n]++;n+='-'+used[n];}else used[n]=1;return {name:n+'.json',data:new TextEncoder().encode(JSON.stringify(buildPresetExport(pp),null,2))};});
+  $('#exAll',m).onclick=async()=>{const used={};const files=[];for(const pp of state.presets){let n=slug(pp.name);if(used[n]){used[n]++;n+='-'+used[n];}else used[n]=1;files.push({name:n+(isV2(pp)?'.reesaber':'.json'),data:await presetFileBytes(pp)});}
     downloadBlob(zipStore(files),'reesaber-presets.zip');T('export-all-zip');toast('Exported '+files.length+' preset'+(files.length!==1?'s':'')+' in one .zip');closeModal();};
   $('#exShare',m).onclick=()=>{copyShareLink();};
   $('#exQuest',m).onclick=()=>{T('export-quest',true);openQuestModal();};
@@ -2275,17 +2551,21 @@ async function importReeSaberBundle(buf,fileName,bopts){bopts=bopts||{};
   const jsonName=names.find(k=>/(^|\/)preset\.json$/i.test(k))||jsons[0];
   if(!jsonName){toast('No preset.json inside the .reesaber','err');return false;}
   const MIME={png:'image/png',jpg:'image/jpeg',jpeg:'image/jpeg',webp:'image/webp',obj:'text/plain',glb:'model/gltf-binary',gltf:'model/gltf+json'};
-  const list=[];
+  const list=[],meshes=[];
   names.forEach(k=>{
     const ext=(k.split('.').pop()||'').toLowerCase();const kind=EXT_KIND[ext];if(kind!=='texture'&&kind!=='mesh')return;
     const base=k.split('/').pop();if(!base)return;
-    list.push({name:base,kind,ext:ext==='jpeg'?'jpg':ext,dataURL:'data:'+(MIME[ext]||'application/octet-stream')+';base64,'+bytesToB64(files[k]),size:files[k].length});
+    const a={name:base,kind,ext:ext==='jpeg'?'jpg':ext,dataURL:'data:'+(MIME[ext]||'application/octet-stream')+';base64,'+bytesToB64(files[k]),size:files[k].length};
+    /* 0.4 models live in geometry/ and are referenced by their path inside it (e.g. "Note/exp.glb") */
+    if(kind==='mesh'){const gi=k.toLowerCase().indexOf('geometry/');a.rel=gi>=0?k.slice(gi+9):base;meshes.push(a);}else list.push(a);
   });
   let text=new TextDecoder().decode(files[jsonName]);
   let probe=null;try{probe=JSON.parse(text);}catch(e){}
-  if(!probe||probe.__reesaberStudio||!Array.isArray(probe.Modules)){return handleImportData(text,{name:fileBaseName(fileName)});}
-  const map=importAssetList(list);updateAssetCount();T('import-reesaber');
-  return handleImportData(text,{name:fileBaseName(fileName),map,baseLabel:bopts.baseLabel});
+  if(!probe||probe.__reesaberStudio||!(Array.isArray(probe.Modules)||Array.isArray(probe.Roots))){return handleImportData(text,{name:fileBaseName(fileName)});}
+  const map=importAssetList(list),geo={};
+  meshes.forEach(a=>{const mm=importAssetList([a]);geo[a.rel]=mm[a.name]||a.name;});
+  updateAssetCount();T('import-reesaber');
+  return handleImportData(text,{name:fileBaseName(fileName),map,geo,baseLabel:bopts.baseLabel});
 }
 /* Read a dropped/selected file: sniff for a zip (PK) → bundle, else treat as JSON text. */
 function importFile(file,done){
@@ -2361,8 +2641,34 @@ const STARTERS={
     const light=newModule('reezonate.simple-trail');light.name='Light Trail';light.config.Name=light.name;light.config.MeshSettings.TrailLength=0.2;
     const dark=newModule('reezonate.simple-trail');dark.name='Dark Trail';dark.config.Name=dark.name;dark.config.MaterialSettings.generalSettings.blendingMode=1;dark.config.MeshSettings.TrailLength=0.12;
     p.modules.push(bl,tip,light,dark);return p;}},
-  drivers:{label:'Driver test preset',desc:'One glowing band per driver number, to learn what each does in game',build:()=>buildDriverTestPreset()}
+  drivers:{label:'Driver test preset',desc:'One glowing band per driver number, to learn what each does in game',build:()=>buildDriverTestPreset()},
+  notes:{label:'Clean Notes',desc:'ReeSabers 0.4 · rounded notes with a dark outline',group:'Notes & bombs (ReeSabers 0.4)',build:()=>buildNotesStarter('Clean Notes',false)},
+  neonNotes:{label:'Neon Outline Notes',desc:'ReeSabers 0.4 · dark glass notes with a bright outline',build:()=>buildNotesStarter('Neon Outline Notes',true)},
+  bomb:{label:'Spiky Bomb',desc:'ReeSabers 0.4 · a slowly tumbling spiky bomb',build:()=>buildBombStarter()}
 };
+/* ReeSabers 0.4 starters. Each part sits at the note's center, so flat pieces (arrow, dot) are built onto the faces of the model. */
+function threeReady(){if(window.THREE&&THREE.BufferGeometry)return true;toast('The 3D engine is still loading. Try again in a moment.','warn');return false;}
+function buildNotesStarter(name,neon){
+  if(!threeReady())return null;
+  const p=newPreset(name);p.rootType=ROOT_NOTES;p.part=ROOT_NOTES;p.formatVersion=2;p.color.left='#ff1e3c';p.color.right='#1e6bff';
+  p.description='Made with ReeSaber Studio';
+  const body=()=>neon?modelLayer('Body','roundcube',{color:[0.12,0.12,0.14],metallic:0.6,roughness:0.2}):modelLayer('Body','roundcube',{roughness:0.35,metallic:0.1});
+  const outline=()=>neon?modelLayer('Outline','roundcube',{outline:9,color:[1,1,1],roughness:0.5}):modelLayer('Outline','roundcube',{outline:6,color:[0.04,0.04,0.05],roughness:0.6});
+  p.modules.push(body(),outline());
+  p.parts[8]=[modelLayer('Arrow','arrow',{white:true,roughness:0.4})];
+  p.parts[9]=[modelLayer('Dot','dot',{white:true,roughness:0.4})];
+  p.parts[10]=[body(),outline(),modelLayer('Arrow','arrow',{white:true,roughness:0.4})];
+  p.parts[11]=[modelLayer('Link','link',neon?{color:[0.12,0.12,0.14],metallic:0.6,roughness:0.2}:{roughness:0.35}),modelLayer('Dot','linkdot',{white:true,roughness:0.4})];
+  p.parts[13]=[modelLayer('Tail','link',neon?{color:[0.12,0.12,0.14],metallic:0.6,roughness:0.2}:{roughness:0.35})];
+  return p;
+}
+function buildBombStarter(){
+  if(!threeReady())return null;
+  const p=newPreset('Spiky Bomb');p.rootType=ROOT_BOMB;p.part=ROOT_BOMB;p.formatVersion=2;p.description='Made with ReeSaber Studio';
+  const g=newModule('reezonate.empty');g.name='Tumble';g.config.Name=g.name;g.config.RotationSpeed={x:15,y:30,z:0};
+  g.children.push(modelLayer('Outline','spiky',{outline:10,color:[1,1,1],roughness:0.5}),modelLayer('Body','spiky',{color:[0.7,0.7,0.75],metallic:0.35,roughness:0.35}));
+  p.modules.push(g);return p;
+}
 /* Driver calibration: band N (counting up from the hilt) lights up as driver type N rises.
    Load it in game, play a song, and note which band reacts to what. */
 const DRIVER_TEST_COLORS=[['red',0],['orange',0.07],['yellow',0.15],['green',0.33],['cyan',0.5],['blue',0.62],['purple',0.76],['pink',0.88],['white',0]];
@@ -2423,8 +2729,9 @@ function renderStarterMenu(){
   const g0=document.createElement('div');g0.className='dd-item dd-gallery dd-feature';g0.innerHTML='<b>Start from a community saber</b><span>Open one from the gallery and make it yours</span>';g0.onclick=()=>{$('#newDd').classList.remove('open');openGalleryModal();T('gallery-browse');};menu.appendChild(g0);
   const sep=document.createElement('div');sep.className='dd-sep';sep.textContent='Templates';menu.appendChild(sep);
   Object.entries(STARTERS).forEach(([k,s])=>{
+    if(s.group){const sp=document.createElement('div');sp.className='dd-sep';sp.textContent=s.group;menu.appendChild(sp);}
     const it=document.createElement('div');it.className='dd-item';it.innerHTML=`<b>${s.label}</b><span>${s.desc}</span>`;
-    it.onclick=()=>{const p=s.build();state.presets.push(p);$('#newDd').classList.remove('open');selectPreset(p.id);toast(s.label+' created');T('starter-'+k);if(k==='drivers')openDriverTestInfo();};
+    it.onclick=()=>{const p=s.build();if(!p)return;state.presets.push(p);$('#newDd').classList.remove('open');selectPreset(p.id);toast(s.label+' created');T('starter-'+k);if(k==='drivers')openDriverTestInfo();};
     menu.appendChild(it);
   });
 }
@@ -3010,7 +3317,7 @@ function layerAt(cx,cy){
   PICK.ray.setFromCamera(ndc,camera);
   const hits=PICK.ray.intersectObjects(pickTargets(),true);
   for(const h of hits){if(!shown(h.object))continue;if(h.object.isPoints&&h.object.geometry.attributes.position.getY(h.index)<-900)continue;
-    const uid=uidOf(h.object);if(!uid)continue;const f=findModule(p,uid);if(f)return {uid,m:f.m,sb:sabers.find(sb=>sb.world.indexOf(h.object)>=0||(()=>{for(let x=h.object;x;x=x.parent)if(x===sb.group)return true;return false;})())};}
+    const uid=uidOf(h.object);if(!uid)continue;const fa=findAnyModule(p,uid),f=fa&&fa.f;if(f)return {uid,m:f.m,part:fa.part,sb:sabers.find(sb=>sb.world.indexOf(h.object)>=0||(()=>{for(let x=h.object;x;x=x.parent)if(x===sb.group)return true;return false;})())};}
   return null;
 }
 /* world-space box around a layer's own parts in one saber (a group or joint with no parts of its own gets everything inside it) */
@@ -3046,6 +3353,7 @@ function queueHover(x,y){PICK.qx=x;PICK.qy=y;if(PICK.queued)return;PICK.queued=t
 function pickLayer(x,y,ptype){
   const hit=layerAt(x,y);if(!hit)return;
   setHover(null);PICK.flashUid=hit.uid;PICK.flashSb=hit.sb;PICK.flash=performance.now()+900;
+  const p=activePreset();if(p&&hit.part!=null&&hit.part!==curPart(p))switchPart(p,hit.part);
   state.activeModuleId=hit.uid;if(state.activeTab!=='drivers')state.activeTab='module';renderAll();T('preview-pick',true);
   if(ptype!=='mouse'&&window.__setMobileView&&window.matchMedia('(max-width:1100px)').matches)window.__setMobileView('editor');
   setTimeout(()=>{const a=document.querySelector('#stackList .stack-item.active');if(a&&a.scrollIntoView)a.scrollIntoView({block:'nearest'});},30);
@@ -3090,6 +3398,42 @@ function gradColors(geo,axisFn,col,grad){
     arr[i*3]=col.r*clamp(g.r,0,4)*k;arr[i*3+1]=col.g*clamp(g.g,0,4)*k;arr[i*3+2]=col.b*clamp(g.b,0,4)*k;}
   geo.setAttribute('color',new THREE.BufferAttribute(arr,3));
 }
+/* which layer lists the preview draws: a notes preset shows its body with the arrow (or the dot, or a chain piece) */
+function previewLists(q){
+  if(!isNotes(q))return [q.modules];const part=curPart(q);
+  if(part===10||part===11||part===13)return [rootModules(q,part)];
+  return [rootModules(q,ROOT_NOTES),rootModules(q,part===9?9:8)];
+}
+/* push every vertex out along its smoothed normal (ReeSabers "Inflate", in millimetres) */
+function inflateGeo(src,d){
+  const g=src.clone();if(!g.attributes.normal)g.computeVertexNormals();
+  const p=g.attributes.position,n=g.attributes.normal,acc=new Map(),key=i=>Math.round(p.getX(i)*1e4)+','+Math.round(p.getY(i)*1e4)+','+Math.round(p.getZ(i)*1e4);
+  for(let i=0;i<p.count;i++){const k=key(i);const a=acc.get(k)||[0,0,0];a[0]+=n.getX(i);a[1]+=n.getY(i);a[2]+=n.getZ(i);acc.set(k,a);}
+  const keys=[];for(let i=0;i<p.count;i++)keys.push(key(i));
+  for(let i=0;i<p.count;i++){const a=acc.get(keys[i]);const l=Math.hypot(a[0],a[1],a[2])||1;p.setXYZ(i,p.getX(i)+a[0]/l*d,p.getY(i)+a[1]/l*d,p.getZ(i)+a[2]/l*d);}
+  p.needsUpdate=true;g.computeBoundingBox();g.computeBoundingSphere();return g;
+}
+function drawModel(cfg,g,baseColor,q){
+  const ms=cfg.MeshSettings||{},mt=cfg.MaterialSettings||{};
+  const a=modelAsset(q,safeStr(ms.modelId,''));const holder=new THREE.Group();
+  const sc=safeNum(ms.scale,1);holder.scale.set(sc*(ms.mirrorX?-1:1),sc*(ms.mirrorY?-1:1),sc*(ms.mirrorZ?-1:1));
+  const c=mt.color||{};const tint=new THREE.Color(clamp(safeNum(c.r,1),0,4),clamp(safeNum(c.g,1),0,4),clamp(safeNum(c.b,1),0,4)).multiply(nodeColor(cfg,baseColor,false));
+  const cull=Math.trunc(safeNum(mt.cullMode,0)),side=cull===1?THREE.BackSide:cull===2?THREE.FrontSide:THREE.DoubleSide;
+  const env=assetByIdOrName(get(cfg,'TexturesSettings.envMapTextureId')),mainT=assetByIdOrName(get(cfg,'TexturesSettings.mainTextureId'));
+  const op=clamp(safeNum(mt.opacity,1),0,1),infl=clamp(safeNum(ms.inflate,0),0,500)*0.001;
+  const mk=()=>{const mm=new THREE.MeshStandardMaterial({color:tint,metalness:clamp(safeNum(mt.metallic,0),0,1),roughness:clamp(safeNum(mt.roughness,0.5),0.04,1),side,transparent:op<1,opacity:op,depthWrite:mt.depthWrite!==false||op>=1,map:mainT&&mainT._tex?mainT._tex:null,emissive:tint.clone().multiplyScalar(0.18)});
+    if(env&&env._tex){env._tex.mapping=THREE.EquirectangularReflectionMapping;mm.envMap=env._tex;mm.envMapIntensity=clamp(safeNum(mt.reflectionIntensity,1),0,4);}
+    if(cull===1)mm.polygonOffset=false;return mm;};
+  if(a&&a._obj){
+    const inst=a._obj.clone(true);inst.position.set(0,0,0);inst.scale.set(1,1,1);inst.rotation.set(0,0,0);   /* undo the asset browser's fit-to-view */
+    inst.traverse(o=>{if(!o.isMesh)return;if(infl>0)o.geometry=inflateGeo(o.geometry,infl);else o.userData.sharedGeo=true;o.material=mk();if(ms.flipNormals)o.material.side=side===THREE.BackSide?THREE.FrontSide:side===THREE.FrontSide?THREE.BackSide:side;});
+    holder.add(inst);
+  } else {
+    /* no model loaded yet: a faint wire box where it would be */
+    const wb=new THREE.Mesh(new THREE.BoxGeometry(NOTE_SIZE,NOTE_SIZE,NOTE_SIZE),new THREE.MeshBasicMaterial({color:tint,wireframe:true,transparent:true,opacity:0.35}));holder.add(wb);
+  }
+  g.add(holder);return holder;
+}
 function rebuildScene(){
   if(!scene)return;disposeSabers();const p=activePreset();updatePreviewFoot();updateSoloBanner();updateCompareBanner();
   if(noteObj){scene.remove(noteObj);disposeObj(noteObj);noteObj=null;}
@@ -3098,25 +3442,27 @@ function rebuildScene(){
   let hands=[];if(p.hands.L)hands.push('L');if(p.hands.R)hands.push('R');
   if(pv.both){if(hands.indexOf('L')<0)hands.push('L');if(hands.indexOf('R')<0)hands.push('R');}
   if(!hands.length)hands.push('R');
+  /* notes and bombs: one object (two notes, left and right colors, with Both hands), no hilt, no saber swing */
+  const objp=isObjectPreset(p);if(objp)hands=isNotes(p)&&pv.both?['L','R']:['R'];
   const base=pv.compare?baselinePreset(p):null;if(base)hands=['L','R'];
-  const comb=comboPresets(p),leftAlt=p.preview&&p.preview.leftId?state.presets.find(x=>x.id===p.preview.leftId&&x!==p):null;
+  const comb=objp?[]:comboPresets(p),leftAlt=!objp&&p.preview&&p.preview.leftId?state.presets.find(x=>x.id===p.preview.leftId&&x!==p):null;
   const setFor=hk=>base?(hk==='L'?[base]:[p]):[(hk==='L'&&leftAlt)?leftAlt:p].concat(comb);
   const solo=soloSets(p);
   hands.forEach((hk,idx)=>{
-    const pivot=new THREE.Group();pivot.position.set(hands.length>1?(idx===0?-0.7:0.7):0,-0.3,0);
-    const root=new THREE.Group();root.position.y=0.18;root.rotation.x=-Math.PI/2;root.scale.setScalar(1.5);pivot.add(root);
+    const pivot=new THREE.Group();pivot.position.set(hands.length>1?(idx===0?-0.7:0.7)*(objp?0.75:1):0,objp?0:-0.3,0);
+    const root=new THREE.Group();root.position.y=objp?0:0.18;if(objp)root.rotation.set(0,Math.PI,0);else root.rotation.x=-Math.PI/2;root.scale.setScalar(1.5);pivot.add(root);   /* a note's front face (-Z) looks at the default camera */
     const mkPT=q=>{const pt=new THREE.Group();const T=q.transform;
       pt.position.set(T.Position.x,T.Position.y,T.Position.z);pt.rotation.order='YXZ';
       pt.rotation.set(THREE.MathUtils.degToRad(T.Rotation.x),THREE.MathUtils.degToRad(T.Rotation.y),THREE.MathUtils.degToRad(T.Rotation.z));
       pt.scale.set(T.Scale.x,T.Scale.y,T.Scale.z);root.add(pt);return pt;};
     const sets=setFor(hk);const pts=sets.map(mkPT);const pt=pts[0];
-    if(pv.hilt){
+    if(pv.hilt&&!objp){
       const hg=new THREE.CylinderGeometry(0.018,0.021,0.17,16);hg.rotateX(Math.PI/2);
       const hilt=new THREE.Mesh(hg,new THREE.MeshStandardMaterial({color:0x151515,metalness:0.8,roughness:0.4}));hilt.position.z=-0.085;root.add(hilt);
       const guard=new THREE.Mesh(new THREE.TorusGeometry(0.028,0.006,8,24),new THREE.MeshStandardMaterial({color:0x0a0a0a,metalness:0.9,roughness:0.3}));root.add(guard);
     }
-    const baseColor=presetColorFor(p,hk);
-    const sb={group:pivot,root,presetGroup:pt,handKey:hk,rec:[],joints:[],trails:[],emitters:[],world:[],phase:hk==='L'?Math.PI:0,prevAng:{x:0,z:0},prevVel:{x:0,z:0},prevSin:0};
+    const baseColor=isBomb(p)?new THREE.Color(0.6,0.61,0.65):presetColorFor(p,hk);
+    const sb={group:pivot,root,presetGroup:pt,handKey:hk,rec:[],joints:[],trails:[],emitters:[],world:[],spins:[],obj:objp,home:pivot.position.clone(),phase:hk==='L'?Math.PI:0,prevAng:{x:0,z:0},prevVel:{x:0,z:0},prevSin:0};
     function drawBlade(cfg,g,col){
       const ms=cfg.MeshSettings||{};
       const zf=safeNum(ms.zOffsetFrom,0),zt=safeNum(ms.zOffsetTo,1);
@@ -3201,16 +3547,18 @@ function rebuildScene(){
         else if(kind==='trail'&&pv.trail){sb.rec.push({m,mesh:drawTrail(cfg,g,nodeColor(cfg,baseColor,false)),type:'trail'});}
         else if(kind==='vfx'){const v=drawVfx(cfg,g,nodeColor(cfg,baseColor),m);sb.rec.push({m,mesh:v.mesh,type:'vfx'});}
         else if(kind==='clone'){const tgt=resolveCloneTarget(q,cfg.Reference);if(tgt&&tgt!==m)drawNode(tgt,g,depth+6,true,q);}
+        else if(kind==='model'){const mm=drawModel(cfg,g,baseColor,q);if(mm)sb.rec.push({m,mesh:mm,type:'model'});}
         if(!forceShow)for(let i=w0;i<sb.world.length;i++)sb.world[i].userData.uid=m.uid;   /* sparks and swing ribbons live in world space */
         if(kind==='joint'&&cfg.JointSettings)sb.joints.push({g,bx:g.rotation.x,by:g.rotation.y,js:cfg.JointSettings,ax:0,ay:0,vx:0,vy:0});
+        if(cfg.RotationSpeed&&typeof cfg.RotationSpeed==='object'){const rs=cfg.RotationSpeed;const sp={x:safeNum(rs.x,0),y:safeNum(rs.y,0),z:safeNum(rs.z,0)};if(sp.x||sp.y||sp.z){const inner=new THREE.Group();while(g.children.length)inner.add(g.children[0]);g.add(inner);g.userData.kids=inner;sb.spins.push({g:inner,sp});}}
       }
-      (m.children||[]).forEach(c=>drawNode(c,g,depth+1,forceShow,q));
+      (m.children||[]).forEach(c=>drawNode(c,g.userData.kids||g,depth+1,forceShow,q));
     }
-    sets.forEach((q,i)=>q.modules.forEach(m=>drawNode(m,pts[i],0,false,q)));
+    sets.forEach((q,i)=>previewLists(q).forEach(list=>list.forEach(m=>drawNode(m,pts[i],0,false,q))));
     scene.add(pivot);sabers.push(sb);
   });
-  if(pv.note)addNoteBlock(hands.length>1,presetColorFor(p,'R'));
-  const fk=p.id+'|'+hands.length+'|'+(base?1:0)+'|'+comb.length;
+  if(pv.note&&!objp)addNoteBlock(hands.length>1,presetColorFor(p,'R'));
+  const fk=p.id+'|'+hands.length+'|'+(base?1:0)+'|'+comb.length+'|'+p.rootType+'|'+curPart(p);
   if(fk!==lastFrameKey){lastFrameKey=fk;frameCamera(false);}
 }
 /* fit the camera to whatever is drawn (rest pose), keeping the current viewing angle */
@@ -3264,7 +3612,12 @@ function stepSaber(sb,dt,t,dv){
   /* hand motion */
   let ax=0,az=0,cut=false;
   const st=swingTime;
-  if(pv.swing){const s=Math.sin(SWING.w*st+sb.phase);ax=-SWING.A*s;az=0.32*Math.sin(SWING.w*0.5*st+sb.phase);if(sb.prevSin*s<0)cut=true;sb.prevSin=s;}
+  sb.spins.forEach(s=>{const k=Math.PI/180*dt;s.g.rotation.x+=s.sp.x*k;s.g.rotation.y+=s.sp.y*k;s.g.rotation.z+=s.sp.z*k;});   /* ReeSabers 0.4 group spin */
+  if(sb.obj){
+    /* notes and bombs: Swing test flies them in from the distance toward the camera, again and again */
+    if(pv.swing){const f=(st*0.45+(sb.handKey==='L'?0.35:0))%1,k=Math.min(f/0.7,1),e=1-Math.pow(1-k,2);sb.group.position.set(sb.home.x,sb.home.y+Math.sin(k*Math.PI)*0.12,sb.home.z-4.5*(1-e));}
+    else sb.group.position.copy(sb.home);
+  } else if(pv.swing){const s=Math.sin(SWING.w*st+sb.phase);ax=-SWING.A*s;az=0.32*Math.sin(SWING.w*0.5*st+sb.phase);if(sb.prevSin*s<0)cut=true;sb.prevSin=s;}
   sb.group.rotation.x=ax;sb.group.rotation.z=az;
   const vx=dt>0?(ax-sb.prevAng.x)/dt:0,vz=dt>0?(az-sb.prevAng.z)/dt:0;const accx=dt>0?(vx-sb.prevVel.x)/dt:0,accz=dt>0?(vz-sb.prevVel.z)/dt:0;
   sb.prevAng={x:ax,z:az};sb.prevVel={x:vx,z:vz};
@@ -3472,6 +3825,8 @@ function perfEstimate(p){
     else if(m.kind==='trail'){const ms=c.MeshSettings||{};pts=clamp(safeNum(ms.HorizontalResolution,4),1,500)*clamp(safeNum(ms.VerticalResolution,80),1,2000)*0.6;why='trail mesh';}
     else if(m.kind==='vfx'){pts=clamp(safeNum(get(c,'MeshSettings.ParticlesCount'),600),0,1e6)*1.2;why='particles';}
     else if(m.kind==='clone'){pts=150;why='repeats another layer';}
+    else if(m.kind==='model'){const a=modelAsset(p,modelIdOf(m));let tris=0;if(a&&a._obj)a._obj.traverse(o=>{if(o.isMesh&&o.geometry){const g=o.geometry;tris+=(g.index?g.index.count:g.attributes.position.count)/3;}});
+      pts=Math.round(clamp(tris?tris/8:(a?(a.size||0)/400:20),10,5000));why='3D model'+(tris?' ('+Math.round(tris).toLocaleString()+' triangles)':'');}
     else{pts=5;why='container';}
     pts=Math.round(pts);total+=pts;items.push({name:m.name||m.moduleId,pts,why});
   });
@@ -3512,6 +3867,7 @@ function describeModule(m,p){
   else if(m.kind==='joint'){const js=c.JointSettings||{};s='Dynamic joint '+nm+' (jiggles, spring '+fmtNum(safeNum(js.springConstant,100),4)+', limit '+fmtNum(safeNum(get(js,'angularLimit.x'),35),4)+'°) holding '+allModules({modules:m.children||[]}).length+' layer(s)';}
   else if(m.kind==='clone'){const t=m._cloneTargetUid?findModule(p,m._cloneTargetUid):null;s='Clone '+nm+' repeating '+(t?'“'+(t.m.name||t.m.moduleId)+'”':'another layer')+' with its own transform';}
   else if(m.kind==='legacy')s='Studio-only layer '+nm+' (not a real ReeSabers module, delete it)';
+  else if(m.kind==='model'){const ms=c.MeshSettings||{};const id=modelIdOf(m);s='Model '+nm+(id?' showing '+id:' with no model picked yet')+(safeNum(ms.inflate,0)>0?', inflated '+fmtNum(safeNum(ms.inflate,0),3)+' mm':'')+(safeNum(get(c,'MaterialSettings.cullMode'),0)===1?' as an outline':'');}
   else s='Layer '+nm+' ('+m.moduleId+', kept as imported)';
   if(c.ForceColorOverride)s+=', fixed color';
   const lt=c.LocalTransform;if(lt&&lt.Rotation&&Math.abs(safeNum(lt.Rotation.x,0))===180)s+=', flipped';
@@ -3557,8 +3913,8 @@ async function folderSave(p,quiet){
   if(!FOLDER.handle){if(quiet)return false;if(!(await folderPick()))return false;}
   if(!(await folderPerm(!quiet))){FOLDER.status='Permission needed: click Save to folder once';updateFolderStatus();if(!quiet)toast('Folder permission was not granted','err');return false;}
   try{
-    const name=slug(p.name)+'.json';const fh=await FOLDER.handle.getFileHandle(name,{create:true});const w=await fh.createWritable();
-    await w.write(JSON.stringify(buildPresetExport(p),null,2));await w.close();
+    const f=presetFile(p),name=f.name;const fh=await FOLDER.handle.getFileHandle(name,{create:true});const w=await fh.createWritable();
+    await w.write(f.blob);await w.close();
     FOLDER.last=Date.now();FOLDER.status='Saved '+name+' at '+new Date().toLocaleTimeString();updateFolderStatus();
     if(!quiet)toast('Saved '+name+' to '+(FOLDER.handle.name||'your folder'));if(!quiet)T('folder-save');return true;
   }catch(e){FOLDER.status='Save failed: '+e.message;updateFolderStatus();if(!quiet)toast('Saving to the folder failed: '+e.message,'err');return false;}
@@ -3579,7 +3935,7 @@ async function inflateLimited(u8,limit){
   const out=new Uint8Array(n);let o=0;parts.forEach(p=>{out.set(p,o);o+=p.length;});return out;
 }
 async function buildShareLink(p){
-  const obj=buildPresetExport(p);const hadTex=(obj.BinaryAssets&&obj.BinaryAssets.Textures||[]).length;
+  const obj=buildPresetExport(p);const hadTex=(obj.BinaryAssets&&obj.BinaryAssets.Textures||[]).length||(isV2(p)&&(presetTextureNames(p,exportedModules(obj)).length||hasModelLayers(p)));
   if(obj.BinaryAssets)obj.BinaryAssets={Textures:[],Geometry:[]};
   const payload=JSON.stringify({v:1,n:p.name,p:obj});
   const data=b64url(await deflateRawBytes(new TextEncoder().encode(payload)));
@@ -3590,7 +3946,7 @@ async function copyShareLink(){
   const p=activePreset();if(!p)return;
   try{const r=await buildShareLink(p);
     await copyText(r.url).then(()=>{},()=>{throw new Error('clipboard blocked');});
-    toast('Share link copied ('+r.url.length.toLocaleString()+' characters)'+(r.hadTex?'. Textures aren\'t included in links.':''),r.hadTex||r.url.length>8000?'warn':undefined);
+    toast('Share link copied ('+r.url.length.toLocaleString()+' characters)'+(r.hadTex?'. Textures and models aren\'t included in links.':''),r.hadTex||r.url.length>8000?'warn':undefined);
     T('share-link');return r.url;
   }catch(e){toast('Could not make a share link: '+e.message,'err');return null;}
 }
@@ -3827,6 +4183,7 @@ function flatPreset(o){
     walk(cfg,lab+' ›');mods(m.Children,lab);});};
   ['ModVersion','RootSettings','LocalTransform'].forEach(k=>{if(k in o)walk(o[k],k);});
   mods(o.Modules,'');
+  (Array.isArray(o.Roots)?o.Roots:[]).forEach(r=>{if(!r||typeof r!=='object')return;mods(r.Modules,o.Roots.length>1?partLabel(Math.trunc(safeNum(r.Type,0))):'');});
   const tex=(o.BinaryAssets&&o.BinaryAssets.Textures)||[];tex.forEach(t=>{if(t&&t.AssetName)out.set('Texture “'+t.AssetName+'”','included');});
   /* "Layer ›.Name" style keys read better as "Layer › Name" */
   const fixed=new Map();out.forEach((v,k)=>fixed.set(k.replace(/ ›\./g,' › '),v));return fixed;
@@ -3858,6 +4215,7 @@ function revertToBaseline(p){
   const q=baselinePreset(p);if(!q)return;
   const fresh=importReeSaberPreset(JSON.parse(p.baseline.json),p.name);
   p.modules=fresh.modules;p.transform=fresh.transform;p.rootType=fresh.rootType;p.modVersion=fresh.modVersion;
+  p.part=fresh.part;p.parts=fresh.parts;p.formatVersion=fresh.formatVersion;p.description=fresh.description;p.geoFiles=Object.assign({},fresh.geoFiles,p.geoFiles);
   state.activeModuleId=null;state.soloUid=null;renderAll();T('compare-revert');toast('Back to the saved version (Undo brings your changes back)');
 }
 function openCompareModal(){
@@ -4019,7 +4377,7 @@ async function questLoad(name){
   }catch(e){T('quest-error-load');qlog('Load failed: '+((e&&e.message)||e),'err');toast('Load failed','err');}
   finally{QUEST.busy=false;renderQuestPanel();}
 }
-function questFileName(p){let n=(QUEST.names[p.id]||slug(p.name)+'.json').split(/[\/\\]/).pop().replace(/^\.+/,'').trim()||'preset.json';if(!/\.json$/i.test(n))n=n.replace(/\.[^.]*$/,'')+'.json';return n;}
+function questFileName(p){const ext=isV2(p)?'.reesaber':'.json';let n=(QUEST.names[p.id]||slug(p.name)+ext).split(/[\/\\]/).pop().replace(/^\.+/,'').trim()||('preset'+ext);n=n.replace(/\.(json|reesaber)$/i,'');return (n||'preset')+ext;}
 async function questPushSummary(p,fname){
   const full=questDir()+'/'+fname;let html='<p class="fset-note">Saving to <code class="k">'+escapeHtml(full)+'</code></p>';
   const names=await questListPresets();
@@ -4027,7 +4385,7 @@ async function questPushSummary(p,fname){
   const existing=names.find(n=>n.toLowerCase()===fname.toLowerCase());
   if(!existing)return html+'<p class="fset-note">This is a <b>new file</b> on the headset. Nothing gets replaced.</p>';
   if(existing!==fname)html+='<p class="fset-note">The headset already has <code class="k">'+escapeHtml(existing)+'</code>. File names there ignore upper and lower case, so this replaces it.</p>';
-  let old;try{old=JSON.parse(new TextDecoder().decode(await questReadFile(questDir()+'/'+existing,30*1024*1024)));}
+  let old;try{old=await presetObjFromBytes(await questReadFile(questDir()+'/'+existing,30*1024*1024));}
   catch(e){return html+'<p class="fset-note">The copy on the headset couldn\'t be read as a preset, so changes can\'t be shown. Pushing replaces it.</p>';}
   const lines=diffPresets(stripTextureData(old),stripTextureData(buildPresetExport(p)));
   if(!lines.length)return html+'<p class="fset-note">No changes: it already matches the copy on the headset.</p>';
@@ -4044,12 +4402,12 @@ async function questPush(){
   const m=openModal(`<div class="modal-head"><h3>Push to Quest?</h3></div><div class="modal-body">${errs.length?'<div class="vitem err"><div class="vic">✕</div><div><div class="vtitle">'+errs.length+' blocking issue'+(errs.length>1?'s':'')+'</div><div class="vmsg">The preset may not load in ReeSabers. Check the Validate tab.</div></div></div>':''}${html}</div><div class="modal-foot"><button class="btn ghost" id="qpBack">Back</button><button class="btn primary" id="qpGo">Push</button></div>`);
   $('#qpBack',m).onclick=()=>openQuestModal();
   $('#qpGo',m).onclick=async()=>{
-    const full=questDir()+'/'+fname;const bytes=new TextEncoder().encode(JSON.stringify(buildPresetExport(p),null,2));
+    const full=questDir()+'/'+fname;const bytes=await presetFileBytes(p);
     openQuestModal();QUEST.busy=true;renderQuestPanel();
     try{qlog('Pushing '+bytesFmt(bytes.length)+' to '+full+'…','dim');const sync=await QUEST.adb.sync();
       try{await sync.write({filename:full,file:new ReadableStream({start(c){c.enqueue(bytes);c.close();}}),permission:0o644});}
       finally{try{sync.dispose&&await sync.dispose();}catch(e){}}
-      QUEST.names[p.id]=fname;qlog('Pushed. In Beat Saber, open the ReeSabers menu and pick "'+fname.replace(/\.json$/i,'')+'" (re-select it if it was already active).','ok');T('quest-push');toast('Pushed to Quest');
+      QUEST.names[p.id]=fname;qlog('Pushed. In Beat Saber, open the ReeSabers menu and pick "'+fname.replace(/\.(json|reesaber)$/i,'')+'" (re-select it if it was already active).','ok');T('quest-push');toast('Pushed to Quest');
       await questListPresets();
     }catch(e){T('quest-error-push');const msg=(e&&e.message)||String(e);qlog('Push failed: '+msg,'err');if(/No such file|ENOENT|not a directory/i.test(msg))qlog('The Presets folder probably doesn\'t exist yet. Launch Beat Saber once with ReeSabers installed, or fix the folder path.','warn');toast('Push failed','err');}
     finally{QUEST.busy=false;renderQuestPanel();}
