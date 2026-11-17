@@ -999,7 +999,7 @@ body.blocks-on .quickstart{background:linear-gradient(90deg,rgba(12,22,34,.82),r
     </a><a class="kofi-support nf-kofi" data-gc="kofi-click" href="https://ko-fi.com/msploit21?utm_source=reesaber-studio&amp;utm_medium=support-button" target="_blank" rel="noopener" title="Support MSploit on Ko-fi"><span class="kofi-heart">❤️</span>Support me</a></div>
   </div>
   <div class="nf-strip">
-    <div class="nf-sl"><span class="nf-map">Runs in your browser</span><span class="nf-dot">&middot;</span><span class="nf-upd" id="footUpdated" data-updated="2026-11-17T13:48Z">Updated recently</span></div>
+    <div class="nf-sl"><span class="nf-map">Runs in your browser</span><span class="nf-dot">&middot;</span><span class="nf-upd" id="footUpdated" data-updated="2026-11-17T14:06Z">Updated recently</span></div>
     <div class="nf-sr"><div class="foot-count" id="footCount" hidden></div><button type="button" class="fxsw" id="blocksSw" role="switch" aria-checked="false" aria-label="Falling blocks" title="Falling blocks background"><span class="fxsw-track"><span class="fxsw-knob"><svg viewBox="0 0 20 20" aria-hidden="true"><rect width="20" height="20" rx="5" class="k-body"/><path d="M3.3 3.3h13.4v1.9L10 8.3 3.3 5.2z" class="k-arrow"/></svg></span></span><span>Falling blocks</span></button></div>
   </div>
 </footer>
@@ -1053,8 +1053,9 @@ import {EffectComposer} from 'three/addons/postprocessing/EffectComposer.js';
 import {RenderPass} from 'three/addons/postprocessing/RenderPass.js';
 import {UnrealBloomPass} from 'three/addons/postprocessing/UnrealBloomPass.js';
 import {OutputPass} from 'three/addons/postprocessing/OutputPass.js';
+import {RoomEnvironment} from 'three/addons/environments/RoomEnvironment.js';
 T3.ColorManagement.enabled=false;
-window.THREE=Object.assign({},T3,{OBJLoader,GLTFLoader,EffectComposer,RenderPass,UnrealBloomPass,OutputPass});
+window.THREE=Object.assign({},T3,{OBJLoader,GLTFLoader,EffectComposer,RenderPass,UnrealBloomPass,OutputPass,RoomEnvironment});
 window.dispatchEvent(new Event('three-ready'));
 </script>
 <!-- ADB over WebUSB for Quest over USB: ya-webadb / Tango by Simon Chan (MIT License, github.com/yume-chan/ya-webadb).
@@ -1374,9 +1375,12 @@ function roundedBoxGeo(w,h,d,r,seg){
 }
 /* flat pieces sit on both the front (-Z, toward the player) and the back face, so they show whichever way the model is read in */
 function onBothFaces(g,z){const a=g.clone();a.translate(0,0,-z);const b=g.clone();b.rotateY(Math.PI);b.translate(0,0,z);return mergeGeos([a,b]);}
-function arrowGeo(){const S=NOTE_SIZE,sh=new THREE.Shape();sh.moveTo(-S*0.3,S*0.1);sh.lineTo(S*0.3,S*0.1);sh.lineTo(0,-S*0.16);sh.lineTo(-S*0.3,S*0.1);
-  const g=new THREE.ExtrudeGeometry(sh,{depth:0.01,bevelEnabled:false});g.translate(0,0,-0.005);return onBothFaces(g,S/2+0.006);}
-function dotGeo(r){const g=new THREE.CylinderGeometry(r||0.07,r||0.07,0.01,28);g.rotateX(Math.PI/2);return onBothFaces(g,NOTE_SIZE/2+0.006);}
+/* the same arrow and dot as Studio's falling blocks: a wide chevron in the top third of the face, a dot in the middle.
+   (u,v) are fractions of the face from its top-left corner; the face's 4/96 margin matches the 2D blocks. */
+function faceXY(u,v){const S=NOTE_SIZE,m=4/96,k=88/96;return [S*(-0.5+m+k*u),S*(0.5-m-k*v)];}
+function arrowGeo(){const sh=new THREE.Shape();[[1/6,1/6],[5/6,1/6],[5/6,0.25],[0.5,5/12],[1/6,0.25]].forEach((p,i)=>{const q=faceXY(p[0],p[1]);if(i)sh.lineTo(q[0],q[1]);else sh.moveTo(q[0],q[1]);});sh.closePath();
+  const g=new THREE.ExtrudeGeometry(sh,{depth:0.006,bevelEnabled:false});g.translate(0,0,-0.003);return onBothFaces(g,NOTE_SIZE/2+0.004);}
+function dotGeo(r){const g=new THREE.CylinderGeometry(r||NOTE_SIZE*0.11,r||NOTE_SIZE*0.11,0.006,32);g.rotateX(Math.PI/2);return onBothFaces(g,NOTE_SIZE/2+0.004);}
 function spikyGeo(){const g=new THREE.IcosahedronGeometry(0.17,1).toNonIndexed(),p=g.attributes.position,ico=new THREE.IcosahedronGeometry(0.17,0).toNonIndexed().attributes.position,tips=[],v=new THREE.Vector3(),q=new THREE.Vector3();
   for(let i=0;i<ico.count;i++){v.fromBufferAttribute(ico,i);if(!tips.some(t=>t.distanceTo(v)<1e-4))tips.push(v.clone());}
   for(let i=0;i<p.count;i++){v.fromBufferAttribute(p,i);if(tips.some(t=>t.distanceTo(v)<1e-4)){q.copy(v).multiplyScalar(1.45);p.setXYZ(i,q.x,q.y,q.z);}}
@@ -1387,7 +1391,7 @@ const SHAPES={
   sphere:{n:'Sphere',file:'sphere.glb',geo:()=>new THREE.SphereGeometry(0.2,32,20)},
   spiky:{n:'Spiky ball',file:'spiky-ball.glb',geo:spikyGeo},
   arrow:{n:'Arrow',file:'note-arrow.glb',geo:arrowGeo},
-  dot:{n:'Dot',file:'note-dot.glb',geo:()=>dotGeo(0.07)},
+  dot:{n:'Dot',file:'note-dot.glb',geo:()=>dotGeo()},
   link:{n:'Chain link',file:'chain-link.glb',geo:()=>roundedBoxGeo(NOTE_SIZE,0.11,NOTE_SIZE,0.035,6)},
   linkdot:{n:'Small dot',file:'chain-dot.glb',geo:()=>{const g=new THREE.CylinderGeometry(0.04,0.04,0.01,24);g.rotateX(Math.PI/2);return onBothFaces(g,NOTE_SIZE/2+0.006);}}
 };
@@ -1987,7 +1991,7 @@ function renderJson(){
   $('#jsonMeta').textContent=allModules(p).length+' layers'+(nTex?' · '+nTex+' embedded texture'+(nTex>1?'s':'')+' (shortened here)':'');
   const st=$('#jsonStatus');st.className='json-status ok';st.textContent='valid JSON';
 }
-function updateModTag(){const p=activePreset();const t=$('#modverTag');if(t)t.textContent='ModVersion '+((p&&p.modVersion)||state.modVersion);}
+function updateModTag(){const p=activePreset();const t=$('#modverTag');if(t)t.textContent='ModVersion '+(p?exportModVersion(p):state.modVersion);}
 function highlightJson(js){
   return escapeHtml(js)
     .replace(/(&quot;(?:[^&]|&(?!quot;))*?&quot;)(\s*:)/g,'<span class="tok-key">$1</span>$2')
@@ -2659,10 +2663,10 @@ const STARTERS={
 function threeReady(){if(window.THREE&&THREE.BufferGeometry)return true;toast('The 3D engine is still loading. Try again in a moment.','warn');return false;}
 function buildNotesStarter(name,neon){
   if(!threeReady())return null;
-  const p=newPreset(name);p.rootType=ROOT_NOTES;p.part=ROOT_NOTES;p.formatVersion=2;p.color.left='#ff1e3c';p.color.right='#1e6bff';
+  const p=newPreset(name);p.rootType=ROOT_NOTES;p.part=ROOT_NOTES;p.formatVersion=2;p.color.left='#ff0016';p.color.right='#0020ff';   /* the falling blocks' colors */
   p.description='Made with ReeSaber Studio';
-  const body=()=>neon?modelLayer('Body','roundcube',{color:[0.12,0.12,0.14],metallic:0.6,roughness:0.2}):modelLayer('Body','roundcube',{roughness:0.35,metallic:0.1});
-  const outline=()=>neon?modelLayer('Outline','roundcube',{outline:9,color:[1,1,1],roughness:0.5}):modelLayer('Outline','roundcube',{outline:6,color:[0.04,0.04,0.05],roughness:0.6});
+  const body=()=>neon?modelLayer('Body','roundcube',{color:[0.12,0.12,0.14],metallic:0.6,roughness:0.2}):modelLayer('Body','roundcube',{roughness:0.5,metallic:0});
+  const outline=()=>neon?modelLayer('Outline','roundcube',{outline:9,color:[1,1,1],roughness:0.5}):modelLayer('Edge','roundcube',{outline:4,color:[0.45,0.45,0.45],roughness:0.5});
   p.modules.push(body(),outline());
   p.parts[8]=[modelLayer('Arrow','arrow',{white:true,roughness:0.4})];
   p.parts[9]=[modelLayer('Dot','dot',{white:true,roughness:0.4})];
@@ -3213,7 +3217,7 @@ function renderSnippets(){
 /* ===================================================================== */
 let renderer,scene,camera,animReq,clock,gridHelper,composer;
 let orbit={az:0.6,el:0.2,dist:3.4,drag:false,px:0,py:0,tx:0,ty:0.45,tz:0};
-let noteObj=null,lastFrameKey='';
+let noteObj=null,lastFrameKey='',studioEnv=null;
 let sabers=[];let simTime=0,swingTime=0;
 /* ---- Test run: a 30 second pretend song so each driver reacts to its own value (swing speed, score, misses...) ---- */
 const RUN={on:false,t:0,len:30,misses:[8,20.5],saved:null,ui:0};
@@ -3430,7 +3434,7 @@ function drawModel(cfg,g,baseColor,q){
   const cull=Math.trunc(safeNum(mt.cullMode,0)),side=cull===1?THREE.BackSide:cull===2?THREE.FrontSide:THREE.DoubleSide;
   const env=assetByIdOrName(get(cfg,'TexturesSettings.envMapTextureId')),mainT=assetByIdOrName(get(cfg,'TexturesSettings.mainTextureId'));
   const op=clamp(safeNum(mt.opacity,1),0,1),infl=clamp(safeNum(ms.inflate,0),0,500)*0.001;
-  const mk=()=>{const mm=new THREE.MeshStandardMaterial({color:tint,metalness:clamp(safeNum(mt.metallic,0),0,1),roughness:clamp(safeNum(mt.roughness,0.5),0.04,1),side,transparent:op<1,opacity:op,depthWrite:mt.depthWrite!==false||op>=1,map:mainT&&mainT._tex?mainT._tex:null,emissive:tint.clone().multiplyScalar(0.18)});
+  const mk=()=>{const mm=new THREE.MeshStandardMaterial({color:tint,metalness:clamp(safeNum(mt.metallic,0),0,1),roughness:clamp(safeNum(mt.roughness,0.5),0.04,1),side,transparent:op<1,opacity:op,depthWrite:mt.depthWrite!==false||op>=1,map:mainT&&mainT._tex?mainT._tex:null,emissive:tint.clone().multiplyScalar(scene.environment?0.14:0.18)});
     if(env&&env._tex){env._tex.mapping=THREE.EquirectangularReflectionMapping;mm.envMap=env._tex;mm.envMapIntensity=clamp(safeNum(mt.reflectionIntensity,1),0,4);}
     if(cull===1)mm.polygonOffset=false;return mm;};
   if(a&&a._obj){
@@ -3446,6 +3450,9 @@ function drawModel(cfg,g,baseColor,q){
 function rebuildScene(){
   if(!scene)return;disposeSabers();const p=activePreset();updatePreviewFoot();updateSoloBanner();updateCompareBanner();
   if(noteObj){scene.remove(noteObj);disposeObj(noteObj);noteObj=null;}
+  /* notes and bombs are lit, solid objects: give them a soft studio environment so their surfaces read like the game's */
+  if(p&&isObjectPreset(p)&&THREE.RoomEnvironment&&renderer){if(!studioEnv){try{const pm=new THREE.PMREMGenerator(renderer);studioEnv=pm.fromScene(new THREE.RoomEnvironment(),0.04).texture;pm.dispose();}catch(e){studioEnv=null;}}scene.environment=studioEnv;scene.environmentIntensity=0.12;}
+  else scene.environment=null;
   if(!p)return;
   syncCloneRefs(p);
   let hands=[];if(p.hands.L)hands.push('L');if(p.hands.R)hands.push('R');
