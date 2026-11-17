@@ -1006,7 +1006,7 @@ body.blocks-on .quickstart{background:linear-gradient(90deg,rgba(12,22,34,.82),r
     </a><a class="kofi-support nf-kofi" data-gc="kofi-click" href="https://ko-fi.com/msploit21?utm_source=reesaber-studio&amp;utm_medium=support-button" target="_blank" rel="noopener" title="Support MSploit on Ko-fi"><span class="kofi-heart">❤️</span>Support me</a></div>
   </div>
   <div class="nf-strip">
-    <div class="nf-sl"><span class="nf-map">Runs in your browser</span><span class="nf-dot">&middot;</span><span class="nf-upd" id="footUpdated" data-updated="2026-11-17T18:15Z">Updated recently</span></div>
+    <div class="nf-sl"><span class="nf-map">Runs in your browser</span><span class="nf-dot">&middot;</span><span class="nf-upd" id="footUpdated" data-updated="2026-11-17T18:18Z">Updated recently</span></div>
     <div class="nf-sr"><div class="foot-count" id="footCount" hidden></div><button type="button" class="fxsw" id="blocksSw" role="switch" aria-checked="false" aria-label="Falling blocks" title="Falling blocks background"><span class="fxsw-track"><span class="fxsw-knob"><svg viewBox="0 0 20 20" aria-hidden="true"><rect width="20" height="20" rx="5" class="k-body"/><path d="M3.3 3.3h13.4v1.9L10 8.3 3.3 5.2z" class="k-arrow"/></svg></span></span><span>Falling blocks</span></button></div>
   </div>
 </footer>
@@ -2504,10 +2504,6 @@ function openExportModal(){
         </details>
         <div class="fset-note" style="margin:10px 0 0">Saber visibility (headset, desktop, mirrors) and motion smoothing aren't part of a preset. Set those in the ReeSabers settings in game.</div>
       </div></div>
-      <div class="acc"><div class="acc-head" style="cursor:default"><span class="acc-ic"><svg style="width:16px;height:16px" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 4h6v6"/><path d="M20 4l-9 9"/><path d="M19 14v5a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1V6a1 1 0 0 1 1-1h5"/></svg></span><span class="acc-title">Official ReeSabers editor</span></div><div class="acc-body">
-        <div class="fset-note">Keep working on this preset in Reezonate's editor. Studio downloads the file and opens the editor in a new tab, then you load the file there.</div>
-        <button class="btn" id="exOfficial" ${p?'':'disabled'}><svg style="width:15px;height:15px" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 4h6v6"/><path d="M20 4l-9 9"/><path d="M19 14v5a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1V6a1 1 0 0 1 1-1h5"/></svg> Open in official editor</button>
-      </div></div>
       <div class="acc"><div class="acc-head" style="cursor:default"><span class="acc-ic">${ICON.link}</span><span class="acc-title">Share</span></div><div class="acc-body">
         <div class="fset-note">A link with the whole preset packed inside it. Anyone who opens it gets a copy in their own Studio. Textures aren't included in links, so share a .reesaber file for textured sabers.</div>
         <button class="btn" id="exShare" ${p?'':'disabled'}>${ICON.link} Copy share link</button>
@@ -2533,7 +2529,6 @@ function openExportModal(){
   $('#exAll',m).onclick=async()=>{const used={};const files=[];for(const pp of state.presets){let n=slug(pp.name);if(used[n]){used[n]++;n+='-'+used[n];}else used[n]=1;files.push({name:n+(isV2(pp)?'.reesaber':'.json'),data:await presetFileBytes(pp)});}
     downloadBlob(zipStore(files),'reesaber-presets.zip');T('export-all-zip');toast('Exported '+files.length+' preset'+(files.length!==1?'s':'')+' in one .zip');closeModal();};
   $('#exShare',m).onclick=()=>{copyShareLink();};
-  $('#exOfficial',m).onclick=()=>gate(()=>{const f=presetFile(p);downloadBlob(f.blob,f.name);window.open('https://reesabers.beatleader.com','_blank','noopener');toast('Preset downloaded. Load it in the official editor');T('export-official-editor');});
   $('#exQuest',m).onclick=()=>{T('export-quest',true);openQuestModal();};
   if($('#exFolder',m)){
     updateFolderStatus();
